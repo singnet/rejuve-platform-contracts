@@ -17,6 +17,9 @@ contract IdentityToken is ERC721 {
     mapping(address => uint) public ownerToToken;  
     mapping(address => UserStatus) public registrations; 
 
+    event IdentityCreated(address,uint);
+    event IdentityDestroyed(address,uint);
+
     constructor(string memory _name, string memory _symbol)
         ERC721(_name,_symbol)
     {
@@ -52,6 +55,8 @@ contract IdentityToken is ERC721 {
         _burn(_tokenId);
         registrations[msg.sender] = UserStatus.NotRegistered;
         ownerToToken[msg.sender] = 0;
+
+        emit IdentityDestroyed(msg.sender, _tokenId);
     }
 
 //----------------------------- ALL VIEWS --------------------------------
@@ -68,6 +73,8 @@ contract IdentityToken is ERC721 {
         _safeMint(msg.sender, tokenId);       
         ownerToToken[msg.sender] = tokenId;
         registrations[msg.sender] = UserStatus.Registered;
+
+        emit IdentityCreated(msg.sender, tokenId);
         return tokenId;
     }
 

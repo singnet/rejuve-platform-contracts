@@ -20,7 +20,8 @@ contract DataManagement is IdentityToken {
     
     bytes32[] dataHashes; 
     
-    event PermissionRequested(uint, bytes32,uint); //lab id, data hash, product uid 
+    event DataSubmitted(address, uint, bytes32); // owner address, identity id, dataHash
+    event PermissionRequested(uint, bytes32, uint); // lab id, data hash, product uid 
     event PermissionGranted(bytes32); // permission hash
 
     constructor(string memory _name, string memory _symbol) 
@@ -39,9 +40,8 @@ contract DataManagement is IdentityToken {
      * @notice Allow user to submit data 
      * @dev Map identity token with Data (struct array index)
     */
-    function submitData(string memory _dHash) external ifRegistered {
-        bytes32 dhash = keccak256(abi.encodePacked(_dHash)); // for testing
-        _submitData(dhash);
+    function submitData(bytes32 _dHash) external ifRegistered {
+        _submitData(_dHash);
     }
 
 //------------------------------ Step 3: Permission Request By Lab ---------------------
@@ -57,6 +57,7 @@ contract DataManagement is IdentityToken {
     function requestPermission(uint _labId, bytes32 _dHash, uint _nextProductUid) external ifRegistered { 
         require(msg.sender == ownerOf(_labId), "REJUVE: Caller is not owner of Lab ID");
         //check user sent amount after integrating Rejuve utility token
+
         emit PermissionRequested(_labId,_dHash,_nextProductUid);
     }
 
@@ -87,7 +88,9 @@ contract DataManagement is IdentityToken {
         uint index = dataHashes.length - 1;
         uint tokenId = ownerToToken[msg.sender]; 
         ownerToData[tokenId].push(index); 
-        dataToOwner[_dHash] = tokenId; 
+        dataToOwner[_dHash] = tokenId;
+
+        emit DataSubmitted(msg.sender, tokenId, _dHash); 
     }
 
     function _grantPermission(uint _labId, bytes32 _dHash, uint _nextProductUid) private {
