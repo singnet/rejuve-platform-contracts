@@ -2,9 +2,9 @@
 pragma solidity ^0.8.9;
 import "./IdentityToken.sol";
 
-/** @dev Contract module which provides data submission, permission
- *  request and granting mechanism.  
- *  It allows a lab to request specific data access.
+/** @dev Contract module which provides data submission, 
+ *  permission request and granting mechanism.  
+ *  It allows a caller to request specific data access.
  *  Data owner can grant permission to access the data.
 */
 
@@ -20,8 +20,8 @@ contract DataManagement is IdentityToken {
     // Mapping from owner identity to permission hashes
     mapping(uint => bytes32[]) ownerToPermissions; 
 
-    // Mapping from owner identity to indexes [dataHashes]
-    mapping(uint => uint[]) ownerToData; 
+    // Mapping from owner identity to indexes => [dataHashes]
+    mapping(uint => uint[]) ownerToDataIndexes; 
 
     // Mapping from data hash to nextProductUID to permission state
     mapping(bytes32 => mapping(uint => PermissionState)) dataToProductPermission; 
@@ -35,34 +35,35 @@ contract DataManagement is IdentityToken {
     event DataSubmitted(address dataOwner, uint dataOwnerId, bytes32 dataHash);
 
     /**
-     * @dev Emitted when permission is requested to access a specific data 
+     * @dev Emitted when permission is requested to access specific data 
+     * to be used in a specific product
     */
     event PermissionRequested(uint requesterId, bytes32 dataHash, uint nextProductUID); 
 
     /**
      * @dev Emitted when permission is granted to access requested data 
+     * to be used in a specific product
     */
     event PermissionGranted(uint requesterId, bytes32 dataHash, uint nextProductUID, bytes32 permissionHash); 
 
-    constructor(string memory _name, string memory _symbol) 
-    IdentityToken(_name,_symbol)
+    constructor(string memory name_, string memory symbol_) 
+    IdentityToken(name_, symbol_)
     {}
-
 
     /**
      * @dev Throws if called by any account other than data owner.
     */
     modifier onlyDataOwner(bytes32 _dHash) {
         uint id = dataToOwner[_dHash];
-        require(id == ownerToToken[msg.sender], "REJUVE: Only Data Owner");
+        require(id == ownerToIdentity[msg.sender], "REJUVE: Only Data Owner");
         _;
     }
 
 // ---------------------------- STEP 2 : Data Submission ------------------------
 
     /**
-     * @notice Allow user to submit data 
-     * @dev Map identity token with Data (struct array index)
+     * @notice Allow only registered users to submit data. 
+     * @dev Link owner identity to submitted data hash
     */
     function submitData(bytes32 _dHash) external ifRegistered {
         _submitData(_dHash);
@@ -71,11 +72,11 @@ contract DataManagement is IdentityToken {
 //------------------------------ Step 3: Permission Request By Lab ---------------------
 
     /**
-     * @notice Labs can request permission for data usage (Pay rejuve token for data use - add later)
-     * @dev Caller should be owner of given Lab ID
+     * @notice A caller can ask for permission to access specific data (Pay rejuve token for data use - add later)
+     * @dev Caller should be owner of given requester ID
      * @param _requesterId requester identity token ID
-     * @param _nextProductUID AI suggested product ID 
-     * @param _dHash Data hash for which permission is granting
+     * @param _nextProductUID AI suggested product unique ID 
+     * @param _dHash Data hash for which permission is requested
     */
 
     function requestPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegistered { 
@@ -94,14 +95,14 @@ contract DataManagement is IdentityToken {
         _grantPermission(_requesterId, _dHash, _nextProductUID);
     }
 
-//----------------------------- OTHER SPPORTIVE PUBLIC VIEWS ---------------------
+//----------------------------- OTHER SPPORTIVE VIEWS ---------------------
 
     /**
-     * @dev Get index of struct array 
+     * @dev Get index of [datahashes] 
      * Get data based on index
     */
     function getDataByTokenId(uint _tokenId, uint _index) internal view returns(bytes32) {
-        uint index = ownerToData[_tokenId][_index] ; // returning index of dataHashes array
+        uint index = ownerToDataIndexes[_tokenId][_index] ; // returning index of dataHashes array
         return dataHashes[index];  
     }
 
@@ -110,8 +111,8 @@ contract DataManagement is IdentityToken {
     function _submitData(bytes32 _dHash) private {
         dataHashes.push(_dHash); 
         uint index = dataHashes.length - 1;
-        uint tokenId = ownerToToken[msg.sender]; 
-        ownerToData[tokenId].push(index); 
+        uint tokenId = ownerToIdentity[msg.sender]; 
+        ownerToDataIndexes[tokenId].push(index); 
         dataToOwner[_dHash] = tokenId;
 
         emit DataSubmitted(msg.sender, tokenId, _dHash); 

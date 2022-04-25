@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /** @dev Contract module which provides an identity creation mechanism 
- *  that allow users to create and burn their identities.  
+ *  that allow users to create and burn (optional feature) their identities.  
 */
 
 contract IdentityToken is ERC721 {
@@ -15,7 +15,7 @@ contract IdentityToken is ERC721 {
     enum UserStatus { NotRegistered, Registered }
 
     // Mapping from owner to Identity token
-    mapping(address => uint) public ownerToToken;  
+    mapping(address => uint) public ownerToIdentity;  
 
     // Mapping from user to registration status 
     mapping(address => UserStatus) public registrations; 
@@ -23,12 +23,12 @@ contract IdentityToken is ERC721 {
     /**
      * @dev Emitted when a new Identity is created 
     */
-    event IdentityCreated(address owner, uint tokenId);
+    event IdentityCreated(address caller, uint tokenId);
 
     /**
      * @dev Emitted when identity owner burn his token
     */
-    event IdentityDestroyed(address owner, uint tokenId);
+    event IdentityDestroyed(address owner, uint ownerId);
 
     constructor(string memory name_, string memory symbol_)
         ERC721(name_, symbol_)
@@ -40,7 +40,7 @@ contract IdentityToken is ERC721 {
      * @dev Throws if called by any account other than token owner.
     */
     modifier onlyIdentityOwner(uint _tokenId) {
-        require(_tokenId == ownerToToken[msg.sender], "REJUVE: Only Identity Owner");
+        require(_tokenId == ownerToIdentity[msg.sender], "REJUVE: Only Identity Owner");
         _;
     }
 
@@ -70,7 +70,7 @@ contract IdentityToken is ERC721 {
     function burnIdentity(uint _tokenId) external onlyIdentityOwner(_tokenId) {
         _burn(_tokenId);
         registrations[msg.sender] = UserStatus.NotRegistered;
-        ownerToToken[msg.sender] = 0;
+        ownerToIdentity[msg.sender] = 0;
 
         emit IdentityDestroyed(msg.sender, _tokenId);
     }
@@ -81,7 +81,7 @@ contract IdentityToken is ERC721 {
      * @dev returns token id (Identity) of the given address.
     */
     function getOwnerId(address _owner) public view returns (uint) { 
-        return ownerToToken[_owner]; 
+        return ownerToIdentity[_owner]; 
     }
 
 //----------------------------- PRIVATE FUNCTIONS -----------------------------    
@@ -94,7 +94,7 @@ contract IdentityToken is ERC721 {
         uint tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(msg.sender, tokenId);       
-        ownerToToken[msg.sender] = tokenId;
+        ownerToIdentity[msg.sender] = tokenId;
         registrations[msg.sender] = UserStatus.Registered;
 
         emit IdentityCreated(msg.sender, tokenId);
