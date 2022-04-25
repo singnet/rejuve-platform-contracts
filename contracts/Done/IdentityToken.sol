@@ -4,8 +4,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /** @dev Contract module which provides an identity creation mechanism 
- *  that allow users to create and burn their identities. 
- *  Only Identity owner can burn their identity.  
+ *  that allow users to create and burn their identities.  
 */
 
 contract IdentityToken is ERC721 {
@@ -31,8 +30,8 @@ contract IdentityToken is ERC721 {
     */
     event IdentityDestroyed(address owner, uint tokenId);
 
-    constructor(string memory _name, string memory _symbol)
-        ERC721(_name,_symbol)
+    constructor(string memory name_, string memory symbol_)
+        ERC721(name_, symbol_)
     {
         _tokenIdCounter.increment();
     }
@@ -40,7 +39,7 @@ contract IdentityToken is ERC721 {
     /**
      * @dev Throws if called by any account other than token owner.
     */
-    modifier onlyIdentityOwner(uint256 _tokenId) {
+    modifier onlyIdentityOwner(uint _tokenId) {
         require(_tokenId == ownerToToken[msg.sender], "REJUVE: Only Identity Owner");
         _;
     }
@@ -59,16 +58,16 @@ contract IdentityToken is ERC721 {
      * @notice Only one identity token per user
      * @dev Create token and assign token id to user 
     */
-    function createIdentityToken() external {
+    function createIdentity() external {
         require(registrations[msg.sender] == UserStatus.NotRegistered, "REJUVE: One identity per user");
-        _createIdentityToken();
+        _createIdentity();
     }
       
     /** 
      * @notice Burn identity token 
      * @dev only identity owner can burn his token
     */
-    function burnIdentity(uint256 _tokenId) external onlyIdentityOwner(_tokenId) {
+    function burnIdentity(uint _tokenId) external onlyIdentityOwner(_tokenId) {
         _burn(_tokenId);
         registrations[msg.sender] = UserStatus.NotRegistered;
         ownerToToken[msg.sender] = 0;
@@ -91,9 +90,8 @@ contract IdentityToken is ERC721 {
      * @dev Private function to create identity token.
      * @return uint new token id created against caller 
     */
-
-    function _createIdentityToken() private returns(uint256) { 
-        uint256 tokenId = _tokenIdCounter.current();
+    function _createIdentity() private returns(uint) { 
+        uint tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(msg.sender, tokenId);       
         ownerToToken[msg.sender] = tokenId;
@@ -102,6 +100,5 @@ contract IdentityToken is ERC721 {
         emit IdentityCreated(msg.sender, tokenId);
         return tokenId;
     }
-
 
 }
