@@ -14,11 +14,22 @@ contract IdentityToken is ERC721 {
     Counters.Counter private _tokenIdCounter;
 
     enum UserStatus { NotRegistered, Registered }
+
+    // Mapping from owner to Identity token
     mapping(address => uint) public ownerToToken;  
+
+    // Mapping from user to registration status 
     mapping(address => UserStatus) public registrations; 
 
-    event IdentityCreated(address,uint);
-    event IdentityDestroyed(address,uint);
+    /**
+     * @dev Emitted when a new Identity is created 
+    */
+    event IdentityCreated(address owner, uint tokenId);
+
+    /**
+     * @dev Emitted when identity owner burn his token
+    */
+    event IdentityDestroyed(address owner, uint tokenId);
 
     constructor(string memory _name, string memory _symbol)
         ERC721(_name,_symbol)
@@ -26,11 +37,17 @@ contract IdentityToken is ERC721 {
         _tokenIdCounter.increment();
     }
 
+    /**
+     * @dev Throws if called by any account other than token owner.
+    */
     modifier onlyIdentityOwner(uint256 _tokenId) {
         require(_tokenId == ownerToToken[msg.sender], "REJUVE: Only Identity Owner");
         _;
     }
 
+    /**
+     * @dev Throws if called by an unregistered account.
+    */
     modifier ifRegistered() {
         require(registrations[msg.sender] == UserStatus.Registered, "REJUVE: Not Registered");
         _;
@@ -61,11 +78,19 @@ contract IdentityToken is ERC721 {
 
 //----------------------------- ALL VIEWS --------------------------------
 
+    /**
+     * @dev returns token id (Identity) of the given address.
+    */
     function getOwnerId(address _owner) public view returns (uint) { 
         return ownerToToken[_owner]; 
     }
 
 //----------------------------- PRIVATE FUNCTIONS -----------------------------    
+
+    /**
+     * @dev Private function to create identity token.
+     * @return uint new token id created against caller 
+    */
 
     function _createIdentityToken() private returns(uint256) { 
         uint256 tokenId = _tokenIdCounter.current();
