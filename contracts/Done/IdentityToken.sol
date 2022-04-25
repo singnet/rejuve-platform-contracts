@@ -59,7 +59,7 @@ contract IdentityToken is ERC721 {
      * @dev Create token and assign token id to user 
     */
     function createIdentity() external {
-        require(registrations[msg.sender] == UserStatus.NotRegistered, "REJUVE: One identity per user");
+        require(registrations[msg.sender] == UserStatus.NotRegistered, "REJUVE: One Identity Per User");
         _createIdentity();
     }
       

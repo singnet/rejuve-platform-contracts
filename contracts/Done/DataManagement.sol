@@ -12,22 +12,46 @@ contract DataManagement is IdentityToken {
 
     enum PermissionState { NotPermitted, Permitted, Rejected } // what's next if data owner rejects data usage request 
 
-    mapping(bytes32 => bytes32[]) dataToPermissions; // test
-    mapping(bytes32 => uint) dataToOwner; // dataHash to identity token - data to owner 
-    mapping(uint => bytes32[]) ownerToPermissions; // tokenId(owner) to permission array
-    mapping(uint => uint[]) ownerToData; // token id to index array 
-    mapping(bytes32 => mapping(uint => PermissionState)) dataToProductPermission; // dataHash => productUid => permissionState
+    mapping(bytes32 => bytes32[]) dataToPermissions; // @dev test mapping if needed (during development)
+
+    // Mapping from data hash to owner identity 
+    mapping(bytes32 => uint) dataToOwner; 
+
+    // Mapping from owner identity to permission hashes
+    mapping(uint => bytes32[]) ownerToPermissions; 
+
+    // Mapping from owner identity to indexes [dataHashes]
+    mapping(uint => uint[]) ownerToData; 
+
+    // Mapping from data hash to nextProductUID to permission state
+    mapping(bytes32 => mapping(uint => PermissionState)) dataToProductPermission; 
     
+    // Array to store all data hashes 
     bytes32[] dataHashes; 
     
-    event DataSubmitted(address, uint, bytes32); // owner address, identity id, dataHash
-    event PermissionRequested(uint, bytes32, uint); // lab id, data hash, product uid 
-    event PermissionGranted(bytes32); // permission hash
+    /**
+     * @dev Emitted when a new data hash is submitted  
+    */
+    event DataSubmitted(address dataOwner, uint dataOwnerId, bytes32 dataHash);
+
+    /**
+     * @dev Emitted when permission is requested to access a specific data 
+    */
+    event PermissionRequested(uint requesterId, bytes32 dataHash, uint nextProductUID); 
+
+    /**
+     * @dev Emitted when permission is granted to access requested data 
+    */
+    event PermissionGranted(uint requesterId, bytes32 dataHash, uint nextProductUID, bytes32 permissionHash); 
 
     constructor(string memory _name, string memory _symbol) 
     IdentityToken(_name,_symbol)
     {}
 
+
+    /**
+     * @dev Throws if called by any account other than data owner.
+    */
     modifier onlyDataOwner(bytes32 _dHash) {
         uint id = dataToOwner[_dHash];
         require(id == ownerToToken[msg.sender], "REJUVE: Only Data Owner");
@@ -49,16 +73,16 @@ contract DataManagement is IdentityToken {
     /**
      * @notice Labs can request permission for data usage (Pay rejuve token for data use - add later)
      * @dev Caller should be owner of given Lab ID
-     * @param _labId Lab identity token ID
-     * @param _nextProductUid AI suggested product ID 
+     * @param _requesterId requester identity token ID
+     * @param _nextProductUID AI suggested product ID 
      * @param _dHash Data hash for which permission is granting
     */
 
-    function requestPermission(uint _labId, bytes32 _dHash, uint _nextProductUid) external ifRegistered { 
-        require(msg.sender == ownerOf(_labId), "REJUVE: Caller is not owner of Lab ID");
+    function requestPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegistered { 
+        require(msg.sender == ownerOf(_requesterId), "REJUVE: Caller is not owner of Lab ID");
         //check user sent amount after integrating Rejuve utility token
 
-        emit PermissionRequested(_labId,_dHash,_nextProductUid);
+        emit PermissionRequested(_requesterId, _dHash, _nextProductUID);
     }
 
 //------------------------------ Step 4: Grant Permission By Data Owner ---------------------
@@ -66,8 +90,8 @@ contract DataManagement is IdentityToken {
     /**
      * @notice Only data owner can grant permission 
     */
-    function grantPermission(uint _labId, bytes32 _dHash, uint _nextProductUid) external ifRegistered onlyDataOwner(_dHash){ // only called by owner of data
-        _grantPermission(_labId,_dHash,_nextProductUid);
+    function grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegistered onlyDataOwner(_dHash){ // only called by owner of data
+        _grantPermission(_requesterId, _dHash, _nextProductUID);
     }
 
 //----------------------------- OTHER SPPORTIVE PUBLIC VIEWS ---------------------
@@ -93,16 +117,16 @@ contract DataManagement is IdentityToken {
         emit DataSubmitted(msg.sender, tokenId, _dHash); 
     }
 
-    function _grantPermission(uint _labId, bytes32 _dHash, uint _nextProductUid) private {
-        bytes32 permissionHash = _generatePermissionHash(_labId,_dHash,_nextProductUid);
+    function _grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) private {
+        bytes32 permissionHash = _generatePermissionHash(_requesterId, _dHash, _nextProductUID);
         ownerToPermissions[getOwnerId(msg.sender)].push(permissionHash); // save all permissions hashes 
-        dataToProductPermission[_dHash][_nextProductUid] = PermissionState.Permitted;
+        dataToProductPermission[_dHash][_nextProductUID] = PermissionState.Permitted;
 
-        emit PermissionGranted(permissionHash);
+        emit PermissionGranted(_requesterId, _dHash, _nextProductUID, permissionHash);
     }
 
-    function _generatePermissionHash(uint _labId, bytes32 _dHash, uint _nextProductUid) private pure returns(bytes32) {
-        return keccak256(abi.encodePacked(_labId,_dHash,_nextProductUid));
+    function _generatePermissionHash(uint _requesterId, bytes32 _dHash, uint _nextProductUID) private pure returns(bytes32) {
+        return keccak256(abi.encodePacked(_requesterId, _dHash, _nextProductUID));
     }
 
 }
