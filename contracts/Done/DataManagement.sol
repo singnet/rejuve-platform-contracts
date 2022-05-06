@@ -23,6 +23,9 @@ contract DataManagement is IdentityToken {
     // Mapping from owner identity to indexes => [dataHashes]
     mapping(uint => uint[]) ownerToDataIndexes; 
 
+    // Mappin from OwnerIdentity to product UID to data hash
+    //mapping(uint => mapping(uint => bytes32[])) ownerToProductToData;
+
     // Mapping from data hash to nextProductUID to permission state
     mapping(bytes32 => mapping(uint => PermissionState)) dataToProductPermission; 
     
@@ -121,6 +124,9 @@ contract DataManagement is IdentityToken {
     function _grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) private {
         bytes32 permissionHash = _generatePermissionHash(_requesterId, _dHash, _nextProductUID);
         ownerToPermissions[getOwnerId(msg.sender)].push(permissionHash); // save all permissions hashes 
+
+        //uint id = dataToOwner[_dHash]; // get owner id
+        //ownerToProductToData[dataToOwner[_dHash]][_nextProductUID].push(_dHash);
         dataToProductPermission[_dHash][_nextProductUID] = PermissionState.Permitted;
 
         emit PermissionGranted(_requesterId, _dHash, _nextProductUID, permissionHash);
