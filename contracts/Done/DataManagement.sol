@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IdentityToken.sol";
 
 /** @dev Contract module which provides data submission, 
@@ -13,6 +14,7 @@ contract DataManagement {
     enum PermissionState { NotPermitted, Permitted, Rejected } // what's next if data owner rejects data usage request 
 
     IdentityToken private _identityToken;
+    IERC20 private _rejuveToken; 
 
     mapping(bytes32 => bytes32[]) dataToPermissions; // @dev test mapping if needed (during development)
 
@@ -51,9 +53,10 @@ contract DataManagement {
     */
     event PermissionGranted(uint requesterId, bytes32 dataHash, uint nextProductUID, bytes32 permissionHash); 
 
-    constructor(IdentityToken identityToken_) 
+    constructor(IdentityToken identityToken_, IERC20 rejuveToken_) 
     {
         _identityToken = identityToken_;
+        _rejuveToken = rejuveToken_;
     }
 
     /**
@@ -83,7 +86,7 @@ contract DataManagement {
         _submitData(_dHash);
     }
 
-//------------------------------ Step 3: Permission Request By researcher / Lab ---------------------
+//----------------- Step 3: Permission Request By researcher / Lab ---------------
 
     /**
      * @notice A caller can ask for permission to access specific data (Pay rejuve token for data use - add later)
@@ -100,7 +103,7 @@ contract DataManagement {
         emit PermissionRequested(_requesterId, _dHash, _nextProductUID);
     }
 
-//------------------------------ Step 4: Grant Permission By Data Owner ---------------------
+//--------------------- Step 4: Grant Permission By Data Owner ---------------------
 
     /**
      * @notice Only data owner can grant permission 
@@ -109,7 +112,7 @@ contract DataManagement {
         _grantPermission(_requesterId, _dHash, _nextProductUID);
     }
 
-//----------------------------- OTHER SPPORTIVE VIEWS ---------------------
+//----------------------------- OTHER SPPORTIVE VIEWS ------------------------------
 
     /**
      * @dev Get index of [datahashes] 
@@ -122,6 +125,11 @@ contract DataManagement {
 
 //----------------------------- PRIVATE FUNCTIONS -----------------------------   
 
+    /**
+     * @dev Private function to submit data 
+     * - Link index of data hash to user identity
+     * - Save owner againt data 
+    */
     function _submitData(bytes32 _dHash) private {
         dataHashes.push(_dHash); 
         uint index = dataHashes.length - 1;
@@ -132,12 +140,15 @@ contract DataManagement {
         emit DataSubmitted(msg.sender, tokenId, _dHash); 
     }
 
+    /**
+     * @dev Private function to grant permission
+     * - Generate permission hash via ~keccak256
+     * - Save all permissions against each owner
+     * - Mark data permitted to be used in a specific product 
+    */    
     function _grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) private {
         bytes32 permissionHash = _generatePermissionHash(_requesterId, _dHash, _nextProductUID);
         ownerToPermissions[_identityToken.getOwnerIdentity(msg.sender)].push(permissionHash); // save all permissions hashes 
-
-        //uint id = dataToOwner[_dHash]; // get owner id
-        //ownerToProductToData[dataToOwner[_dHash]][_nextProductUID].push(_dHash);
         dataToProductPermission[_dHash][_nextProductUID] = PermissionState.Permitted;
 
         emit PermissionGranted(_requesterId, _dHash, _nextProductUID, permissionHash);
