@@ -8,9 +8,11 @@ import "./IdentityToken.sol";
  *  Data owner can grant permission to access the data.
 */
 
-contract DataManagement is IdentityToken {
+contract DataManagement {
 
     enum PermissionState { NotPermitted, Permitted, Rejected } // what's next if data owner rejects data usage request 
+
+    IdentityToken private _identityToken;
 
     mapping(bytes32 => bytes32[]) dataToPermissions; // @dev test mapping if needed (during development)
 
@@ -49,16 +51,25 @@ contract DataManagement is IdentityToken {
     */
     event PermissionGranted(uint requesterId, bytes32 dataHash, uint nextProductUID, bytes32 permissionHash); 
 
-    constructor(string memory name_, string memory symbol_) 
-    IdentityToken(name_, symbol_)
-    {}
+    constructor(IdentityToken identityToken_) 
+    {
+        _identityToken = identityToken_;
+    }
 
     /**
      * @dev Throws if called by any account other than data owner.
     */
     modifier onlyDataOwner(bytes32 _dHash) {
         uint id = dataToOwner[_dHash];
-        require(id == ownerToIdentity[msg.sender], "REJUVE: Only Data Owner");
+        require(id == _identityToken.getOwnerIdentity(msg.sender), "REJUVE: Only Data Owner");
+        _;
+    }
+
+    /**
+     * @dev Throws if called by unregistered user.
+    */
+    modifier ifRegisteredUser {
+        require(_identityToken.ifRegistered(msg.sender) == 1, "REJUVE: Not Registered");
         _;
     }
 
@@ -68,11 +79,11 @@ contract DataManagement is IdentityToken {
      * @notice Allow only registered users to submit data. 
      * @dev Link owner identity to submitted data hash
     */
-    function submitData(bytes32 _dHash) external ifRegistered {
+    function submitData(bytes32 _dHash) external ifRegisteredUser {
         _submitData(_dHash);
     }
 
-//------------------------------ Step 3: Permission Request By Lab ---------------------
+//------------------------------ Step 3: Permission Request By researcher / Lab ---------------------
 
     /**
      * @notice A caller can ask for permission to access specific data (Pay rejuve token for data use - add later)
@@ -82,8 +93,8 @@ contract DataManagement is IdentityToken {
      * @param _dHash Data hash for which permission is requested
     */
 
-    function requestPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegistered { 
-        require(msg.sender == ownerOf(_requesterId), "REJUVE: Caller is not owner of Lab ID");
+    function requestPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegisteredUser { 
+        require(msg.sender == _identityToken.ownerOf(_requesterId), "REJUVE: Caller is not owner of Lab ID");
         //check user sent amount after integrating Rejuve utility token
 
         emit PermissionRequested(_requesterId, _dHash, _nextProductUID);
@@ -94,7 +105,7 @@ contract DataManagement is IdentityToken {
     /**
      * @notice Only data owner can grant permission 
     */
-    function grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegistered onlyDataOwner(_dHash){ // only called by owner of data
+    function grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegisteredUser onlyDataOwner(_dHash){ // only called by owner of data
         _grantPermission(_requesterId, _dHash, _nextProductUID);
     }
 
@@ -114,7 +125,7 @@ contract DataManagement is IdentityToken {
     function _submitData(bytes32 _dHash) private {
         dataHashes.push(_dHash); 
         uint index = dataHashes.length - 1;
-        uint tokenId = ownerToIdentity[msg.sender]; 
+        uint tokenId = _identityToken.getOwnerIdentity(msg.sender); 
         ownerToDataIndexes[tokenId].push(index); 
         dataToOwner[_dHash] = tokenId;
 
@@ -123,7 +134,7 @@ contract DataManagement is IdentityToken {
 
     function _grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) private {
         bytes32 permissionHash = _generatePermissionHash(_requesterId, _dHash, _nextProductUID);
-        ownerToPermissions[getOwnerId(msg.sender)].push(permissionHash); // save all permissions hashes 
+        ownerToPermissions[_identityToken.getOwnerIdentity(msg.sender)].push(permissionHash); // save all permissions hashes 
 
         //uint id = dataToOwner[_dHash]; // get owner id
         //ownerToProductToData[dataToOwner[_dHash]][_nextProductUID].push(_dHash);
