@@ -118,7 +118,7 @@ contract DataManagement {
      * @dev Get index of [datahashes] 
      * Get data based on index
     */
-    function getDataByTokenId(uint _tokenId, uint _index) internal view returns(bytes32) {
+    function getDataByTokenId(uint _tokenId, uint _index) external view returns(bytes32) {
         uint index = ownerToDataIndexes[_tokenId][_index] ; // returning index of dataHashes array
         return dataHashes[index];  
     }
