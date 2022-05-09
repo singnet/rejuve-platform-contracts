@@ -15,10 +15,10 @@ contract IdentityToken is ERC721 {
     enum UserStatus { NotRegistered, Registered }
 
     // Mapping from owner to Identity token
-    mapping(address => uint) public ownerToIdentity;  
+    mapping(address => uint) ownerToIdentity;  
 
     // Mapping from user to registration status 
-    mapping(address => UserStatus) public registrations; 
+    mapping(address => UserStatus) registrations; 
 
     /**
      * @dev Emitted when a new Identity is created 
@@ -41,14 +41,6 @@ contract IdentityToken is ERC721 {
     */
     modifier onlyIdentityOwner(uint _tokenId) {
         require(_tokenId == ownerToIdentity[msg.sender], "REJUVE: Only Identity Owner");
-        _;
-    }
-
-    /**
-     * @dev Throws if called by an unregistered account.
-    */
-    modifier ifRegistered() {
-        require(registrations[msg.sender] == UserStatus.Registered, "REJUVE: Not Registered");
         _;
     }
 
@@ -75,13 +67,20 @@ contract IdentityToken is ERC721 {
         emit IdentityDestroyed(msg.sender, _tokenId);
     }
 
-//----------------------------- ALL VIEWS --------------------------------
+//----------------------------- EXTERNAL VIEWS --------------------------------
 
     /**
-     * @dev returns token id (Identity) of the given address.
+     * @dev Returns token id (Identity) of the given address.
     */
-    function getOwnerId(address _owner) public view returns (uint) { 
+    function getOwnerIdentity(address _owner) external view returns(uint) { 
         return ownerToIdentity[_owner]; 
+    }
+
+    /**
+     * @dev Returns caller registration status.
+    */
+    function ifRegistered(address _userAddress) external view returns(uint8) {
+        return uint8(registrations[_userAddress]);
     }
 
 //----------------------------- PRIVATE FUNCTIONS -----------------------------    
