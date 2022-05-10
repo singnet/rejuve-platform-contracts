@@ -8,6 +8,8 @@ import "./ProductNFTAbstract.sol";
 
 contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
 
+    enum RewardStatus { NotRewarded, Rewarded }
+
     // Product NFT contract address
     address private _productNFT; 
 
@@ -25,6 +27,14 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
 
     // Mapping from data contributor to product UID to share amount
     mapping(address => mapping( uint => uint)) userToProductToShare; 
+
+    // Mapping from user to share reward status 
+    mapping(address => RewardStatus) userToReward; 
+
+    /**
+     * @dev Emitted when product shares are distributed 
+    */
+    event ShardDistributed(uint productUID, address dataOwner, uint share);
 
     constructor(
         string memory name_,
@@ -114,7 +124,7 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
     // }
 
 
-//----------------------------------- PRIVATE ------------------------------------------------------------------
+//---------------------------------------------- PRIVATE ------------------------------------------------
 
     /**
      * @notice Transfer product NFT ownership to this contract
@@ -143,14 +153,19 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
         ProductNFTAbstract productNFT = ProductNFTAbstract(_productNFT);
         bytes32[] memory productDataHashes = getData(_productUID);
 
-        for(uint i = 0; i < productDataHashes.length; i++) {
-
+        for(uint i = 0; i < productDataHashes.length; i++){
             address dataOwner = productNFT.getDataOwnerAddress(productDataHashes[i]);
-            uint ownerShareAmount = _calculateShareAmount(dataOwner, _productUID, productNFT.getDataCredit(productDataHashes[i], _productUID));  
-           
-            require(ownerShareAmount <= totalShareLeft(),"REJUVE: Exceed Share Amount");
-            _mint(dataOwner, ownerShareAmount); 
 
+            require(userToReward[dataOwner] == RewardStatus.NotRewarded, "REJUVE: Already rewarded");
+
+            uint ownerShareAmount = _calculateShareAmount(dataOwner, _productUID, productNFT.getDataCredit(productDataHashes[i], _productUID));  
+            
+            require(ownerShareAmount <= totalShareLeft(), "REJUVE: Exceed share amount");
+            
+            _mint(dataOwner, ownerShareAmount); 
+            userToReward[dataOwner] = RewardStatus.Rewarded;    
+
+            emit ShardDistributed(_productUID, dataOwner, ownerShareAmount);
         }
     }
 
