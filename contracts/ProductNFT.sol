@@ -41,6 +41,18 @@ contract ProductNFT is DataManagement {
 
         emit ProductCreated(_productCreatorId, _productUID); 
     }
+
+    /**
+     * @notice Link new data to existing product
+     * @dev only product owner (Lab/rejuve) can call
+     * Experimental
+    */
+    function linkNewData(uint _productUID, bytes32 _dataHash, uint _creditScore) external { // admin not added yet
+        require(dataToProductPermission[_dataHash][_productUID] == PermissionState.Permitted, "REJUVE: Data Not Permitted");
+        productToData[_productUID].push(_dataHash);      
+        dataToProductToCredit[_dataHash][_productUID] = _creditScore;  
+    }
+    
 //-------------------------------------- VIEWS--------------------------------------------------
 
     /**
@@ -76,15 +88,13 @@ contract ProductNFT is DataManagement {
     function _createProduct(uint _productUID, bytes32[] memory _dataHashes, uint[] memory _creditScores) private {
 
         for(uint i = 0; i < _dataHashes.length; i++) {
-
             if(dataToProductPermission[_dataHashes[i]][_productUID] == PermissionState.Permitted){ 
-                
                 dataToProductToCredit[_dataHashes[i]][_productUID] = _creditScores[i]; 
                 productToData[_productUID].push(_dataHashes[i]);
-            
             }
- 
+            else{break;}
         } 
+
         _safeMint(msg.sender, _productUID); 
     }
 
