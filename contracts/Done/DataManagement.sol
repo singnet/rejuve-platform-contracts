@@ -123,6 +123,14 @@ contract DataManagement {
         return dataHashes[index];  
     }
 
+    function getPermissionStatus(bytes32 _dHash, uint _productUID) external view returns(uint) {
+        return uint(dataToProductPermission[_dHash][_productUID]);
+    }
+
+    function getDataOwnerId(bytes32 _dHash) external view returns(uint) {
+        return dataToOwner[_dHash];
+    }
+
 //----------------------------- PRIVATE FUNCTIONS -----------------------------   
 
     /**
