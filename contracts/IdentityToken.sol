@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.9;
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /** @dev Contract module which provides an identity creation mechanism 
  *  that allow users to create and burn (optional feature) their identities.  
 */
 
-contract IdentityToken is ERC721 {
+contract IdentityToken is ERC721URIStorage {
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
@@ -50,9 +51,9 @@ contract IdentityToken is ERC721 {
      * @notice Only one identity token per user
      * @dev Create token and assign token id to user 
     */
-    function createIdentity() external {
+    function createIdentity(string memory _tokenURI) external {
         require(registrations[msg.sender] == UserStatus.NotRegistered, "REJUVE: One Identity Per User");
-        _createIdentity();
+        _createIdentity(_tokenURI);
     }
       
     /** 
@@ -89,10 +90,11 @@ contract IdentityToken is ERC721 {
      * @dev Private function to create identity token.
      * @return uint new token id created against caller 
     */
-    function _createIdentity() private returns(uint) { 
+    function _createIdentity(string memory _tokenURI) private returns(uint) { 
         uint tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(msg.sender, tokenId);       
+        _safeMint(msg.sender, tokenId); 
+        _setTokenURI(tokenId, _tokenURI);      
         ownerToIdentity[msg.sender] = tokenId;
         registrations[msg.sender] = UserStatus.Registered;
 
