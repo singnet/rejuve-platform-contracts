@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./Done/DataManagement.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "./IdentityToken.sol";
+import "./DataManagement.sol";
 
 /** @dev Contract module which provides product creation mechanism. 
  *  that allow a registered identity to create a product.  
 */
 
-contract ProductNFT is ERC721 {
+contract ProductNFT is ERC721URIStorage {
 
     // Mapping from data hash to product UID to credit score
     mapping(bytes32 => mapping(uint => uint)) dataToProductToCredit; 
@@ -21,6 +23,11 @@ contract ProductNFT is ERC721 {
      * @dev Emitted when a new product is created 
     */
     event ProductCreated(uint creatorID, uint productUID);
+
+    /**
+     * @dev Emitted when a new data hash is linked with exisitng product
+    */
+    event NewDataLinked(uint productUID, bytes32 dataHash, uint creditScore);
 
     constructor(string memory name_, string memory symbol_, IdentityToken identityToken_, DataManagement dataMgt_) 
         ERC721(name_, symbol_)
@@ -47,10 +54,10 @@ contract ProductNFT is ERC721 {
      * @param _dataHashes list of data hashes used in this product 
      * @param _creditScores AI assigned credit scores to each data hash
     */
-    function createProduct(uint _productCreatorId, uint _productUID, bytes32[] memory _dataHashes, uint[] memory _creditScores) external ifRegisteredUser  {
+    function createProduct(uint _productCreatorId, uint _productUID, string memory _productURI, bytes32[] memory _dataHashes, uint[] memory _creditScores) external ifRegisteredUser  {
         require(msg.sender == _identityToken.ownerOf(_productCreatorId), "REJUVE: Caller is not owner of lab ID");
         require(_dataHashes.length == _creditScores.length, "REJUVE: Not equal length");
-        _createProduct(_productUID, _dataHashes, _creditScores);
+        _createProduct(_productUID, _productURI, _dataHashes, _creditScores);
 
         emit ProductCreated(_productCreatorId, _productUID); 
     }
@@ -63,7 +70,9 @@ contract ProductNFT is ERC721 {
     function linkNewData(uint _productUID, bytes32 _dataHash, uint _creditScore) external { // admin not added yet
         require(_dataMgt.getPermissionStatus(_dataHash, _productUID) == 1, "REJUVE: Data Not Permitted");
         productToData[_productUID].push(_dataHash);      
-        dataToProductToCredit[_dataHash][_productUID] = _creditScore;  
+        dataToProductToCredit[_dataHash][_productUID] = _creditScore; 
+        
+        emit NewDataLinked(_productUID, _dataHash, _creditScore); 
     }
     
 //-------------------------------------- VIEWS--------------------------------------------------
@@ -98,19 +107,25 @@ contract ProductNFT is ERC721 {
      * - Link product UID to all data hashes     
      * - Use product UID as token id
     */
-    function _createProduct(uint _productUID, bytes32[] memory _dataHashes, uint[] memory _creditScores) private {
+    function _createProduct(uint _productUID, string memory _productURI, bytes32[] memory _dataHashes, uint[] memory _creditScores) private {
 
+        bool notPermitted; // false
         for(uint i = 0; i < _dataHashes.length; i++) {
 
-            if(_dataMgt.getPermissionStatus(_dataHashes[i], _productUID) == 1){ 
+            if(_dataMgt.getPermissionStatus(_dataHashes[i], _productUID) == 1){ // 1 = permitted , 0 = not permitted
                 dataToProductToCredit[_dataHashes[i]][_productUID] = _creditScores[i]; 
                 productToData[_productUID].push(_dataHashes[i]);
             }
-            else{break;}
+            else{
+                notPermitted = true;
+                break;
+            }
 
         } 
-
+                  
+        require (!notPermitted, "REJUVE: Data Not Permitted");
         _safeMint(msg.sender, _productUID); 
+        _setTokenURI(_productUID, _productURI);
     }
 
 }
