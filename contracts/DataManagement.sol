@@ -11,12 +11,11 @@ import "./IdentityToken.sol";
 
 contract DataManagement {
 
-    enum PermissionState { NotPermitted, Permitted, Rejected } // what's next if data owner rejects data usage request 
+    enum RequestState { NotRequested, Requested }
+    enum PermissionState { NotPermitted, Permitted } 
 
     IdentityToken private _identityToken;
     IERC20 private _rejuveToken; 
-
-    mapping(bytes32 => bytes32[]) dataToPermissions; // @dev test mapping if needed (during development)
 
     // Mapping from data hash to owner identity 
     mapping(bytes32 => uint) dataToOwner; 
@@ -27,8 +26,8 @@ contract DataManagement {
     // Mapping from owner identity to indexes => [dataHashes]
     mapping(uint => uint[]) ownerToDataIndexes; 
 
-    // Mappin from OwnerIdentity to product UID to data hash
-    //mapping(uint => mapping(uint => bytes32[])) ownerToProductToData;
+    // Mapping from data hash to nextProductUID to request state
+    mapping(bytes32 => mapping(uint => RequestState)) dataToProductRequest; 
 
     // Mapping from data hash to nextProductUID to permission state
     mapping(bytes32 => mapping(uint => PermissionState)) dataToProductPermission; 
@@ -97,8 +96,10 @@ contract DataManagement {
     */
 
     function requestPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegisteredUser { 
-        require(msg.sender == _identityToken.ownerOf(_requesterId), "REJUVE: Caller is not owner of Lab ID");
+        require(msg.sender == _identityToken.ownerOf(_requesterId), "REJUVE: Caller is not owner of ID");
+        require(dataToProductRequest[_dHash][_nextProductUID] == RequestState.NotRequested, "REJUVE: Data requested already");
         //check user sent amount after integrating Rejuve utility token
+        dataToProductRequest[_dHash][_nextProductUID] = RequestState.Requested; 
 
         emit PermissionRequested(_requesterId, _dHash, _nextProductUID);
     }
@@ -109,6 +110,8 @@ contract DataManagement {
      * @notice Only data owner can grant permission 
     */
     function grantPermission(uint _requesterId, bytes32 _dHash, uint _nextProductUID) external ifRegisteredUser onlyDataOwner(_dHash){ // only called by owner of data
+        
+        require(dataToProductRequest[_dHash][_nextProductUID] == RequestState.Requested, "REJUVE: Data not requested");
         _grantPermission(_requesterId, _dHash, _nextProductUID);
     }
 
@@ -123,8 +126,8 @@ contract DataManagement {
         return dataHashes[index];  
     }
 
-    function getPermissionStatus(bytes32 _dHash, uint _productUID) external view returns(uint) {
-        return uint(dataToProductPermission[_dHash][_productUID]);
+    function getPermissionStatus(bytes32 _dHash, uint _productUID) external view returns(uint8) {
+        return uint8(dataToProductPermission[_dHash][_productUID]);
     }
 
     function getDataOwnerId(bytes32 _dHash) external view returns(uint) {
