@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 import "@openzeppelin/contracts/interfaces/IERC721Receiver.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Interfaces/RFT.sol";
 import "./ProductNFTAbstract.sol";
 
-contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
+contract ProductShards is ERC20, ERC20Capped, IERC721Receiver, RFT, Ownable {
 
     enum RewardStatus { NotRewarded, Rewarded }
 
@@ -16,17 +17,11 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
     // Product NFT token ID
     uint productNftID; 
 
-    // Initial share supply allowed to be minted
-    uint productShareTarget; 
-
     // Initial buy price for entrepreneurs
     uint sharePrice; 
 
     // Share fraction division
     uint8 shareDecimal;    
-
-    // Mapping from data contributor to product UID to share amount
-    mapping(address => mapping( uint => uint)) userToProductToShare; 
 
     // Mapping from user to share reward status 
     mapping(address => RewardStatus) userToReward; 
@@ -39,17 +34,17 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
     constructor(
         string memory name_,
         string memory symbol_,
+        uint cap_,
         address productNFT_,
         uint productNftID_,
-        uint productShareTarget_,
         uint sharePrice_,
         uint8 shareDecimal_
     ) 
         ERC20 (name_,symbol_)
+        ERC20Capped (cap_)
     {
         _productNFT = productNFT_;
         productNftID = productNftID_;
-        productShareTarget = productShareTarget_;
         sharePrice = sharePrice_;
         shareDecimal = shareDecimal_;
     }
@@ -72,20 +67,8 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
         _createShard(_productUID);
     }
 
-
-    /**
-     * @notice Increase share amount that are allowed to be minted 
-    */
-    function increaseShareTarget(uint _addedValue) external onlyOwner {
-        productShareTarget = productShareTarget + _addedValue; // increase target amount
-    }
-
 // ------------------------------------- Other External Views ---------------------------------------------------
 
-    function onERC721Received(address, address, uint256, bytes memory) public pure override returns (bytes4) {
-        return this.onERC721Received.selector;
-    }
-    
     function parentToken() external view override returns(address _parentToken){
         return address(_productNFT);
     }
@@ -94,36 +77,20 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
         return productNftID;
     }
 
+    function getSharePrice() external view returns (uint) {
+        return sharePrice;
+    }
+
+//---------------------------------- PUBLIC OVERRIDE -----------------------------------------------------------
+    
     function decimals() public view override returns (uint8) {
         return shareDecimal;
     }
 
-    function getShareTarget() external view returns(uint) {
-        return productShareTarget;
+    function onERC721Received(address, address, uint256, bytes memory) public pure override returns (bytes4) {
+        return this.onERC721Received.selector;
     }
-
-
-//--------------------------------------- Entrepreneur -------------------------------------------------------
-
-    // function buyShare(uint _buyAmount , uint _productUID) external payable { // share purchased by entrepreneur 
-    //     uint _msgValue = msg.value;
-    //     uint tokenAmount = calculateAmount(_buyAmount);
-    //     require(_msgValue >= tokenAmount , "REJUVE: Not Enough Amount");
-    //     //require(_buyAmount<= totalSupply() - shards) check if share available
-    //     _buyShare(msg.sender, _buyAmount, _productUID);
-    // }
-
-    // function calculateAmount(uint _buyAmount) private view returns(uint) {
-    //     uint rejuveTokens = _buyAmount * sharePrice ;
-    //     return rejuveTokens;
-    // }
-
-    // function _buyShare(address _to, uint _amount , uint _productUID) private {
-    //     userToProductToShare[_to][_productUID] = _amount;
-    //     _mint(_to, _amount); // mint or transfer for entrepreneur 
-    // }
-
-
+    
 //---------------------------------------------- PRIVATE ------------------------------------------------
 
     /**
@@ -158,9 +125,9 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
 
             require(userToReward[dataOwner] == RewardStatus.NotRewarded, "REJUVE: Already rewarded");
 
-            uint ownerShareAmount = _calculateShareAmount(dataOwner, _productUID, productNFT.getDataCredit(productDataHashes[i], _productUID));  
+            uint ownerShareAmount = _calculateShareAmount(productNFT.getDataCredit(productDataHashes[i], _productUID));  
             
-            require(ownerShareAmount <= totalShareLeft(), "REJUVE: Exceed share amount");
+            //require(ownerShareAmount <= totalShareLeft(), "REJUVE: Exceed share amount");
             
             _mint(dataOwner, ownerShareAmount); 
             userToReward[dataOwner] = RewardStatus.Rewarded;    
@@ -182,16 +149,16 @@ contract ProductShards is ERC20, IERC721Receiver, RFT, Ownable {
      * @dev calculate share amount of a data contributor in a specific product 
      * as per credit score 
     */ 
-    function _calculateShareAmount(address _to, uint _productUID, uint _creditScore) private returns(uint) {
-        uint share = _creditScore;  // how credit score will be converted to share amount ?
-        userToProductToShare[_to][_productUID] = share;   
+    function _calculateShareAmount(uint _creditScore) private pure returns(uint) {
+        uint share = _creditScore;  // how credit score will be converted to share amount ? 
         return share; 
     }
 
-    /**
-     * @dev Returns target shares left to be minted 
-    */ 
-    function totalShareLeft() private view returns(uint) { 
-        return productShareTarget - totalSupply();
+    function _mint(address account, uint256 amount) internal override(ERC20, ERC20Capped) {
+        require(ERC20.totalSupply() + amount <= cap(), "ERC20Capped: cap exceeded");
+        super._mint(account, amount);
     }
+
+
+ 
 }
