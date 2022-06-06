@@ -48,11 +48,11 @@ contract IdentityToken is ERC721URIStorage {
   
     /** 
      * @notice Only one identity token per user
-     * @dev Create token and assign token id to user 
+     * @dev User or Rejuve can create identity token and assign token id to user 
     */
-    function createIdentity(string memory _tokenURI) external {
-        require(registrations[msg.sender] == UserStatus.NotRegistered, "REJUVE: One Identity Per User");
-        _createIdentity(_tokenURI);
+    function createIdentity(address _userAddress, string memory _tokenURI) external {
+        require(registrations[_userAddress] == UserStatus.NotRegistered, "REJUVE: One Identity Per User");
+        _createIdentity(_userAddress, _tokenURI);
     }
       
     /** 
@@ -89,15 +89,15 @@ contract IdentityToken is ERC721URIStorage {
      * @dev Private function to create identity token.
      * @return uint new token id created against caller 
     */
-    function _createIdentity(string memory _tokenURI) private returns(uint) { 
+    function _createIdentity(address _userAddress, string memory _tokenURI) private returns(uint) { 
         uint tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(msg.sender, tokenId); 
+        _safeMint(_userAddress, tokenId); 
         _setTokenURI(tokenId, _tokenURI);      
-        ownerToIdentity[msg.sender] = tokenId;
-        registrations[msg.sender] = UserStatus.Registered;
+        ownerToIdentity[_userAddress] = tokenId;
+        registrations[_userAddress] = UserStatus.Registered;
 
-        emit IdentityCreated(msg.sender, tokenId);
+        emit IdentityCreated(_userAddress, tokenId);
         return tokenId;
     }
 
