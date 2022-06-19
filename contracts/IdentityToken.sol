@@ -7,7 +7,9 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /** @dev Contract module which provides an identity creation mechanism 
- *  that allow users to create and burn their identities.  
+ *  that allows rejuve to create identities on the behalf of user,
+ *  taking their signature as permission to create identity. 
+ *  Also, users can burn their identities any time
 */
 
 contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
@@ -23,6 +25,9 @@ contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
 
     // Mapping from user to registration status 
     mapping(address => UserStatus) registrations; 
+
+   // Mapping from nonce to use status 
+    mapping(uint256 => bool) usedNonces;
 
     /**
      * @dev Emitted when a new Identity is created 
@@ -48,8 +53,8 @@ contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
         _;
     }
 
-    modifier ifSignedByUser(string memory _message, bytes memory _signedMessage, address _userAccount) {
-        require(verifyMessage(_message, _signedMessage, _userAccount), "REJUVE: Invalid Signature");
+    modifier ifSignedByUser(bytes memory _signature, address _signer, string memory _tokenURI, uint256 _nonce) {
+        require(verifyMessage(_signature, _signer, _tokenURI, _nonce), "REJUVE: Invalid Signature");
         _;
     }
 
@@ -57,16 +62,19 @@ contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
   
     /** 
      * @notice Only one identity token per user
-     * @dev User or Rejuve can create identity token for user 
-     * @dev User signature is mandatory
+     * @dev Rejuve/sponsor can create identity token for user. User signature is mandatory
+     * @param _signature user signature
+     * @param _signer user address 
+     * @param _tokenURI user metadata
+     * @param _nonce a unique number to prevent replay attacks
     */
-    function createIdentity(string memory _message, bytes memory _signedMessage, address _userAccount, string memory _tokenURI) 
+    function createIdentity(bytes memory _signature, address _signer, string memory _tokenURI, uint256 _nonce) 
         external 
-        whenNotPaused
-        ifSignedByUser(_message, _signedMessage, _userAccount)  
+        whenNotPaused 
+        ifSignedByUser(_signature, _signer, _tokenURI, _nonce)  
     {
-        require(registrations[_userAccount] == UserStatus.NotRegistered, "REJUVE: One Identity Per User");
-        _createIdentity(_userAccount, _tokenURI);
+        require(registrations[_signer] == UserStatus.NotRegistered, "REJUVE: One Identity Per User");
+        _createIdentity(_signer, _tokenURI);
     }
       
     /**  
@@ -149,25 +157,21 @@ contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
      * @dev Private function to verify user signature 
      * @return bool true if valid signature 
     */
-    function verifyMessage(string memory message, bytes memory signedMessage, address account) 
-        private 
-        pure 
-        returns (bool) 
-    {  
-        bytes32 messageHash = _generateMsgHash(message);
-        return messageHash
-            .toEthSignedMessageHash()
-            .recover(signedMessage) == account;
-    }
-
-    /** 
-     * @dev Generate message hash
-    */
-    function _generateMsgHash(string memory _msg) 
-        private 
-        pure 
-        returns (bytes32) 
+    function verifyMessage(bytes memory _signature, address _signer, string memory _uri, uint256 _nonce)
+        private
+        returns (bool)
     {
-        return keccak256(abi.encodePacked(_msg));
+        require(!usedNonces[_nonce],"REJUVE: Signature used already");
+        usedNonces[_nonce] = true;
+        bytes32 messagehash = keccak256(abi.encodePacked(_signer, _uri, _nonce, address(this))); // recreate message
+        address signer = messagehash.toEthSignedMessageHash().recover(_signature); // verify signer using ECDSA
+
+        if (_signer == signer) {
+            return true;
+        } 
+        
+        else {
+            return false;
+        }
     }
 }
