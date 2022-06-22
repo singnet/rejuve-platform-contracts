@@ -21,13 +21,13 @@ contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
     enum UserStatus { NotRegistered, Registered }
 
     // Mapping from owner to Identity token
-    mapping(address => uint) ownerToIdentity;  
+    mapping(address => uint) private ownerToIdentity;  
 
     // Mapping from user to registration status 
-    mapping(address => UserStatus) registrations; 
+    mapping(address => UserStatus) private registrations; 
 
    // Mapping from nonce to use status 
-    mapping(uint256 => bool) usedNonces;
+    mapping(uint256 => bool) private usedNonces;
 
     /**
      * @dev Emitted when a new Identity is created 
