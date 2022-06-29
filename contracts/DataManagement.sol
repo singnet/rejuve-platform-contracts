@@ -100,7 +100,6 @@ contract DataManagement is Ownable, Pausable  {
      * @dev Requester should be a registered identity
      * - check if requester provided correct data owner address
      * - check if valid signature is provided
-     * - 
      * @param _signer Data owner address 
      * @param _signature Data owner's signature
      * @param _dHash Data hash
@@ -152,14 +151,22 @@ contract DataManagement is Ownable, Pausable  {
         return dataHashes[index];  
     }
 
+    /**
+     * @notice permission status of a datahash for a product UID
+     * @return uint8 0 for not-permitted and 1 for permitted 
+     */
     function getPermissionStatus(bytes memory _dHash, uint _productUID) external view returns(uint8) {
         return uint8(dataToProductPermission[_dHash][_productUID]);
     }
 
+    // @return uint data owner identity token ID
     function getDataOwnerId(bytes memory _dHash) external view returns(uint) {
         return dataToOwner[_dHash];
     }
 
+    /** @notice A Data hash is allowed to be used in a product for a specific time (deadline) 
+     *  @return uint expiration time in seconds 
+     */
     function getPermissionDeadline(bytes memory _dHash, uint _nextProductUID) external view returns(uint) { 
         return dataToProductToExpiry[_dHash][_nextProductUID];
     }
