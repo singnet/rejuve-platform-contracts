@@ -16,6 +16,9 @@ import "./Interfaces/IDataManagement.sol";
 
 contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
 
+    // Mapping from product UID to initial data array length
+    mapping(uint => uint) private productToInitialLength;
+
     // Mapping from data hash to product UID to credit score
     mapping(bytes => mapping(uint => uint)) private dataToProductToCredit; 
 
@@ -35,7 +38,12 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
     */
     event NewDataLinked(uint productUID, bytes[] dataHash, uint[] creditScore);
 
-    constructor(string memory name_, string memory symbol_,  IIdentityToken identityToken_, IDataManagement dataMgt_) 
+    constructor(
+        string memory name_, 
+        string memory symbol_, 
+        IIdentityToken identityToken_, 
+        IDataManagement dataMgt_
+    ) 
         ERC721(name_, symbol_)
     {
         _identityToken = identityToken_;
@@ -105,7 +113,7 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
         
         emit NewDataLinked(_productUID, _newDataHashes, _creditScores); 
     }
-    
+
 //-------------------------------------- EXTERNAL VIEWS--------------------------------------------------
 
     /**
@@ -127,6 +135,13 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
     */
     function getDataOwnerAddress(bytes memory _dHash) external view returns(address) {     
         return _identityToken.ownerOf(_dataMgt.getDataOwnerId(_dHash));     
+    }
+
+    /**
+     * @notice returns owner of given data 
+    */
+    function getInitialDataLength(uint _productUID) external view returns(uint) {
+        return productToInitialLength[_productUID];
     }
 
 //---------------------------- -------- OWNER FUNCTIONS --------------------------------------------------
@@ -164,6 +179,7 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
         require(!_linkData(_productUID, _dataHashes, _creditScores), "REJUVE: Data Not Permitted");
         _safeMint(msg.sender, _productUID); 
         _setTokenURI(_productUID, _productURI);
+        productToInitialLength[_productUID] =_dataHashes.length;
     }
 
     /**
