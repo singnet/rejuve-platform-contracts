@@ -16,6 +16,9 @@ import "./Interfaces/IDataManagement.sol";
 
 contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
 
+    // Mapping from product to creator 
+    mapping(uint => address) private productToCreator; 
+
     // Mapping from product UID to initial data array length
     mapping(uint => uint) private productToInitialLength;
 
@@ -59,10 +62,10 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
     }
     
     /**
-     * @dev Throws if called by user other than product owner
+     * @dev Throws if called by user other than product creator
     */
-    modifier onlyProductOwner (uint _productUID) {
-        require(msg.sender == ownerOf(_productUID), "REJUVE: Only Product Owner");
+    modifier onlyProductCreator (uint _productUID) {
+        require(msg.sender == productToCreator[_productUID], "REJUVE: Only Product Creator");
         _;
     }
 //------------------------------ Step 5: Creating Product - Transaction by Lab / Product Creator ---------------------
@@ -106,7 +109,7 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
     ) 
         external 
         whenNotPaused
-        onlyProductOwner(_productUID)
+        onlyProductCreator(_productUID)
     { 
         require(_newDataHashes.length == _creditScores.length, "REJUVE: Not equal length");
         require(!_linkData(_productUID, _newDataHashes, _creditScores), "REJUVE: Data Not Permitted");       
@@ -144,6 +147,13 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
         return productToInitialLength[_productUID];
     }
 
+    /**
+     * @notice returns product creator address
+    */
+    function getProductCreator(uint _productUID) external view returns(address) {
+        return productToCreator[_productUID];
+    }
+
 //---------------------------- -------- OWNER FUNCTIONS --------------------------------------------------
 
     /**
@@ -179,6 +189,7 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
         require(!_linkData(_productUID, _dataHashes, _creditScores), "REJUVE: Data Not Permitted");
         _safeMint(msg.sender, _productUID); 
         _setTokenURI(_productUID, _productURI);
+        productToCreator[_productUID] = msg.sender;
         productToInitialLength[_productUID] =_dataHashes.length;
     }
 
