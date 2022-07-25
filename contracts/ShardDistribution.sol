@@ -30,7 +30,7 @@ import "./ShardAdministration.sol";
 contract ShardDistribution is ShardAdministration, ERC20, IERC721Receiver, RFT {
 
     // Total supply to be minted
-    uint private _targetShardSupply;
+    uint _targetShardSupply;
 
     // Share fraction division
     uint8 private _shareDecimal;    
@@ -112,22 +112,6 @@ contract ShardDistribution is ShardAdministration, ERC20, IERC721Receiver, RFT {
         _createInitialContributorShards(_productUID, _initialContributorShare);
         _createLabShards(_productUID, _labShare, _labShardHolder);
         _createRejuveShards(_productUID, _rejuveShare, _rejuveShardHolder);
-    }  
-
-    /**
-     * @notice Mint remaining shards if available & assign to rejuve 
-     * @dev Caller should have minter role to execute function
-     * @dev Initial Contributor reward status must be true
-    */ 
-    function createRemainingInitialShards(
-        uint _initialShare, 
-        uint _rejuveShare, 
-        uint _labShare, 
-        address _rejuveShardHolder
-    ) external {
-        require(hasRole(MINTER_ROLE, _msgSender()), "REJUVE: Must have minter role to mint shards");
-        require(initialContributorReward, "REJUVE: Initial contributors not rewarded yet");
-        require(_createRemainingInitialShards(_initialShare, _rejuveShare, _labShare, _rejuveShardHolder), "REJUVE: No remaining shards available to mint");
     }  
 
 // --------------------------------------- External Views -----------------------------------------------
@@ -258,35 +242,6 @@ contract ShardDistribution is ShardAdministration, ERC20, IERC721Receiver, RFT {
         initialContributorReward = true;
         emit ShardDistributed(_productUID, _initialDataOwners, _initialDataOwnerShards);
     }
-
-    /**
-     * @dev Create & assign remaining shards if available
-     * - Calculate total target initial amount (initial contributors + lab + rejuve)
-       that need to be minted.
-     * - Check if total minted amount (totalSupply) is less than target amount 
-     * - Mint remaining shard if condiition is true
-     */
-    function _createRemainingInitialShards(
-        uint _initialContributorShare, 
-        uint _rejuveShare, 
-        uint _labShare, 
-        address _rejuveShardHolder
-    ) 
-        private 
-        returns(bool) 
-    {
-        bool sharded;
-        uint totalInitialPercent = _initialContributorShare + _rejuveShare + _labShare; 
-        uint totalShardAmount = _calculateTotalShards(totalInitialPercent); 
-     
-        if(totalShardAmount > totalSupply()){
-            uint amount = totalShardAmount - totalSupply();
-            _mintShard(_rejuveShardHolder, amount);
-            sharded = true;
-        }
-
-        return sharded;
-    }  
 
     /**
      * @dev create shards for lab
