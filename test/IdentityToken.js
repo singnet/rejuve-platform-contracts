@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-let _getSign = require ('./GetSign');
+let _getSign = require ('./modules/GetSign');
 
 describe("Identity Token Contract", function () {
 

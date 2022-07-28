@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-let _getSign = require ('./GetSign');
+let _getSign = require ('./modules/GetSign');
 
 
 describe("Product NFT Contract", function () {
@@ -205,7 +205,7 @@ describe("Product NFT Contract", function () {
         await dataMgt.connect(addr4).getPermission(owner.address, permissionSign, newDataHash, 3, 100, nonce, expiration);
  
         await expect (productNFT.linkNewData(productUID, [newDataHash], [30]))
-        .to.be.revertedWith("REJUVE: Only Product Owner");  
+        .to.be.revertedWith("REJUVE: Only Product Creator");  
     });
 
     it("Should link new data to existing product", async function () {
