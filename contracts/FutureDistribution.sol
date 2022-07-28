@@ -147,23 +147,6 @@ contract FutureDistribution is ShardDistribution  {
     }
 
     /**
-     * @return uint sum of all future data credits 
-    */ 
-    function _getTotalFutureCredits(uint _productUID) private view returns(uint) {
-        bytes[] memory productDataHashes = _getData(_productUID);
-        uint _totalFutureCredits;
-
-        for(uint i = productNFT.getInitialDataLength(_productUID); i < productDataHashes.length; i++){
-
-            uint dataCredit = productNFT.getDataCredit(productDataHashes[i], _productUID); 
-            _totalFutureCredits = _totalFutureCredits + dataCredit;
-
-        }
-
-        return _totalFutureCredits;
-    }
-
-    /**
      * @dev Create & assign remaining shards if available
      * - Check if total supply is less than target supply
      * - Mint remaining shard if condiition is true
@@ -188,5 +171,23 @@ contract FutureDistribution is ShardDistribution  {
         emit RemainingShardDistributed(_productUID, _rejuveShardHolder, remainingShards);
         return sharded;
     }  
+
+    /**
+     * @return uint sum of all future data credits 
+    */ 
+    function _getTotalFutureCredits(uint _productUID) private view returns(uint) {
+        bytes[] memory productDataHashes = _getData(_productUID);
+        uint _totalFutureCredits;
+
+        for(uint i = productNFT.getInitialDataLength(_productUID); i < productDataHashes.length; i++){
+
+            uint dataCredit = productNFT.getDataCredit(productDataHashes[i], _productUID); 
+            _totalFutureCredits = _totalFutureCredits + dataCredit;
+
+        }
+
+        return _totalFutureCredits;
+    }
+
 
 }
