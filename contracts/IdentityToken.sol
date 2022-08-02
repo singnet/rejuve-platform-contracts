@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -12,7 +13,7 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
  *  Also, users can burn their identities any time
 */
 
-contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
+contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
 
     using Counters for Counters.Counter;
     using ECDSA for bytes32;
@@ -49,7 +50,7 @@ contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
      * @dev Throws if called by any account other than token owner.
     */
     modifier onlyIdentityOwner(uint _tokenId) {
-        require(_tokenId == ownerToIdentity[msg.sender], "REJUVE: Only Identity Owner");
+        require(_tokenId == ownerToIdentity[_msgSender()], "REJUVE: Only Identity Owner");
         _;
     }
 
@@ -86,10 +87,10 @@ contract IdentityToken is ERC721URIStorage, Ownable, Pausable {
         onlyIdentityOwner(_tokenId) 
     {
         _burn(_tokenId);
-        registrations[msg.sender] = UserStatus.NotRegistered;
-        ownerToIdentity[msg.sender] = 0;
+        registrations[_msgSender()] = UserStatus.NotRegistered;
+        ownerToIdentity[_msgSender()] = 0;
 
-        emit IdentityDestroyed(msg.sender, _tokenId);
+        emit IdentityDestroyed(_msgSender(), _tokenId);
     }
 
 //---------------------------- OWNER FUNCTIONS --------------------------------

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
+import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -14,7 +15,7 @@ import "./Interfaces/IDataManagement.sol";
  * - Owner can call pause/unpause functions
 */
 
-contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
+contract ProductNFT is Context, ERC721URIStorage, Ownable, Pausable {
 
     // Mapping from product to creator 
     mapping(uint => address) private productToCreator; 
@@ -57,7 +58,7 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
      * @dev Throws if called by unregistered user.
     */
     modifier ifRegisteredUser {
-        require(_identityToken.ifRegistered(msg.sender) == 1, "REJUVE: Not Registered");
+        require(_identityToken.ifRegistered(_msgSender()) == 1, "REJUVE: Not Registered");
         _;
     }
     
@@ -65,7 +66,7 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
      * @dev Throws if called by user other than product creator
     */
     modifier onlyProductCreator (uint _productUID) {
-        require(msg.sender == productToCreator[_productUID], "REJUVE: Only Product Creator");
+        require(_msgSender() == productToCreator[_productUID], "REJUVE: Only Product Creator");
         _;
     }
 //------------------------------ Step 5: Creating Product - Transaction by Lab / Product Creator ---------------------
@@ -91,7 +92,7 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
         whenNotPaused 
         ifRegisteredUser    
     {
-        require(msg.sender == _identityToken.ownerOf(_productCreatorId), "REJUVE: Caller is not owner of lab ID"); // if provided incorrect creator ID
+        require(_msgSender() == _identityToken.ownerOf(_productCreatorId), "REJUVE: Caller is not owner of lab ID"); // if provided incorrect creator ID
         require(_dataHashes.length == _creditScores.length, "REJUVE: Not equal length");
         _createProduct(_productUID, _productURI, _dataHashes, _creditScores);
 
@@ -187,9 +188,9 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
         private 
     {  
         require(!_linkData(_productUID, _dataHashes, _creditScores), "REJUVE: Data Not Permitted");
-        _safeMint(msg.sender, _productUID); 
+        _safeMint(_msgSender(), _productUID); 
         _setTokenURI(_productUID, _productURI);
-        productToCreator[_productUID] = msg.sender;
+        productToCreator[_productUID] = _msgSender();
         productToInitialLength[_productUID] =_dataHashes.length;
     }
 

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
+import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -10,7 +11,7 @@ import "./Interfaces/IIdentityToken.sol";
  * It allows a caller to request specific data access by taking data owner's signature as permission.
 */
 
-contract DataManagement is Ownable, Pausable  {
+contract DataManagement is Context, Ownable, Pausable  {
 
     using ECDSA for bytes32;
     IIdentityToken private _identityToken;
@@ -120,7 +121,7 @@ contract DataManagement is Ownable, Pausable  {
         external
         whenNotPaused
     {
-        _preValidations(msg.sender, _signer, _signature, _dHash, _requesterId, _nextProductUID, _nonce, _expiration);
+        _preValidations(_msgSender(), _signer, _signature, _dHash, _requesterId, _nextProductUID, _nonce, _expiration);
         _getPermission(_signer,_dHash ,_requesterId, _nextProductUID, _expiration);
     }
 
