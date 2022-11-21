@@ -15,7 +15,7 @@ import "./Interfaces/IDataManagement.sol";
  * - Owner can call pause/unpause functions
 */
 
-contract ProductNFT is Context, ERC721URIStorage, Ownable, Pausable {
+contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
 
     // Mapping from product to creator 
     mapping(uint => address) private productToCreator; 
@@ -147,14 +147,6 @@ contract ProductNFT is Context, ERC721URIStorage, Ownable, Pausable {
     function getInitialDataLength(uint _productUID) external view returns(uint) {
         return productToInitialLength[_productUID];
     }
-
-    /**
-     * @notice returns product creator address
-    */
-    function getProductCreator(uint _productUID) external view returns(address) {
-        return productToCreator[_productUID];
-    }
-
 //---------------------------- -------- OWNER FUNCTIONS --------------------------------------------------
 
     /**

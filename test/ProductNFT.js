@@ -1,7 +1,6 @@
 const { expect } = require("chai");
 let _getSign = require ('./modules/GetSign');
 
-
 describe("Product NFT Contract", function () {
 
     let _identityToken;
@@ -57,6 +56,11 @@ describe("Product NFT Contract", function () {
         await dataMgt.connect(addr2).submitData(addr1.address, dataSignature2, dataHash2, nonce);
     }); 
 
+    it("Should revert if contract paused by user other than owner", async function () {
+        await expect(productNFT.connect(addr1).pause())
+        .to.be.revertedWith("Ownable: caller is not the owner");
+    })
+
     it("Should revert if contract is paused", async function () {
 
         await productNFT.pause();
@@ -68,10 +72,18 @@ describe("Product NFT Contract", function () {
             dataHash2],
             [10,20]
         )).to.be.revertedWith("Pausable: paused");
+
+        expect (await productNFT.paused()).to.equal(true);
     });
+
+    it("Should revert if contract unpaused by user other than owner", async function () {
+        await expect(productNFT.connect(addr1).unpause())
+        .to.be.revertedWith("Ownable: caller is not the owner");
+    })
 
     it("Should revert if product creator is not registered", async function () {
         await productNFT.unpause();
+        expect (await productNFT.paused()).to.equal(false);
         await expect(productNFT.connect(addr2).createProduct(
             3,
             productUID,
@@ -175,8 +187,14 @@ describe("Product NFT Contract", function () {
             [10,20]
         ); 
 
+        
         expect (await productNFT.ownerOf(productUID)).to.equal(addr4.address);
         expect (await productNFT.tokenURI(productUID)).to.equal("/ProductURI");    
+        expect (await productNFT.balanceOf(addr4.address)).to.equal(1);
+        expect (await productNFT.name()).to.equal("Rejuve Products");
+        expect (await productNFT.symbol()).to.equal("RP");
+        expect (await productNFT.getInitialDataLength(productUID)).to.equal(2);
+
 
         let arr = await productNFT.getProductToData(productUID);
         expect (arr.length).to.equal(2);       
@@ -187,9 +205,9 @@ describe("Product NFT Contract", function () {
         expect (await productNFT.getDataCredit(dataHash2, productUID)).to.equal(20);
     
         expect (await productNFT.getDataOwnerAddress(dataHash1)).to.equal(owner.address);    
-        expect (await productNFT.getDataOwnerAddress(dataHash2)).to.equal(addr1.address);    
+        expect (await productNFT.getDataOwnerAddress(dataHash2)).to.equal(addr1.address);          
+         
     });
-
 
     it("Should revert if called by user other than product owner", async function () {
         // New data submission by addr2 on the behalf of data owner 1

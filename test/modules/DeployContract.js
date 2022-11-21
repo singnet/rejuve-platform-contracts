@@ -9,12 +9,6 @@ let dataMgt;
 let _productNFT;
 let productNFT;
 
-let _productShard;
-let productShard;
-
-let _confirmRFT;
-let confirmRFT;
-
 let arr = [];
 
 const shareTarget = 100;
@@ -42,30 +36,6 @@ async function productNFTContract()
     return productNFT;   
 }
 
-async function productShardContract(deployer, rejuveAdmin, curatorFee) 
-{
-    _productShard = await ethers.getContractFactory("FutureDistribution");
-    productShard = await _productShard.connect(deployer).deploy(
-        "Rejuve Shards",
-        "RS", 
-        shareDecimal,
-        shareTarget,
-        productUID,
-        productNFT.address, 
-        rejuveAdmin,
-        curatorFee
-    );
-
-    return productShard;   
-}
-
-async function confirmRFTContract() 
-{
-    _confirmRFT = await ethers.getContractFactory("ConfirmRFT");
-    confirmRFT = await  _confirmRFT.deploy();
-    return confirmRFT;   
-}
-
 async function deployAll(deployer, rejuveAdmin, curatorFee)
 {
     identityToken = await identityContract();
@@ -77,20 +47,10 @@ async function deployAll(deployer, rejuveAdmin, curatorFee)
     productNFT = await productNFTContract();
     arr.push(productNFT);
 
-    productShard = await productShardContract(deployer, rejuveAdmin, curatorFee);
-    arr.push(productShard);
-
-    confirmRFT = await confirmRFTContract();
-    arr.push(confirmRFT);
-
     return arr;
 }
-
-
 
 module.exports.identityContract = identityContract;
 module.exports.dataMgtContract = dataMgtContract;
 module.exports.productNFTContract = productNFTContract;
-module.exports.productShardContract = productShardContract;
-module.exports.confirmRFTContract = confirmRFTContract;
 module.exports.deployAll= deployAll;

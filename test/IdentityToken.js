@@ -82,14 +82,10 @@ describe("Identity Token Contract", function () {
     });
 
     it("should burn given token Id", async function () {
-
         await identityToken.connect(addr1).burnIdentity(identityToken.getOwnerIdentity(userAddress1));        
         expect (await identityToken.balanceOf(userAddress1)).to.equal(0);
         expect (await identityToken.getOwnerIdentity(userAddress1)).to.equal(0);
         expect (await identityToken.ifRegistered(userAddress1)).to.equal(0);
-        await expect (identityToken.tokenURI( identityToken.getOwnerIdentity(userAddress1)))
-        .to.be.revertedWith("ERC721URIStorage: URI query for nonexistent token");
-
     });
 
     it("should revert if burn is called by user other than owner", async function () {
