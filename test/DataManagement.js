@@ -74,7 +74,6 @@ describe("Data Management Contract", function () {
 
         expect (await dataMgt.getDataOwnerId(dataHash))
        .to.equal(await identityToken.getOwnerIdentity(addr2.address));
-       
     });
 
     it("should revert if requester is not registered", async function () {
@@ -98,6 +97,8 @@ describe("Data Management Contract", function () {
         expect (await dataMgt.getPermissionStatus(dataHash, 100)).to.equal(0);
         await dataMgt.getPermission(addr2.address, signature, dataHash, 3, 100, nonce, expiration);
         expect (await dataMgt.getPermissionStatus(dataHash, 100)).to.equal(1);
+
+        console.log("Deadline for a data hash", await dataMgt.getPermissionDeadline(dataHash, 100));
     });
 
     it("should revert if requester provided incorrect data owner", async function () {

@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "./Interfaces/IIdentityToken.sol";
 
-
 /** @dev Contract module which provides data submission and data access permission features.
  * It allows a caller to request specific data access by taking data owner's signature as permission.
 */
-
 contract DataManagement is Context, Ownable, Pausable  {
 
     using ECDSA for bytes32;
@@ -58,7 +56,7 @@ contract DataManagement is Context, Ownable, Pausable  {
     /**
      * @dev Throws if called by unregistered user.
     */
-    modifier ifRegisteredUser (address _dataOwner) {
+    modifier ifRegisteredUser(address _dataOwner) {
         require(_identityToken.ifRegistered(_dataOwner) == 1, "REJUVE: Not Registered");
         _;
     }
