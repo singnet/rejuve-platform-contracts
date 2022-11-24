@@ -56,6 +56,14 @@ describe("Product NFT Contract", function () {
         await dataMgt.connect(addr2).submitData(addr1.address, dataSignature2, dataHash2, nonce);
     }); 
 
+    it("Should set product collection name", async function () {
+        expect (await productNFT.name()).to.equal("Rejuve Products");
+    })
+
+    it("Should set product collection symbol", async function () {
+        expect (await productNFT.symbol()).to.equal("RP");
+    })
+
     it("Should revert if contract paused by user other than owner", async function () {
         await expect(productNFT.connect(addr1).pause())
         .to.be.revertedWith("Ownable: caller is not the owner");
