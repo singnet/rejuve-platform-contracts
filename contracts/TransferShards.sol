@@ -2,6 +2,16 @@
 pragma solidity ^0.8.17;
 import "./FutureShards.sol";
 
+/** @notice Contract module that provides shards transfer mechanism for 
+ * both "Traded" and "Locked" types.
+ *
+ * @dev System should lock transfer of 50% of tokens for a specific time.
+ * After this locking period, owner of shards can sale them as traded tokens
+ * 
+ * @dev contract deployer is the default owner. 
+ * - Only Owner can call pause/unpause functions
+*/
+
 contract TransferShards is FutureShards {
 
     constructor(string memory uri_, address productNFT_) 
@@ -26,7 +36,16 @@ contract TransferShards is FutureShards {
     }
 
 //---------------------------------------- PUBLIC ----------------------------------------------//
-
+    /**
+     * @dev Overrides {ERC1155 safeTransferFrom}
+     * Steps:
+     * 1. Check ID type
+     * 2 If it is "locked" then check block.timestamp, 
+     *  - if it is more than locking period, allow transfer
+     *  - if less, lock transfer
+     *  
+     * 3.Else (Means Type ID is "traded"), allow transfer 
+    */
     function safeTransferFrom(
         address from,
         address to,
@@ -48,6 +67,9 @@ contract TransferShards is FutureShards {
 
 //---------------------------------------- PRIVATE----------------------------------------------//
 
+    /**
+     * @dev See {ERC1155-safeTransferFrom}.
+    */
     function _transferShard(    
         address from,
         address to,

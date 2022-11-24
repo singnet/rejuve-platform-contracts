@@ -2,6 +2,17 @@
 pragma solidity ^0.8.17;
 import "./ProductShards.sol";
 
+/** @notice Contract module that provides product shards creation to future contributors.
+ *  this is phase 2 of Product shards contract. 
+ *
+ * Phase 2:
+ * 1. Shards Distribution to Future data contributors e.g. clinics 
+ * 2. Remaining shards allocation 
+ * 
+ * @dev contract deployer is the default owner. 
+ * - Only Owner can call initial, future and remaining shards allocation functions
+ * - Only Owner can call pause/unpause functions
+*/
 contract FutureShards is ProductShards {
 
     // Shard amount of all future contributors 

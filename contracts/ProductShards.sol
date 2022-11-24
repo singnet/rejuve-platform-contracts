@@ -5,7 +5,26 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "./Interfaces/IProductNFT.sol";
 
+/** @notice Contract module that provides product shards creation and 
+ * allocation mechanisam. This module has 2 phases.
+ * 
+ * Phase 1:
+ * 1. Shards Distribution to Initial data contributors including Lab
+ * 2. Shards Distribution to Rejuve - The platoform
+ *
+ * Phase 2:
+ * 1. Shards Distribution to Future data contributors e.g. clinics 
+ * 2. Remaining shards allocation 
+ *
+ * This contract implemented functionality for "Phase 1"
+ * 
+ * @dev contract deployer is the default owner. 
+ * - Only Owner can call initial, future and remaining shards allocation functions
+ * - Only Owner can call pause/unpause functions
+*/
 contract ProductShards is Ownable, Pausable, ERC1155 {
+    
+    //Product shards configuration
     struct ShardConfig {
         uint productUID;
         uint targetSupply;
@@ -111,40 +130,9 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
     function targetSupply(uint _productUID) external view returns(uint) {
         return productToShardsConfig[_productUID].targetSupply;
     }
-
-    // /**
-    //  * A specific percentage out of total (targetSupply) is assigned to each category of participants,
-    //  *  - Category 1: Initial data contributors 
-    //  *  - Category 2: Future data contributors
-    //  *  - Category 3: Rejuve - the Platform
-    //  *
-    //  * @return initialContributorPercent percentage for a given product
-    // */
-    // function initialPercent(uint _productUID) external view returns(uint8) {
-    //     return productToShardsConfig[_productUID].initialPercent;
-    // }
-
-    // /**
-    //  * @return futureContributorPercent - category 2
-    // */
-    // function futurePercent(uint _productUID) external view returns(uint8) {
-    //     return productToShardsConfig[_productUID].futurePercent;
-    // }
-
-    // /**
-    //  * @return rejuvePercent - category 3
-    // */
-    // function rejuvePercent(uint _productUID) external view returns(uint8) {
-    //     return productToShardsConfig[_productUID].rejuvePercent;
-    // }
-
-    // /**
-    //  * @return lockPeriod in which user cannot transfer 50% of his shards 
-    // */
-    // function lockPeriod(uint _productUID) external view returns(uint) {
-    //     return productToShardsConfig[_productUID].lockPeriod;
-    // }
-
+    /**
+     * @dev returns shards configuration info for a given productUID
+    */
     function getShardsConfig(uint _productUID) external view returns(uint,uint8,uint8,uint8) {
         return (
             productToShardsConfig[_productUID].lockPeriod,
@@ -156,6 +144,9 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
 
 //--------------------------------------- PUBLIC ------------------------------------------------//
 
+    /**
+     * @dev returns unique URI for unique ID type (locked, traded)
+    */
    function uri(uint256 _id) public view override returns (string memory) {
         return typeToURI[_id];
     }
@@ -384,34 +375,6 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
 
 //------------------------------------ Helpers---------------------------------------------//
 
-    // function _preValidations(
-    //     uint _targetSupply,
-    //     uint8 _initialPercent
- 
-    // ) 
-    //     private 
-    //     pure 
-    // {
-    //     require(_targetSupply != 0, "REJUVE: Target supply can not be 0");
-    //     require(_initialPercent != 0, "REJUVE: Initial contributors percent can not be 0");
-    // }
-
-    // /**
-    //  * @dev Create types for given product UID
-    // */
-    // function _createType(
-    //     uint _productUID, 
-    //     string memory _type
-    // ) 
-    //     private 
-    // {
-    //     _types.push(_type);
-    //     uint index = _types.length - 1;
-    //     productToTypeIndexes[_productUID].push(index);
-    //     typeToState[index] = _type;   
-    //     typeToProduct[index] = _productUID; 
-    // }
-
     /**
      * @dev Calculate lab shards as per its credit  
      * @dev Lab will get shards in initial data contributor category 
@@ -455,33 +418,4 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
 
         return _totalInitialCredits;
     }
-
-    // /**
-    //  * @return bytes[] all data hashes used in the product 
-    // */ 
-    // function _getData(uint _productUID) private view returns(bytes[] memory) {
-    //     bytes[] memory productData = _productNFT.getProductToData(_productUID);
-    //     return productData;
-    // }
-
-    // total available amount for percent (initital, final , lab etc)   
-    // function _availableShardAmount(
-    //     uint _targetSupply,  
-    //     uint _percent
-    // ) 
-    //     private 
-    //     pure 
-    //     returns(uint) 
-    // {
-    //     uint availableAmount = (_targetSupply * _percent) / 100;
-    //     return availableAmount;
-    // }
-
-    // /**
-    //  * @dev Calculate 50% shard amount
-    // */
-    // function _lockedAmount(uint _amount) private pure returns(uint) {     
-    //     uint lockedAmount =  (_amount * 50)  / 100; // calculate 50% locked
-    //     return lockedAmount;
-    // }
 }
