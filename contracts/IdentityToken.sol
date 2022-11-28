@@ -11,8 +11,7 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
  *  that allows rejuve to create identities on the behalf of user,
  *  taking their signature as permission to create identity.
  *  Also, users can burn their identities any time
- */
-
+*/
 contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
     using Counters for Counters.Counter;
     using ECDSA for bytes32;
@@ -169,14 +168,14 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
 
     /**
      * @dev Private function to verify user signature
-     * @return bool true if valid signature
+     * Return bool flag true if valid signature
      */
     function verifyMessage(
         bytes memory _signature,
         address _signer,
         string memory _uri,
         uint256 _nonce
-    ) private returns (bool) {
+    ) private returns (bool _flag) {
         require(!usedNonces[_nonce], "REJUVE: Signature used already");
         usedNonces[_nonce] = true;
         bytes32 messagehash = keccak256(
@@ -187,9 +186,7 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         ); // verify signer using ECDSA
 
         if (_signer == signer) {
-            return true;
-        } else {
-            return false;
-        }
+            _flag = true;
+        } 
     }
 }

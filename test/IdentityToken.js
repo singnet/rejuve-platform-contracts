@@ -35,22 +35,20 @@ describe("Identity Token Contract", function () {
     });
 
     it("should create identity", async function () {
-
         signature = await _getSign.getSignForIdentity(userAddress1, "/tokenURIHere", nonce, identityToken.address, addr1);   
         await identityToken.createIdentity(signature, userAddress1, "/tokenURIHere", nonce);
+
         expect (await identityToken.balanceOf(userAddress1)).to.equal(balance);
         expect (await identityToken.getOwnerIdentity(userAddress1)).to.equal(tokenId);
-        expect (await identityToken.ifRegistered(userAddress1)).to.equal(1);
-      
+        expect (await identityToken.ifRegistered(userAddress1)).to.equal(1);      
     });
 
-    it("Should revert if use a signature more than once", async function () {
-
-        // using same signature
-        await expect(identityToken.createIdentity(signature, userAddress1, "/tokenURIHere", nonce)) 
+    it("Should revert if using a signature more than once", async function () {
+        let signature5 = await _getSign.getSignForIdentity(userAddress1, "/tokenURIHere", nonce, identityToken.address, addr1);   
+        await expect (identityToken.createIdentity(signature5, userAddress1, "/tokenURIHere", nonce))
         .to.be.revertedWith("REJUVE: Signature used already");
-      
-    });
+
+    })
 
     it("Should revert if signed by user other than identity requester", async function () {
 
@@ -95,6 +93,11 @@ describe("Identity Token Contract", function () {
   
     });
 
+    it("Should revert if trying to pause contract by address other than owner", async function () {
+        await expect(identityToken.connect(addr1).pause())
+        .to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
     it("should revert if contract is paused", async function () {
 
         await identityToken.pause();
@@ -103,11 +106,15 @@ describe("Identity Token Contract", function () {
         let signature3 = await _getSign.getSignForIdentity(userAddress1, "/tokenURIHere", nonce, identityToken.address, addr1);   
         await expect(identityToken.createIdentity(signature3, userAddress1, "/tokenURIHere", nonce))
         .to.be.revertedWith("Pausable: paused");
+    });
 
+    it("Should revert if trying to unpause contract by address other than owner", async function () {
+        await expect(identityToken.connect(addr1).unpause())
+        .to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("Should unpause contract", async function () {
         await identityToken.unpause();
         expect(await identityToken.paused()).to.equal(false);
-
     });
-    
-
 });

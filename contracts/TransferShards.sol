@@ -36,6 +36,13 @@ contract TransferShards is FutureShards {
     }
 
 //---------------------------------------- PUBLIC ----------------------------------------------//
+    
+    //---test---
+
+        uint public checkTimeStamp;
+
+    //---
+
     /**
      * @dev Overrides {ERC1155 safeTransferFrom}
      * Steps:
@@ -56,6 +63,7 @@ contract TransferShards is FutureShards {
         public 
         override 
     {
+        checkTimeStamp = block.timestamp;
         if (keccak256(bytes(typeToState[id])) == keccak256(bytes("LOCKED"))){ // check type if it is LOCKED  
             require(block.timestamp > productToLockPeriod[typeToProduct[id]], "REJUVE: Cannot sale 50% of shards before locking period"); 
             _transferShard(from, to, id, amount, data);

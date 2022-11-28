@@ -7,10 +7,9 @@ import "./ProductShards.sol";
  *
  * Phase 2:
  * 1. Shards Distribution to Future data contributors e.g. clinics 
- * 2. Remaining shards allocation 
  * 
  * @dev contract deployer is the default owner. 
- * - Only Owner can call initial, future and remaining shards allocation functions
+ * - Only Owner can call initial & future shards allocation functions
  * - Only Owner can call pause/unpause functions
 */
 contract FutureShards is ProductShards {
@@ -71,21 +70,6 @@ contract FutureShards is ProductShards {
         _distributeFutureShards(_productUID, _futurePercent, _credits, _futureContributors);
     }
 
-    /**
-     * @dev Mint remaining shards (if left any) after initial and future shard distribution  
-     * @dev Assign these shards to Rejuve or any other address provided in the input
-    */
-    function mintRemainingShards(
-        uint _productUID, 
-        address _holder
-    ) 
-        external 
-        onlyOwner 
-        whenNotPaused
-    {
-        _mintRemainingShards(_productUID, _holder);
-    }
-
 //---------------------------------------- PRIVATE ---------------------------------------------
 
     /**
@@ -123,30 +107,6 @@ contract FutureShards is ProductShards {
 
         emit FutureShardDistributed(_productUID, _futureContributors, _futureContributorShards);
         _futureRewardDistributed = true;
-    }
-
-    /**
-     * @dev Mint & assign remianing shards to Rejuve after initial & future shards allocation (if left any)
-    */
-    function _mintRemainingShards(
-        uint _productUID, 
-        address _holder
-    ) 
-        private 
-    {
-        require(_initialRewardDistributed && _futureRewardDistributed, "REJUVE: Cannot mint before initial & future distribution");
-        ShardConfig storage config = productToShardsConfig[_productUID];
-        uint amount = config.targetSupply - config.totalSupply;
-        require(amount != 0, "REJUVE: No shard available");
-            config.totalSupply = config.totalSupply + amount;
-            uint[] memory amounts = _setAmount(amount); 
-            for(uint i = 0; i < amounts.length; i++){
-                _mint(_holder, productToTypeIndexes[_productUID][i], amounts[i], "0x00");
-            }
-
-            emit RemainingShardAllocated(_productUID, _holder, amount);
-            
-        
     }
 
 //------------------------------------ Helpers---------------------------------------------//

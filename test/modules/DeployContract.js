@@ -11,10 +11,6 @@ let productNFT;
 
 let arr = [];
 
-const shareTarget = 100;
-const shareDecimal = 2;
-let productUID = 200;
-
 async function identityContract() 
 {
     _identityToken = await ethers.getContractFactory("IdentityToken");
@@ -36,7 +32,7 @@ async function productNFTContract()
     return productNFT;   
 }
 
-async function deployAll(deployer, rejuveAdmin, curatorFee)
+async function deployAll()
 {
     identityToken = await identityContract();
     arr.push(identityToken);

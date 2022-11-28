@@ -35,8 +35,8 @@ describe("Product shards - 1155", function () {
   const shareDecimal = 2;
   const calculatedTarget = shareTarget * 10 ** shareDecimal;
 
-  let lockPeriod = 2;
-  lockPeriod = lockPeriod * 60 * 60;
+  let daysLocked = 2;
+  let lockPeriod = daysLocked * 24 * 60 * 60;
 
   before(async function () {
     [
@@ -241,6 +241,8 @@ it("Should create 1155 based shards", async function () {
     ["/product1Locked", "/product1Traded"]
   );
 
+  await _testTime.setLockPeriod(daysLocked);
+
   expect(await productShards.totalShardSupply(productUID)).to.equal(48);
   expect(await productShards.targetSupply(productUID)).to.equal(100);
   expect(await productShards.uri(0)).to.equal("/product1Locked");
@@ -295,12 +297,12 @@ it("Should create 1155 based shards", async function () {
     )).to.be.revertedWith("REJUVE: Future percentage share cannot be zero"); 
   })
 
-  it("Should revert if called before initial or future shard distribution", async function () {
-    await expect(productShards.mintRemainingShards(
-      productUID,
-      rejuveAdmin.address
-    )).to.be.revertedWith("REJUVE: Cannot mint before initial & future distribution");
-  })
+  // it("Should revert if called before initial or future shard distribution", async function () {
+  //   await expect(productShards.mintRemainingShards(
+  //     productUID,
+  //     rejuveAdmin.address
+  //   )).to.be.revertedWith("REJUVE: Cannot mint before initial & future distribution");
+  // })
 
 
   it("Should create future shards", async function () {
@@ -319,39 +321,40 @@ it("Should create 1155 based shards", async function () {
 
 //------------------------------------- Remaining shards start------------------------------//
 
-  it("Should revert if called by address other than owner  ", async function () {
-    await expect(productShards.connect(rejuveSponsor).mintRemainingShards(
-      productUID,
-      rejuveAdmin.address
-    )).to.be.revertedWith("Ownable: caller is not the owner");
-  })
+  // it("Should revert if called by address other than owner  ", async function () {
+  //   await expect(productShards.connect(rejuveSponsor).mintRemainingShards(
+  //     productUID,
+  //     rejuveAdmin.address
+  //   )).to.be.revertedWith("Ownable: caller is not the owner");
+  // })
 
-  it("Should revert when contract is paused  ", async function () {
-    await productShards.pause();
-    await expect(productShards.mintRemainingShards(
-      productUID,
-      rejuveAdmin.address
-    )).to.be.revertedWith("Pausable: paused");
-  })
+  // it("Should revert when contract is paused  ", async function () {
+  //   await productShards.pause();
+  //   await expect(productShards.mintRemainingShards(
+  //     productUID,
+  //     rejuveAdmin.address
+  //   )).to.be.revertedWith("Pausable: paused");
+  // })
 
 
-  it("Should create remaining shards  ", async function () {
-    await productShards.unpause();
-    await productShards.mintRemainingShards(
-      productUID,
-      rejuveAdmin.address
-    );
-  })
+  // it("Should create remaining shards  ", async function () {
+  //   await productShards.unpause();
+  //   await productShards.mintRemainingShards(
+  //     productUID,
+  //     rejuveAdmin.address
+  //   );
+  // })
 
-  it("Should revert if no remaining shards to mint", async function () {
-    await expect(productShards.mintRemainingShards(
-      productUID,
-      rejuveAdmin.address
-    )).to.be.revertedWith("REJUVE: No shard available");
-  })
+  // it("Should revert if no remaining shards to mint", async function () {
+  //   await expect(productShards.mintRemainingShards(
+  //     productUID,
+  //     rejuveAdmin.address
+  //   )).to.be.revertedWith("REJUVE: No shard available");
+  // })
 
   
- //----------------------------------- Future ended ---------------------------------//
+//----------------------------------- Future ended ---------------------------------//
+
 
 //----------------------------------- Transfer shard start ---------------------------------//
 
@@ -378,7 +381,7 @@ it("Should revert if contract is paused", async function () {
 
 
   it("Should transfer shards", async function () {
-    await productShards.unpause();
+    await productShards.unpause(); 
     await productShards.safeTransferFrom(
       dataOwner1.address,
       dataOwner3.address,
@@ -388,7 +391,9 @@ it("Should revert if contract is paused", async function () {
     );
   });
 
-  it("Should lock shards", async function () {
+  it("Should lock shards", async function () { 
+    await _testTime.checkTimeAfter(1);
+
     await expect( 
       productShards.connect(dataOwner2).safeTransferFrom(
         dataOwner2.address,
@@ -399,22 +404,17 @@ it("Should revert if contract is paused", async function () {
       )).to.be.revertedWith("REJUVE: Cannot sale 50% of shards before locking period");
   });
 
-
-  it("Should test timestamp", async function () {
-      await _testTime.TestTime(2);
-  })
-
-  // it("Should unlock shards to be tranfered", async function () {
-  //   //console.log("Block timestample " , await productShards.block.timestamp());
+  it("Should unlock shards to be tranfered", async function () {
+    await _testTime.checkTimeAfter(3);
     
-  //   // await productShards.connect(dataOwner2).safeTransferFrom(
-  //   //   dataOwner2.address,
-  //   //   dataOwner3.address,
-  //   //   0,
-  //   //   2,
-  //   //   "0x00"
-  //   // );
-  // });
+    await productShards.connect(dataOwner2).safeTransferFrom(
+      dataOwner2.address,
+      dataOwner3.address,
+      0,
+      2,
+      "0x00"
+    );
+  });
 
   it("Should revert if caller is not owner or an approved address", async function () {
     await expect(

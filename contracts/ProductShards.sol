@@ -239,6 +239,7 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
 
     /**
      * @notice Set lock period for a given productUID
+     * @param _lockPeriod days in seconds e.g for 2 days => 172,800 seconds
     */
     function _setLockPeriod(
         uint _productUID, 
