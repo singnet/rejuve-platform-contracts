@@ -14,12 +14,11 @@ import "./Interfaces/IProductNFT.sol";
  *
  * Phase 2:
  * 1. Shards Distribution to Future data contributors e.g. clinics 
- * 2. Remaining shards allocation 
- *
+
  * This contract implemented functionality for "Phase 1"
  * 
  * @dev contract deployer is the default owner. 
- * - Only Owner can call initial, future and remaining shards allocation functions
+ * - Only Owner can call initial & future 
  * - Only Owner can call pause/unpause functions
 */
 contract ProductShards is Ownable, Pausable, ERC1155 {
