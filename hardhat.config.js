@@ -3,8 +3,8 @@ require("hardhat-gas-reporter");
 require('solidity-coverage');
 require('@openzeppelin/test-helpers');
 
-const ALCHEMY_API_KEY = "Hne9KCjmpBb-7KhujFL2ayrze9hvnb4z";
-const GOERLI_PRIVATE_KEY = "21a3951923d82710124462bc77938bb2d57b810ee676401e9c4e39ab0f0a31be";
+const ALCHEMY_API_KEY = "";
+const GOERLI_PRIVATE_KEY = "";
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
