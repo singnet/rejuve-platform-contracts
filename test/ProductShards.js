@@ -4,9 +4,13 @@ let deploy = require("./modules/DeployContract");
 let identity = require("./modules/CreateIdentity");
 let data = require("./modules/DataSubmission");
 let _testTime = require("./modules/TestTime");
+const { ethers } = require("hardhat");
 
 describe("Product shards - 1155", function () {
+  let _identityToken;
   let identityToken;
+  let _dataMgt;
+  let _productNFT;
   let dataMgt;
   let productNFT;
   let _productShards;
@@ -53,15 +57,15 @@ describe("Product shards - 1155", function () {
 
     //-------------------- Deploy contracts ----------------------/
 
-    let contractInstance = await deploy.deployAll(
-      lab,
-      rejuveAdmin.address,
-      100
-    );
-    identityToken = contractInstance[0];
-    dataMgt = contractInstance[1];
-    productNFT = contractInstance[2];
-
+    _identityToken = await ethers.getContractFactory("IdentityToken");
+    identityToken = await  _identityToken.deploy("Rejuve Identities","RI");
+  
+    _dataMgt = await ethers.getContractFactory("DataManagement");
+    dataMgt = await _dataMgt.deploy(identityToken.address);  
+    
+    _productNFT = await ethers.getContractFactory("ProductNFT");
+    productNFT = await  _productNFT.deploy("Rejuve Products","RP", identityToken.address, dataMgt.address); 
+    
     _productShards = await ethers.getContractFactory("TransferShards");
     productShards = await _productShards.deploy(
       "/rejuveshards",
@@ -176,7 +180,7 @@ describe("Product shards - 1155", function () {
 
   //----------------- Create Product -------------------------------
 
-  it("Should create product ", async function () {
+  it("Should create product", async function () {
     // Product Creation by lab (lab)
     await productNFT
       .connect(lab)
@@ -249,9 +253,7 @@ it("Should create 1155 based shards", async function () {
   expect(await productShards.uri(1)).to.equal("/product1Traded");
   
   let values = await productShards.getShardsConfig(productUID);
-
-  console.log("Shards Config :: ", values);
-
+  //console.log("Shards Config :: ", values);
 });
 
 
@@ -314,47 +316,9 @@ it("Should create 1155 based shards", async function () {
       [dataOwner3.address, clinic.address]
     );
 
-    //expect(await productShards.futurePercent(productUID)).to.equal(40);
     expect(await productShards.totalShardSupply(productUID)).to.equal(86);  
   })
 //------------------------------------- Future ended ------------------------------//
-
-//------------------------------------- Remaining shards start------------------------------//
-
-  // it("Should revert if called by address other than owner  ", async function () {
-  //   await expect(productShards.connect(rejuveSponsor).mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   )).to.be.revertedWith("Ownable: caller is not the owner");
-  // })
-
-  // it("Should revert when contract is paused  ", async function () {
-  //   await productShards.pause();
-  //   await expect(productShards.mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   )).to.be.revertedWith("Pausable: paused");
-  // })
-
-
-  // it("Should create remaining shards  ", async function () {
-  //   await productShards.unpause();
-  //   await productShards.mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   );
-  // })
-
-  // it("Should revert if no remaining shards to mint", async function () {
-  //   await expect(productShards.mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   )).to.be.revertedWith("REJUVE: No shard available");
-  // })
-
-  
-//----------------------------------- Future ended ---------------------------------//
-
 
 //----------------------------------- Transfer shard start ---------------------------------//
 

@@ -3,6 +3,7 @@ require("hardhat-gas-reporter");
 require('solidity-coverage');
 require('@openzeppelin/test-helpers');
 
+//********** Replace KEYs here ***********************
 const ALCHEMY_API_KEY = "";
 const GOERLI_PRIVATE_KEY = "";
 
@@ -10,12 +11,14 @@ const GOERLI_PRIVATE_KEY = "";
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  networks: {
-    goerli: {
-      url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-      accounts: [GOERLI_PRIVATE_KEY]
-    }
-  },
+
+//****************** Deploy the contract to selected network **************
+  // networks: {
+  //   goerli: {
+  //     url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+  //     accounts: [GOERLI_PRIVATE_KEY]
+  //   }
+  // },
 
   solidity:{ 
     compilers: [
