@@ -57,7 +57,26 @@ async function getSignForPermission(dataOwnerAddress, requesterID, dataHash, nex
 }
 
 
+async function getDistributorSign(distributorAddress, contractAddress, agreementHash, nonce, distributor) {
+
+  const message = ethers.utils.solidityKeccak256(
+    ['address','bytes', 'uint256' ,'address'],
+      [
+        distributorAddress,
+        agreementHash,
+        nonce,
+        contractAddress
+      ],
+  )
+
+  const arrayifyMessage = ethers.utils.arrayify(message)
+  const flatSignature = await distributor.signMessage(arrayifyMessage)
+
+  return flatSignature;
+
+}
 
 module.exports.getSignForIdentity = getSignForIdentity;
 module.exports.getSignForData = getSignForData;
 module.exports.getSignForPermission = getSignForPermission;
+module.exports.getDistributorSign = getDistributorSign;

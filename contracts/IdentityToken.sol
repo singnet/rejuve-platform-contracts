@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
  *  that allows rejuve to create identities on the behalf of user,
  *  taking their signature as permission to create identity.
  *  Also, users can burn their identities any time
-*/
+ */
 contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
     using Counters for Counters.Counter;
     using ECDSA for bytes32;
@@ -41,9 +41,10 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      */
     event IdentityDestroyed(address owner, uint256 ownerId);
 
-    constructor(string memory name_, string memory symbol_)
-        ERC721(name_, symbol_)
-    {
+    constructor(
+        string memory name_,
+        string memory symbol_
+    ) ERC721(name_, symbol_) {
         _tokenIdCounter.increment();
     }
 
@@ -102,10 +103,9 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      * @notice Burn identity token
      * @dev only identity owner can burn his token
      */
-    function burnIdentity(uint256 _tokenId)
-        external
-        onlyIdentityOwner(_tokenId)
-    {
+    function burnIdentity(
+        uint256 _tokenId
+    ) external onlyIdentityOwner(_tokenId) {
         _burn(_tokenId);
         registrations[_msgSender()] = UserStatus.NotRegistered;
         ownerToIdentity[_msgSender()] = 0;
@@ -151,10 +151,10 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      * @dev Private function to create identity token.
      * @return uint new token id created against caller
      */
-    function _createIdentity(address _userAccount, string memory _tokenURI)
-        private
-        returns (uint256)
-    {
+    function _createIdentity(
+        address _userAccount,
+        string memory _tokenURI
+    ) private returns (uint256) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(_userAccount, tokenId);
@@ -187,6 +187,6 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
 
         if (_signer == signer) {
             _flag = true;
-        } 
+        }
     }
 }

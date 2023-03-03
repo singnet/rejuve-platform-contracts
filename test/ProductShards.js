@@ -4,11 +4,18 @@ let deploy = require("./modules/DeployContract");
 let identity = require("./modules/CreateIdentity");
 let data = require("./modules/DataSubmission");
 let _testTime = require("./modules/TestTime");
+let prod = require("./modules/Contracts")
 
 describe("Product shards - 1155", function () {
+
+  let _identityToken;
   let identityToken;
+  let _dataMgt;
   let dataMgt;
+  let _productNFT;
   let productNFT;
+
+
   let _productShards;
   let productShards;
   let dataOwner1;
@@ -19,6 +26,7 @@ describe("Product shards - 1155", function () {
   let rejuveAdmin;
   let clinic;
   let dataOwner3; // new data owner
+  let addr3;
   let addrs;
 
   let dataHash1 =
@@ -53,20 +61,22 @@ describe("Product shards - 1155", function () {
 
     //-------------------- Deploy contracts ----------------------/
 
-    let contractInstance = await deploy.deployAll(
-      lab,
-      rejuveAdmin.address,
-      100
-    );
-    identityToken = contractInstance[0];
-    dataMgt = contractInstance[1];
-    productNFT = contractInstance[2];
+    _identityToken = await ethers.getContractFactory("IdentityToken");
+    identityToken = await  _identityToken.deploy("Rejuve Identities","RI");
+
+    _dataMgt = await ethers.getContractFactory("DataManagement");
+    dataMgt = await _dataMgt.deploy(identityToken.address);
+
+    _productNFT = await ethers.getContractFactory("ProductNFT"); 
+    productNFT = await _productNFT.deploy("Rejuve Products","RP", identityToken.address, dataMgt.address);
 
     _productShards = await ethers.getContractFactory("TransferShards");
     productShards = await _productShards.deploy(
       "/rejuveshards",
       productNFT.address
     );
+
+    prod.setContractAddress(productShards, productShards.address);
 
     //------------------ Create Identities -------------------------/
 
@@ -100,7 +110,7 @@ describe("Product shards - 1155", function () {
       identityToken
     );
 
-    // Create identity by lab for itself
+    //Create identity by lab for itself
     await identity.createIdentity(
       lab.address,
       "/tokenURIHere",
@@ -177,6 +187,8 @@ describe("Product shards - 1155", function () {
   //----------------- Create Product -------------------------------
 
   it("Should create product ", async function () {
+
+   
     // Product Creation by lab (lab)
     await productNFT
       .connect(lab)
@@ -225,8 +237,6 @@ describe("Product shards - 1155", function () {
 
   });
 
-
-
 it("Should create 1155 based shards", async function () {
   await productShards.unpause();
   await productShards.distributeInitialShards(
@@ -251,6 +261,9 @@ it("Should create 1155 based shards", async function () {
   let values = await productShards.getShardsConfig(productUID);
 
   console.log("Shards Config :: ", values);
+  console.log("Balance of Data owner 1: type locked: " , await productShards.balanceOf(dataOwner1.address, 0));
+
+  console.log("Balance of Data owner 1: type traded: " , await productShards.balanceOf(dataOwner1.address, 1));
 
 });
 
@@ -500,7 +513,7 @@ it("Should revert if contract is paused", async function () {
     ).to.be.revertedWith("REJUVE: Target supply cannot be 0");
   });
 
-  it("Should Initial contributor percentage is zero", async function () {
+  it("Should revert if initial contributor percentage is zero", async function () {
     await expect(
       productShards.distributeInitialShards(
         productUID,

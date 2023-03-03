@@ -35,11 +35,6 @@ async function checkTimeAfter(daysPassed) {
 
 }
 
-
-
-
-
-
 // async function TestTime(days){
 //     const calculateSec = days * 24 * 60 * 60;
 //     console.log("Time in sec ", calculateSec);
