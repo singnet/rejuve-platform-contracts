@@ -3,6 +3,7 @@ require("hardhat-gas-reporter");
 require('solidity-coverage');
 require('@openzeppelin/test-helpers');
 
+//********** Replace KEYs here ***********************
 const ALCHEMY_API_KEY = "";
 const GOERLI_PRIVATE_KEY = "";
 

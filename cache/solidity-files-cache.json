@@ -10,6 +10,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -25,6 +26,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -134,6 +138,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -149,6 +154,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -174,6 +182,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -189,6 +198,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -212,6 +224,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -227,6 +240,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -252,6 +268,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -267,6 +284,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -292,6 +312,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -307,6 +328,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -330,6 +354,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -345,6 +370,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -370,6 +398,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -385,6 +414,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -408,6 +440,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -423,6 +456,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -454,6 +490,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -469,6 +506,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -492,6 +532,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -507,6 +548,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -532,6 +576,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -547,6 +592,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -570,6 +618,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -585,6 +634,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -610,6 +662,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -625,6 +678,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -655,6 +711,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -670,6 +727,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -695,6 +755,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -710,6 +771,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -734,6 +798,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
+            "enabled": false,
             "enabled": false,
             "runs": 200
           },
@@ -775,6 +840,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -790,6 +856,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -817,6 +886,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -832,6 +902,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -855,6 +928,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -870,6 +944,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -973,6 +1050,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -988,6 +1066,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1057,6 +1138,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1072,6 +1154,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1142,6 +1227,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1157,6 +1243,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1267,6 +1356,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1282,6 +1372,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1305,6 +1398,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1320,6 +1414,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1345,6 +1442,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1360,6 +1458,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1385,6 +1486,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1400,6 +1502,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1425,6 +1530,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1440,6 +1546,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1463,6 +1572,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1478,6 +1588,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false
@@ -1503,6 +1616,7 @@
         "settings": {
           "optimizer": {
             "enabled": false,
+            "enabled": false,
             "runs": 200
           },
           "outputSelection": {
@@ -1518,6 +1632,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           },
           "metadata": {
             "useLiteralContent": false

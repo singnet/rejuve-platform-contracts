@@ -327,47 +327,9 @@ it("Should create 1155 based shards", async function () {
       [dataOwner3.address, clinic.address]
     );
 
-    //expect(await productShards.futurePercent(productUID)).to.equal(40);
     expect(await productShards.totalShardSupply(productUID)).to.equal(86);  
   })
 //------------------------------------- Future ended ------------------------------//
-
-//------------------------------------- Remaining shards start------------------------------//
-
-  // it("Should revert if called by address other than owner  ", async function () {
-  //   await expect(productShards.connect(rejuveSponsor).mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   )).to.be.revertedWith("Ownable: caller is not the owner");
-  // })
-
-  // it("Should revert when contract is paused  ", async function () {
-  //   await productShards.pause();
-  //   await expect(productShards.mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   )).to.be.revertedWith("Pausable: paused");
-  // })
-
-
-  // it("Should create remaining shards  ", async function () {
-  //   await productShards.unpause();
-  //   await productShards.mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   );
-  // })
-
-  // it("Should revert if no remaining shards to mint", async function () {
-  //   await expect(productShards.mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   )).to.be.revertedWith("REJUVE: No shard available");
-  // })
-
-  
-//----------------------------------- Future ended ---------------------------------//
-
 
 //----------------------------------- Transfer shard start ---------------------------------//
 
