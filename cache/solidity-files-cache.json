@@ -2,15 +2,14 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/DataManagement.sol": {
-      "lastModificationDate": 1676343323304,
-      "contentHash": "f733353ffcad727baf12296918204d22",
+      "lastModificationDate": 1677727323258,
+      "contentHash": "010cd65a876c242060a4548396ef0ae8",
       "sourceName": "contracts/DataManagement.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -26,12 +25,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -50,14 +43,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IIdentityToken.sol": {
-      "lastModificationDate": 1676343295798,
-      "contentHash": "35d9ef75018b726a4f47116881a026ee",
+      "lastModificationDate": 1677727323347,
+      "contentHash": "6cdb40a5652b07ff726b0b8ea341cae5",
       "sourceName": "contracts/Interfaces/IIdentityToken.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -73,9 +66,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -97,7 +87,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -113,9 +103,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -137,8 +124,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -154,12 +140,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -181,8 +161,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -198,12 +177,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -223,8 +196,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -240,12 +212,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -267,8 +233,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -284,12 +249,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -311,8 +270,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -328,12 +286,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -353,8 +305,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -370,12 +321,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -397,8 +342,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -414,12 +358,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -439,8 +377,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -456,12 +393,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -489,8 +420,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -506,12 +436,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -531,8 +455,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -548,12 +471,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -575,8 +492,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -592,12 +508,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -617,8 +527,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -634,12 +543,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -661,8 +564,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -678,12 +580,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -710,8 +606,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -727,12 +622,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -754,8 +643,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -771,12 +659,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -798,8 +680,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -815,9 +696,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -839,8 +717,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -856,12 +733,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -885,8 +756,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -902,12 +772,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -927,8 +791,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -944,12 +807,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -971,7 +828,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -987,9 +844,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1002,14 +856,14 @@
       "artifacts": []
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IRejuveToken.sol": {
-      "lastModificationDate": 1676343302035,
-      "contentHash": "715bece2447b174a5cd9eb4390ac3a18",
+      "lastModificationDate": 1677727323357,
+      "contentHash": "d57398d9e92845f3433deec223341b79",
       "sourceName": "contracts/Interfaces/IRejuveToken.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1025,9 +879,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1042,15 +893,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/RejuveTokenTest.sol": {
-      "lastModificationDate": 1676605112735,
-      "contentHash": "e49e2817f69759e4f0dcd5080961a0e0",
+      "lastModificationDate": 1677727323460,
+      "contentHash": "1dcd997eee800fc82ae0c50adcac4208",
       "sourceName": "contracts/RejuveTokenTest.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1066,12 +916,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1087,14 +931,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ProductShards.sol": {
-      "lastModificationDate": 1677126883903,
-      "contentHash": "c2faf2da3d75151b5c09f80d036cf0fb",
+      "lastModificationDate": 1677727323437,
+      "contentHash": "358a2e2c3b525a42d8143b8b3f78a2ab",
       "sourceName": "contracts/ProductShards.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1110,9 +954,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1130,15 +971,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IProductNFT.sol": {
-      "lastModificationDate": 1676343308477,
-      "contentHash": "752659cdcf5acaced3ca14e862dca180",
+      "lastModificationDate": 1677727323351,
+      "contentHash": "c6ee8962377b0ba550258fb3aabc1606",
       "sourceName": "contracts/Interfaces/IProductNFT.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1154,12 +994,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1174,14 +1008,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ProductNFT.sol": {
-      "lastModificationDate": 1676343345115,
-      "contentHash": "726beafed591ed7cf3488faa9a87b409",
+      "lastModificationDate": 1677727323386,
+      "contentHash": "86965cf309e9feeafa1dec90dd30c21e",
       "sourceName": "contracts/ProductNFT.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1197,9 +1031,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1219,15 +1050,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IDataManagement.sol": {
-      "lastModificationDate": 1676343298791,
-      "contentHash": "d932eb0f307d8ce4e992172fcf1c181e",
+      "lastModificationDate": 1677727323344,
+      "contentHash": "c1c9a4d195e8edce61e110783151dd0b",
       "sourceName": "contracts/Interfaces/IDataManagement.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1243,12 +1073,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1270,7 +1094,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1286,9 +1110,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1303,14 +1124,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/IdentityToken.sol": {
-      "lastModificationDate": 1676343336440,
-      "contentHash": "7612d21949ff7d1900c0ebbb715f1440",
+      "lastModificationDate": 1677727323339,
+      "contentHash": "e75af6fdfc9c508b871fa803e3ba23ed",
       "sourceName": "contracts/IdentityToken.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1326,9 +1147,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1355,8 +1173,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1372,12 +1189,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1390,15 +1201,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/FutureShards.sol": {
-      "lastModificationDate": 1676343331454,
-      "contentHash": "d22bfbb07395a1e430fc6bd82a9f8c29",
+      "lastModificationDate": 1677727323315,
+      "contentHash": "187145199c5d918b860025bbf2c05a51",
       "sourceName": "contracts/FutureShards.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1414,12 +1224,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1434,15 +1238,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/TransferShards.sol": {
-      "lastModificationDate": 1677638255175,
-      "contentHash": "56bb37aa3d72414eb4a25401e41a43aa",
+      "lastModificationDate": 1677830098544,
+      "contentHash": "3425f0898af1596a3e2a7892ed0d6d66",
       "sourceName": "contracts/TransferShards.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1458,12 +1261,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1478,15 +1275,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/DistributorAgreement.sol": {
-      "lastModificationDate": 1676530154800,
-      "contentHash": "beee66347810c0621a3d814b654ce0a1",
+      "lastModificationDate": 1678072994124,
+      "contentHash": "11935a5c760c9c7acbadb2e8b6988b6e",
       "sourceName": "contracts/DistributorAgreement.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1502,17 +1298,13 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
       "imports": [
-        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol"
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/security/Pausable.sol"
       ],
       "versionPragmas": [
         "^0.8.18"
@@ -1529,8 +1321,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1546,12 +1337,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1564,15 +1349,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IProductShards.sol": {
-      "lastModificationDate": 1677125215351,
-      "contentHash": "f816716197694ae0fd1e91acb02c186f",
+      "lastModificationDate": 1677727323354,
+      "contentHash": "9a7c814a2e4d427b1bc7467516351b3f",
       "sourceName": "contracts/Interfaces/IProductShards.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1588,12 +1372,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1608,15 +1386,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ProfitDistribution.sol": {
-      "lastModificationDate": 1677643311251,
-      "contentHash": "318ac12543ee36aa97f167b5e2b1c1e6",
+      "lastModificationDate": 1677727323455,
+      "contentHash": "e869694c5f0a0319cbc128abe4be896d",
       "sourceName": "contracts/ProfitDistribution.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1632,12 +1409,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },

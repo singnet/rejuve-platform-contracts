@@ -7,11 +7,13 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-/** @dev Contract module which provides an identity creation mechanism
- *  that allows rejuve to create identities on the behalf of user,
- *  taking their signature as permission to create identity.
- *  Also, users can burn their identities any time
- */
+/** 
+ * @title Identity Management for data contributors
+ * @dev Contract module which provides an identity creation mechanism
+ * that allows rejuve to create identities on the behalf of user,
+ * taking their signature as permission to create identity.
+ * Also, users can burn their identities any time
+*/
 contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
     using Counters for Counters.Counter;
     using ECDSA for bytes32;
@@ -34,69 +36,69 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
     /**
      * @dev Emitted when a new Identity is created
      */
-    event IdentityCreated(address caller, uint256 tokenId);
+    event IdentityCreated(address caller, uint256 tokenId, string tokenURI);
 
     /**
      * @dev Emitted when identity owner burn his token
      */
     event IdentityDestroyed(address owner, uint256 ownerId);
 
-    constructor(
-        string memory name_,
-        string memory symbol_
-    ) ERC721(name_, symbol_) {
-        _tokenIdCounter.increment();
-    }
-
     /**
      * @dev Throws if called by any account other than token owner.
-     */
-    modifier onlyIdentityOwner(uint256 _tokenId) {
+    */
+    modifier onlyIdentityOwner(uint256 tokenId) {
         require(
-            _tokenId == ownerToIdentity[_msgSender()],
+            tokenId == ownerToIdentity[_msgSender()],
             "REJUVE: Only Identity Owner"
         );
         _;
     }
 
     modifier ifSignedByUser(
-        bytes memory _signature,
-        address _signer,
-        string memory _tokenURI,
-        uint256 _nonce
+        bytes memory signature,
+        address signer,
+        string memory tokenURI,
+        uint256 nonce
     ) {
         require(
-            verifyMessage(_signature, _signer, _tokenURI, _nonce),
+            _verifyMessage(signature, signer, tokenURI, nonce),
             "REJUVE: Invalid Signature"
         );
         _;
     }
 
-    // ---------------------------- STEP 1 : Create Identity token ------------
+    constructor(string memory name_, string memory symbol_) 
+        ERC721(name_, symbol_) 
+    {
+        _tokenIdCounter.increment();
+    }
+
+    // ---------------------------- STEP 1 : Create Identity token ------------//
 
     /**
-     * @notice Only one identity token per user
+     * @notice Decentralized identitiies for data contributors. 
+     * @dev Only one identity token per user
      * @dev Rejuve/sponsor can create identity token for user. User signature is mandatory
-     * @param _signature user signature
-     * @param _signer user address
-     * @param _tokenURI user metadata
-     * @param _nonce a unique number to prevent replay attacks
+     * @param signature user signature
+     * @param signer user address
+     * @param tokenURI user metadata
+     * @param nonce a unique number to prevent replay attacks
      */
     function createIdentity(
-        bytes memory _signature,
-        address _signer,
-        string memory _tokenURI,
-        uint256 _nonce
+        bytes memory signature,
+        address signer,
+        string memory tokenURI,
+        uint256 nonce
     )
         external
         whenNotPaused
-        ifSignedByUser(_signature, _signer, _tokenURI, _nonce)
+        ifSignedByUser(signature, signer, tokenURI, nonce)
     {
         require(
-            registrations[_signer] == UserStatus.NotRegistered,
+            registrations[signer] == UserStatus.NotRegistered,
             "REJUVE: One Identity Per User"
         );
-        _createIdentity(_signer, _tokenURI);
+        _createIdentity(signer, tokenURI);
     }
 
     /**
@@ -104,20 +106,23 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      * @dev only identity owner can burn his token
      */
     function burnIdentity(
-        uint256 _tokenId
-    ) external onlyIdentityOwner(_tokenId) {
-        _burn(_tokenId);
+        uint256 tokenId
+    ) 
+        external 
+        onlyIdentityOwner(tokenId) 
+    {
+        _burn(tokenId);
         registrations[_msgSender()] = UserStatus.NotRegistered;
         ownerToIdentity[_msgSender()] = 0;
 
-        emit IdentityDestroyed(_msgSender(), _tokenId);
+        emit IdentityDestroyed(_msgSender(), tokenId);
     }
 
-    //---------------------------- OWNER FUNCTIONS --------------------------------
+    //---------------------------- OWNER FUNCTIONS --------------------------------//
+
     /**
      * @dev Triggers stopped state.
-     *
-     */
+    */
     function pause() external onlyOwner {
         _pause();
     }
@@ -129,40 +134,40 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         _unpause();
     }
 
-    //----------------------------- EXTERNAL VIEWS --------------------------------
+    //----------------------------- EXTERNAL VIEWS --------------------------------//
 
     /**
      * @return token id (Identity) of the given address.
      */
-    function getOwnerIdentity(address _owner) external view returns (uint256) {
-        return ownerToIdentity[_owner];
+    function getOwnerIdentity(address owner) external view returns (uint256) {
+        return ownerToIdentity[owner];
     }
 
     /**
      * @return caller registration status.
      */
-    function ifRegistered(address _userAccount) external view returns (uint8) {
-        return uint8(registrations[_userAccount]);
+    function ifRegistered(address userAccount) external view returns (uint8) {
+        return uint8(registrations[userAccount]);
     }
 
-    //----------------------------- PRIVATE FUNCTIONS -----------------------------
+    //----------------------------- PRIVATE FUNCTIONS -----------------------------//
 
     /**
      * @dev Private function to create identity token.
      * @return uint new token id created against caller
-     */
+    */
     function _createIdentity(
-        address _userAccount,
-        string memory _tokenURI
+        address userAccount,
+        string memory tokenURI
     ) private returns (uint256) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(_userAccount, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
-        ownerToIdentity[_userAccount] = tokenId;
-        registrations[_userAccount] = UserStatus.Registered;
+        _safeMint(userAccount, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+        ownerToIdentity[userAccount] = tokenId;
+        registrations[userAccount] = UserStatus.Registered;
 
-        emit IdentityCreated(_userAccount, tokenId);
+        emit IdentityCreated(userAccount, tokenId, tokenURI);
         return tokenId;
     }
 
@@ -170,23 +175,23 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      * @dev Private function to verify user signature
      * Return bool flag true if valid signature
      */
-    function verifyMessage(
-        bytes memory _signature,
-        address _signer,
-        string memory _uri,
-        uint256 _nonce
-    ) private returns (bool _flag) {
-        require(!usedNonces[_nonce], "REJUVE: Signature used already");
-        usedNonces[_nonce] = true;
+    function _verifyMessage(
+        bytes memory signature,
+        address signer,
+        string memory uri,
+        uint256 nonce
+    ) private returns (bool flag) {
+        require(!usedNonces[nonce], "REJUVE: Signature used already");
+        usedNonces[nonce] = true;
         bytes32 messagehash = keccak256(
-            abi.encodePacked(_signer, _uri, _nonce, address(this))
+            abi.encodePacked(signer, uri, nonce, address(this))
         ); // recreate message
-        address signer = messagehash.toEthSignedMessageHash().recover(
-            _signature
+        address signerAddress = messagehash.toEthSignedMessageHash().recover(
+            signature
         ); // verify signer using ECDSA
 
-        if (_signer == signer) {
-            _flag = true;
+        if (signer == signerAddress) {
+            flag = true;
         }
     }
 }
