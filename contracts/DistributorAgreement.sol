@@ -63,7 +63,7 @@ contract DistributorAgreement is Ownable, Pausable {
         require(_unitPrice > 0, "REJUVE: Price can not be zero");
         require(_percentage > 0, "REJUVE: Percentage can not be zero");
         require(
-            verifySignature(_distributor, _sign, _agreement, _nonce),
+            _verifySignature(_distributor, _sign, _agreement, _nonce),
             "REJUVE: Invalid signature"
         );
 
@@ -136,7 +136,7 @@ contract DistributorAgreement is Ownable, Pausable {
      * @dev Private function to verify user signature
      * @return bool flag true if valid signature
     */
-    function verifySignature(
+    function _verifySignature(
         address _distributor,
         bytes memory _sign,
         bytes memory _agreement,
