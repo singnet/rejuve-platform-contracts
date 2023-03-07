@@ -67,8 +67,8 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         _;
     }
 
-    constructor(string memory name_, string memory symbol_) 
-        ERC721(name_, symbol_) 
+    constructor(string memory name, string memory symbol) 
+        ERC721(name, symbol) 
     {
         _tokenIdCounter.increment();
     }

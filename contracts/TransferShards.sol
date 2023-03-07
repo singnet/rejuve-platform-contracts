@@ -2,7 +2,9 @@
 pragma solidity ^0.8.18;
 import "./FutureShards.sol";
 
-/** @notice Contract module that provides shards transfer mechanism for
+/** 
+ * @title Transfer shards 
+ * @notice Contract module that provides shards transfer mechanism for
  * both "Traded" and "Locked" types.
  *
  * @dev System should lock transfer of 50% of tokens for a specific time.
@@ -10,13 +12,12 @@ import "./FutureShards.sol";
  *
  * @dev contract deployer is the default owner.
  * - Only Owner can call pause/unpause functions
- */
-
+*/
 contract TransferShards is FutureShards {
-    constructor(
-        string memory uri_,
-        address productNFT_
-    ) FutureShards(uri_, productNFT_) {}
+
+    constructor(string memory uri, address productNFT) 
+        FutureShards(uri, productNFT) 
+    {}
 
     //----------------------------------------
 

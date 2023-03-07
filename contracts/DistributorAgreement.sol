@@ -4,7 +4,9 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-/** @dev Contract module which provides a distributor agreement mechanism
+/** 
+ * @title Distributor agreement creation
+ * @dev Contract module which provides a distributor agreement mechanism
  * that allows a distributor OR anyone with valid distributor's signature
  * to create a business agreement.
 */
@@ -39,41 +41,41 @@ contract DistributorAgreement is Ownable, Pausable {
 
     /**
      * @dev Distributor or anyone with a valid signature can create an agreement
-     * @param _distributor address 
-     * @param _sign distributor signature
-     * @param _agreement hash
-     * @param _productUID product unique ID on which agreement is made
-     * @param _totalUnits purchased 
-     * @param _unitPrice of an item
-     * @param _percentage agreed percentage, distributor will pay to Rejuve
-     * @param _nonce a unique number to prevent replay attacks
+     * @param distributor address 
+     * @param sign distributor signature
+     * @param agreement hash
+     * @param productUID product unique ID on which agreement is made
+     * @param totalUnits purchased 
+     * @param unitPrice of an item
+     * @param percentage agreed percentage, distributor will pay to Rejuve
+     * @param nonce a unique number to prevent replay attacks
     */
     function createAgreement(
-        address _distributor,
-        bytes memory _sign,
-        bytes memory _agreement,
-        uint _productUID,
-        uint _totalUnits,
-        uint _unitPrice,
-        uint _percentage,
-        uint _nonce
+        address distributor,
+        bytes memory sign,
+        bytes memory agreement,
+        uint productUID,
+        uint totalUnits,
+        uint unitPrice,
+        uint percentage,
+        uint nonce
     ) external {
-        require(_distributor != address(0), "REJUVE: Zero address");
-        require(_totalUnits > 0, "REJUVE: Total units can not be zero");
-        require(_unitPrice > 0, "REJUVE: Price can not be zero");
-        require(_percentage > 0, "REJUVE: Percentage can not be zero");
+        require(distributor != address(0), "REJUVE: Zero address");
+        require(totalUnits > 0, "REJUVE: Total units can not be zero");
+        require(unitPrice > 0, "REJUVE: Price can not be zero");
+        require(percentage > 0, "REJUVE: Percentage can not be zero");
         require(
-            _verifySignature(_distributor, _sign, _agreement, _nonce),
+            _verifySignature(distributor, sign, agreement, nonce),
             "REJUVE: Invalid signature"
         );
 
         _createAgreement(
-            _distributor,
-            _agreement,
-            _productUID,
-            _totalUnits,
-            _unitPrice,
-            _percentage
+            distributor,
+            agreement,
+            productUID,
+            totalUnits,
+            unitPrice,
+            percentage
         );
     }
 
@@ -81,15 +83,14 @@ contract DistributorAgreement is Ownable, Pausable {
 
     /**
      * @dev Triggers stopped state.
-     *
-     */
+    */
     function pause() external onlyOwner {
         _pause();
     }
 
     /**
      * @dev Returns to normal state.
-     */
+    */
     function unpause() external onlyOwner {
         _unpause();
     }
@@ -100,35 +101,35 @@ contract DistributorAgreement is Ownable, Pausable {
      * @return Distributor's agreement information
     */
     function getDistributorData(
-        address _distributor
+        address distributor
     ) external view returns (Distributor memory) {
-        return distributors[_distributor];
+        return distributors[distributor];
     }
 
     //-------------------- PRIVATE --------------------------//
 
     function _createAgreement(
-        address _distributor,
-        bytes memory _agreement,
-        uint _productUID,
-        uint _totalUnits,
-        uint _unitPrice,
-        uint _percentage
+        address distributor,
+        bytes memory agreement,
+        uint productUID,
+        uint totalUnits,
+        uint unitPrice,
+        uint percentage
     ) private {
-        Distributor storage dist = distributors[_distributor];
-        dist.agreement = _agreement;
-        dist.productUID = _productUID;
-        dist.units = _totalUnits;
-        dist.unitPrice = _unitPrice;
-        dist.percentage = _percentage;
+        Distributor storage dist = distributors[distributor];
+        dist.agreement = agreement;
+        dist.productUID = productUID;
+        dist.units = totalUnits;
+        dist.unitPrice = unitPrice;
+        dist.percentage = percentage;
 
         emit DistributorCreated(
-            _distributor,
-            _agreement,
-            _productUID,
-            _totalUnits,
-            _unitPrice,
-            _percentage
+            distributor,
+            agreement,
+            productUID,
+            totalUnits,
+            unitPrice,
+            percentage
         );
     }
 
@@ -137,19 +138,19 @@ contract DistributorAgreement is Ownable, Pausable {
      * @return bool flag true if valid signature
     */
     function _verifySignature(
-        address _distributor,
-        bytes memory _sign,
-        bytes memory _agreement,
+        address distributor,
+        bytes memory sign,
+        bytes memory agreement,
         uint _nonce
     ) private returns (bool) {
         require(!usedNonce[_nonce], "REJUVE: Nonce used already");
         usedNonce[_nonce] = true;
         bytes32 msgHash = keccak256(
-            abi.encodePacked(_distributor, _agreement, _nonce, address(this))
+            abi.encodePacked(distributor, agreement, _nonce, address(this))
         );
-        address signer = msgHash.toEthSignedMessageHash().recover(_sign);
+        address signer = msgHash.toEthSignedMessageHash().recover(sign);
 
-        if (signer == _distributor) {
+        if (signer == distributor) {
             return true;
         } else {
             return false;
