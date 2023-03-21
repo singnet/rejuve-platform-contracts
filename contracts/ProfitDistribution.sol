@@ -53,12 +53,15 @@ contract ProfitDistribution is Context, Ownable, Pausable {
      * @param productUID token Id of a product that is being purchased
      * @param amount deposited RJV tokens / price (in RJV) of the item
     */
-    function deposit(uint productUID, uint amount) external {
+    function deposit(
+        uint productUID, 
+        uint amount
+    ) 
+        external 
+        whenNotPaused 
+    {
         require(amount > 0, "REJUVE: Zero amount");
-        _rejuveToken.transferFrom(_msgSender(), address(this), amount);
-        productEarning[productUID] += amount;
-
-        emit PaymentReceived(_msgSender(), productUID, amount);
+        _deposit(productUID, amount);
     }
 
     /**
@@ -68,7 +71,13 @@ contract ProfitDistribution is Context, Ownable, Pausable {
      * @param contributionPoints - caller contribution in overall product 
      * (calculate off-chain)
     */
-    function withdraw(uint productUID, uint contributionPoints) external {
+    function withdraw(
+        uint productUID, 
+        uint contributionPoints
+    ) 
+        external 
+        whenNotPaused 
+    {
         require(contributionPoints > 0, "REJUVE: Zero contribution");
         require(productEarning[productUID] > 0, "REJUVE: No product earning");
         require(_getShardBalance(productUID) > 0, "REJUVE: No shard balance");
@@ -92,7 +101,7 @@ contract ProfitDistribution is Context, Ownable, Pausable {
         _unpause();
     }
 
-    //----------------- VIEWS ------------
+    //----------------------------- VIEWS ----------------------//
 
     /**
      * @return Total earning of a product
@@ -138,6 +147,12 @@ contract ProfitDistribution is Context, Ownable, Pausable {
     }
 
     //------------------------------ PRIVATE --------------------------------//
+
+    function _deposit(uint productUID, uint amount) private {
+        _rejuveToken.transferFrom(_msgSender(), address(this), amount);
+        productEarning[productUID] += amount;
+        emit PaymentReceived(_msgSender(), productUID, amount);     
+    }
 
     /**
      * @dev Contribution points are basis points (1% = 100 bps => calculate off-chain)

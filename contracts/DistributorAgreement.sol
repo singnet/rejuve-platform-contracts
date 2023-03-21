@@ -59,11 +59,14 @@ contract DistributorAgreement is Ownable, Pausable {
         uint unitPrice,
         uint percentage,
         uint nonce
-    ) external {
+    ) 
+        external
+        whenNotPaused
+    {
         require(distributor != address(0), "REJUVE: Zero address");
-        require(totalUnits > 0, "REJUVE: Total units can not be zero");
-        require(unitPrice > 0, "REJUVE: Price can not be zero");
-        require(percentage > 0, "REJUVE: Percentage can not be zero");
+        require(totalUnits > 0, "REJUVE: Total units cannot be zero");
+        require(unitPrice > 0, "REJUVE: Price cannot be zero");
+        require(percentage > 0, "REJUVE: Percentage cannot be zero");
         require(
             _verifySignature(distributor, sign, agreement, nonce),
             "REJUVE: Invalid signature"

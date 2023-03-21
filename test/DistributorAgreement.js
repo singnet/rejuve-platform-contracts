@@ -19,10 +19,27 @@ describe("Distributor Agreement Contract", function () {
         agreement = await _agreement.deploy();
     });  
 
+    it("Should revert if contract is paused by person other than owner", async function () {
+        await expect(agreement.connect(distributor1).pause())
+        .to.be.revertedWith("Ownable: caller is not the owner");   
+    })
+
+    it("Should revert if contract is paused", async function () {
+        await agreement.pause();
+        let signature = await _getSign.getDistributorSign(distributor1.address, agreement.address, agreementHash,nonce, distributor1) 
+        await expect(agreement.createAgreement(distributor1.address, signature, agreementHash, 101, 100, 5, 20, nonce))
+        .to.be.revertedWith("Pausable: paused");   
+    })
+
+    it("Should revert if contract is unpaused by person other than owner", async function () {
+        await expect(agreement.connect(distributor1).unpause())
+        .to.be.revertedWith("Ownable: caller is not the owner");   
+    })
+
     it("Should create business agreement if Rejuve is paying", async function () {
+        await agreement.unpause();
         let signature = await _getSign.getDistributorSign(distributor1.address, agreement.address, agreementHash,nonce, distributor1)
         await agreement.connect(rejuveAdmin).createAgreement(distributor1.address, signature, agreementHash, 101, 100, 5, 20, nonce);
-        console.log(`Distributor details: ${await agreement.getDistributorData(distributor1.address)}`);
         ++nonce;
     });
 
@@ -35,19 +52,19 @@ describe("Distributor Agreement Contract", function () {
     it("Should revert if total units are zero ", async function () {
         let signature = await _getSign.getDistributorSign(distributor1.address, agreement.address, agreementHash,nonce, distributor1) 
         await expect(agreement.createAgreement(distributor1.address, signature, agreementHash, 101, 0, 5, 20, nonce))
-        .to.be.revertedWith("REJUVE: Total units can not be zero");   
+        .to.be.revertedWith("REJUVE: Total units cannot be zero");   
     })
 
     it("Should revert if unit price is zero ", async function () {
         let signature = await _getSign.getDistributorSign(distributor1.address, agreement.address, agreementHash,nonce, distributor1)
         await expect(agreement.createAgreement(distributor1.address, signature, agreementHash, 101, 100, 0, 20, nonce))
-        .to.be.revertedWith("REJUVE: Price can not be zero");      
+        .to.be.revertedWith("REJUVE: Price cannot be zero");      
     })
 
     it("Should revert if percentage is zero ", async function () {
         let signature = await _getSign.getDistributorSign(distributor1.address, agreement.address, agreementHash,nonce, distributor1) 
         await expect(agreement.createAgreement(distributor1.address, signature, agreementHash, 101, 100, 5, 0, nonce))
-        .to.be.revertedWith("REJUVE: Percentage can not be zero");
+        .to.be.revertedWith("REJUVE: Percentage cannot be zero");
     })
 
     it("Should revert if address is 0 ", async function () {

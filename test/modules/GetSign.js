@@ -76,7 +76,27 @@ async function getDistributorSign(distributorAddress, contractAddress, agreement
 
 }
 
+async function getAdminSignForCoupon(adminAddress, admin, userAddress, contractAddress, couponBps, nonce) {
+  const message = ethers.utils.solidityKeccak256(
+    ['address', 'address', 'address', 'uint256', 'uint256'],
+      [
+        adminAddress,
+        userAddress,
+        contractAddress,
+        couponBps,
+        nonce
+      ],
+  )
+
+  const arrayifyMessage = ethers.utils.arrayify(message)
+  const flatSignature = await admin.signMessage(arrayifyMessage)
+
+  return flatSignature;
+
+}
+
 module.exports.getSignForIdentity = getSignForIdentity;
 module.exports.getSignForData = getSignForData;
 module.exports.getSignForPermission = getSignForPermission;
 module.exports.getDistributorSign = getDistributorSign;
+module.exports.getAdminSignForCoupon = getAdminSignForCoupon;

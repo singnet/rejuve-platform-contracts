@@ -45,10 +45,26 @@ describe("Profit Distribution Contract", function () {
         .to.be.revertedWith("REJUVE: No product earning");
     })
 
+    it("Should revert if contract is paused by person other than owner", async function () {
+        await expect(profit.connect(dataowner1).pause())
+        .to.be.revertedWith("Ownable: caller is not the owner");   
+    })
+
+    it("Should revert if contract is paused", async function () {
+        await profit.pause();
+        await expect(profitModule.depositRejuveTokens(rejuveToken, individualBuyer, profit.address, profit, productUID, 50 ))
+        .to.be.revertedWith("Pausable: paused");   
+    })
+
+    it("Should revert if contract is unpaused by person other than owner", async function () {
+        await expect(profit.connect(dataowner1).unpause())
+        .to.be.revertedWith("Ownable: caller is not the owner");   
+    })
+
     //----- Deposit RJV tokens 
 
     it("Should receive RJV tokens", async function () {
-
+        await profit.unpause();
         //-- RJV tokens deposited by an Individual buyer ---
         totalAmount = await profitModule.depositRejuveTokens(rejuveToken, individualBuyer, profit.address, profit, productUID, 50 );
        
@@ -206,6 +222,27 @@ describe("Profit Distribution Contract", function () {
 
         expect (await rejuveToken.balanceOf(lab.address)).to.equal(callerEarning); 
         expect (await profit.getHolderLastPoint(lab.address, productUID)).to.equal(await profit.getProductEarning(productUID));
+        let totalWithdrawal = Number (previousWithdrawal) + Number (await profitModule.getWithdrawAmount());
+        expect (await profit.getTotalWithdrawal(productUID)).to.equal(totalWithdrawal);
+    })
+
+    it("Should revert if trying withdraw when contract is paused", async function () {
+        await profit.pause();
+        await profitModule.calculateEarning(rejuveToken, dataowner1.address, dataowner1, profit, productUID, totalAvailableShards);
+        let contributionPoints = await profitModule.getContributionPoints();
+        await expect(profit.connect(dataowner1).withdraw(productUID, contributionPoints))
+        .to.be.revertedWith("Pausable: paused");
+    })
+
+    it("Should claim profit by data owner again", async function () {
+        await profit.unpause();
+        let callerEarning = await profitModule.calculateEarning(rejuveToken, dataowner1.address, dataowner1, profit, productUID, totalAvailableShards);
+        let contributionPoints = await profitModule.getContributionPoints();
+        let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
+        await profit.connect(dataowner1).withdraw(productUID, contributionPoints);  
+
+        expect (await rejuveToken.balanceOf(dataowner1.address)).to.equal(callerEarning); 
+        expect (await profit.getHolderLastPoint(dataowner1.address, productUID)).to.equal(await profit.getProductEarning(productUID));
         let totalWithdrawal = Number (previousWithdrawal) + Number (await profitModule.getWithdrawAmount());
         expect (await profit.getTotalWithdrawal(productUID)).to.equal(totalWithdrawal);
     })
