@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -59,33 +59,6 @@ contract DataManagement is Context, Ownable, Pausable {
         bytes32 permissionHash
     );
 
-    /**
-     * @dev Throws if called by unregistered user.
-     */
-    modifier ifRegisteredUser(address dataOwner) {
-        require(
-            _identityToken.ifRegistered(dataOwner) == 1,
-            "REJUVE: Not Registered"
-        );
-        _;
-    }
-
-    /**
-     * @dev Throws if invalid signature
-     */
-    modifier ifSignedByUserForData(
-        address signer,
-        bytes memory signature,
-        bytes memory dHash,
-        uint256 nonce
-    ) {
-        require(
-            _verifyDataMessage(signature, signer, dHash, nonce),
-            "REJUVE: Invalid Signature"
-        );
-        _;
-    }
-
     constructor(IIdentityToken identityToken_) {
         _identityToken = identityToken_;
     }
@@ -106,9 +79,16 @@ contract DataManagement is Context, Ownable, Pausable {
     )
         external
         whenNotPaused
-        ifRegisteredUser(signer)
-        ifSignedByUserForData(signer, signature, dHash, nonce)
     {
+        require(
+            _identityToken.ifRegistered(signer) == 1,
+            "REJUVE: Not Registered"
+        );
+        require(
+            _verifyDataMessage(signature, signer, dHash, nonce),
+            "REJUVE: Invalid Signature"
+        );
+
         _submitData(signer, dHash);
     }
 
@@ -135,7 +115,10 @@ contract DataManagement is Context, Ownable, Pausable {
         uint256 nextProductUID,
         uint256 nonce,
         uint256 expiration
-    ) external whenNotPaused {
+    ) 
+        external 
+        whenNotPaused 
+    {
         _preValidations(
             _msgSender(),
             signer,
@@ -181,7 +164,7 @@ contract DataManagement is Context, Ownable, Pausable {
         uint tokenId,
         uint index
     ) external view returns (bytes memory) {
-        uint dataIndex = ownerToDataIndexes[tokenId][index]; // returning index of dataHashes array
+        uint dataIndex = ownerToDataIndexes[tokenId][index];
         return _dataHashes[dataIndex];
     }
 
@@ -196,7 +179,7 @@ contract DataManagement is Context, Ownable, Pausable {
         return uint8(dataToProductPermission[dHash][productUID]);
     }
 
-    // @return uint data owner identity token ID
+    // @return data owner identity token ID
     function getDataOwnerId(bytes memory dHash) external view returns (uint) {
         return dataToOwner[dHash];
     }

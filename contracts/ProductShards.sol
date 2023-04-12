@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -77,7 +77,7 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         uint[] shardAmount
     );
 
-    //------------------------------- Constructor -------------------------------------------//
+    //------------------------------- Constructor --------------------//
 
     constructor(string memory uri_, address productNFT_) 
         ERC1155(uri_) 
@@ -85,7 +85,7 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         _productNFT = IProductNFT(productNFT_);
     }
 
-    //---------------------------------  EXTERNAL --------------------------------------------//
+    //---------------------------------  EXTERNAL --------------------//
 
     /**
      * @notice Shards creation and distribution to initial data contributors (including lab) 
@@ -115,6 +115,16 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         onlyOwner 
         whenNotPaused 
     {
+        _preValidate(
+            targetSupply_,
+            labCredit,
+            lockPeriod,
+            initialPercent,
+            rejuvePercent,
+            lab,
+            rejuve,
+            uris
+        );
         _distributeInitialShards(
             productUID,
             targetSupply_,
@@ -128,7 +138,7 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         );
     }
 
-    //------------------------------------ VIEWS -------------------------------------//
+    //--------------------- VIEWS --------------------------------//
 
     /**
      * @return mintedShardSupply of a given product UID
@@ -167,7 +177,7 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         return productToTypeIndexes[productUID];
     }
 
-    //--------------------------------------- PUBLIC ------------------------------------------------//
+    //---------------------- PUBLIC -------------------------------------//
 
     /**
      * @dev returns unique URI for unique ID type (locked, traded)
@@ -176,7 +186,7 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         return typeToURI[id];
     }
 
-    //---------------------------------------- INTERNAL --------------------------------//
+    //------------------------ INTERNAL --------------------------------//
 
     /**
      * @dev Calculate shards Amount for individual data contributor
@@ -213,7 +223,33 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         return amounts;
     }
 
-    //---------------------------------------- PRIVATE ---------------------------------------------//
+    //----------------------------- PRIVATE -----------------------------//
+
+    /**
+     * @dev Checking input values 
+    */
+    function _preValidate(
+        uint targetSupply_,
+        uint labCredit,
+        uint lockPeriod,
+        uint8 initialPercent,
+        uint8 rejuvePercent,
+        address lab,
+        address rejuve,
+        string[] memory uris
+    ) 
+        private 
+        pure
+    {
+        require(targetSupply_ > 0, "REJUVE: Target supply cannot be zero");
+        require(labCredit > 0, "REJUVE: Lab credit cannot be zero");
+        require(lockPeriod > 0, "REJUVE: Lock period cannot be zero");
+        require(initialPercent > 0, "REJUVE: Initial percent cannot be zero");
+        require(rejuvePercent > 0, "REJUVE: Rejuve percent cannot be zero");
+        require(lab !=  address(0), "REJUVE: Lab address cannot be zero");
+        require(rejuve !=  address(0), "REJUVE: Rejuve address cannot be zero");
+        require(uris.length > 0, "REJUVE: URIs length cannot be zero");
+    }
 
     /**
      * @notice Shards creation and distribution to initial data contributors (including lab) 
@@ -266,14 +302,14 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
             labCredit,
             lab
         );
-        _rejuveShare(productUID, targetSupply_, rejuve, rejuvePercent);
+        _rejuveShare(productUID, targetSupply_, rejuve, rejuvePercent); 
 
         emit InitialShardDistributed(
             productUID,
             _initialDataOwners,
             _initialDataOwnerShards
         );
-        _initialRewardDistributed = true;
+        _initialRewardDistributed = true; 
     }
 
     /**
@@ -281,7 +317,6 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @param lockPeriod days in seconds e.g for 2 days => 172,800 seconds
      */
     function _setLockPeriod(uint productUID, uint lockPeriod) private {
-        require(lockPeriod != 0, "REJUVE: Lock period cannot be zero");
         lockPeriod = lockPeriod + block.timestamp;
         productToLockPeriod[productUID] = lockPeriod;
     }
@@ -296,12 +331,6 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         uint8 initialPercent,
         uint8 rejuvePercent
     ) private {
-        require(targetSupply_ != 0, "REJUVE: Target supply cannot be 0");
-        require(
-            initialPercent != 0,
-            "REJUVE: Initial contributors percent cannot be 0"
-        );
-
         ShardConfig storage config = productToShardsConfig[productUID];
         config.productUID = productUID;
         config.targetSupply = targetSupply_;

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -148,10 +148,10 @@ contract ProfitDistribution is Context, Ownable, Pausable {
 
     //------------------------------ PRIVATE --------------------------------//
 
-    function _deposit(uint productUID, uint amount) private {
-        _rejuveToken.transferFrom(_msgSender(), address(this), amount);
+    function _deposit(uint productUID, uint amount) private {   
         productEarning[productUID] += amount;
-        emit PaymentReceived(_msgSender(), productUID, amount);     
+        emit PaymentReceived(_msgSender(), productUID, amount);   
+        _rejuveToken.transferFrom(_msgSender(), address(this), amount);  
     }
 
     /**
@@ -174,8 +174,7 @@ contract ProfitDistribution is Context, Ownable, Pausable {
         ]; 
         withdrawalBalance[productUID] += amount;
 
-        _rejuveToken.transfer(_msgSender(), amount);
-
         emit Withdrawal(_msgSender(), productUID, amount);
+        _rejuveToken.transfer(_msgSender(), amount);
     }
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -43,30 +43,6 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      */
     event IdentityDestroyed(address owner, uint256 ownerId);
 
-    /**
-     * @dev Throws if called by any account other than token owner.
-    */
-    modifier onlyIdentityOwner(uint256 tokenId) {
-        require(
-            tokenId == ownerToIdentity[_msgSender()],
-            "REJUVE: Only Identity Owner"
-        );
-        _;
-    }
-
-    modifier ifSignedByUser(
-        bytes memory signature,
-        address signer,
-        string memory tokenURI,
-        uint256 nonce
-    ) {
-        require(
-            _verifyMessage(signature, signer, tokenURI, nonce),
-            "REJUVE: Invalid Signature"
-        );
-        _;
-    }
-
     constructor(string memory name, string memory symbol) 
         ERC721(name, symbol) 
     {
@@ -92,12 +68,16 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
     )
         external
         whenNotPaused
-        ifSignedByUser(signature, signer, tokenURI, nonce)
     {
+        require(
+            _verifyMessage(signature, signer, tokenURI, nonce),
+            "REJUVE: Invalid Signature"
+        );
         require(
             registrations[signer] == UserStatus.NotRegistered,
             "REJUVE: One Identity Per User"
         );
+        
         _createIdentity(signer, tokenURI);
     }
 
@@ -109,13 +89,16 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         uint256 tokenId
     ) 
         external 
-        onlyIdentityOwner(tokenId) 
     {
-        _burn(tokenId);
+        require(
+            tokenId == ownerToIdentity[_msgSender()],
+            "REJUVE: Only Identity Owner"
+        );
+
         registrations[_msgSender()] = UserStatus.NotRegistered;
         ownerToIdentity[_msgSender()] = 0;
-
         emit IdentityDestroyed(_msgSender(), tokenId);
+        _burn(tokenId);
     }
 
     //---------------------------- OWNER FUNCTIONS --------------------------------//
@@ -159,15 +142,18 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
     function _createIdentity(
         address userAccount,
         string memory tokenURI
-    ) private returns (uint256) {
+    ) 
+        private 
+        returns(uint256) 
+    {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(userAccount, tokenId);
-        _setTokenURI(tokenId, tokenURI);
         ownerToIdentity[userAccount] = tokenId;
         registrations[userAccount] = UserStatus.Registered;
-
         emit IdentityCreated(userAccount, tokenId, tokenURI);
+        _safeMint(userAccount, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+
         return tokenId;
     }
 

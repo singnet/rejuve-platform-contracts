@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -273,18 +273,15 @@ contract ShardMarketplace is Context, Ownable, Pausable {
             if(discountApplied) {
                 uint discount = coupon * totalPrice / 10000;
                 totalPrice = totalPrice - discount;
-                _transferAmount(seller, totalPrice, id, shardAmount);
+                _transferAmount(seller, productUID, unitPrice, totalPrice, id, shardAmount);
             } else {
-                _transferAmount(seller, totalPrice, id, shardAmount);
+                _transferAmount(seller, productUID, unitPrice, totalPrice, id, shardAmount);
             }
         }
 
         else {
-            _transferAmount(seller, totalPrice, id, shardAmount);
+            _transferAmount(seller, productUID, unitPrice, totalPrice, id, shardAmount);
         }
-
-        emit Sold(seller, _msgSender(), productUID, shardAmount, unitPrice);
-
     }
 
     /**
@@ -293,10 +290,12 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @dev Send RJV to shards seller 
      * @dev Send Shards ownership to buyer
     */
-    function _transferAmount(address seller, uint totalPrice, uint id, uint shardAmount) private {    
+    function _transferAmount(address seller, uint productUID, uint unitPrice, uint totalPrice, uint id, uint shardAmount) private {    
         
         require(_rejuveToken.balanceOf(_msgSender()) >= totalPrice, "REJUVE Insuffient RJV balance");
         require(_rejuveToken.allowance(_msgSender(), address(this)) >= totalPrice, "REJUVE: Not approved");
+        
+        emit Sold(seller, _msgSender(), productUID, shardAmount, unitPrice);
         
         // Sending RJV tokens
         _rejuveToken.transferFrom(_msgSender(), seller, totalPrice);

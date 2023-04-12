@@ -6,6 +6,8 @@ let data = require("./modules/DataSubmission");
 let _testTime = require("./modules/TestTime");
 let prod = require("./modules/Contracts")
 
+let zero_address = "0x0000000000000000000000000000000000000000";
+
 describe("Product shards - 1155", function () {
 
   let _identityToken;
@@ -186,9 +188,7 @@ describe("Product shards - 1155", function () {
 
   //----------------- Create Product -------------------------------
 
-  it("Should create product ", async function () {
-
-   
+  it("Should create product ", async function () {   
     // Product Creation by lab (lab)
     await productNFT
       .connect(lab)
@@ -206,7 +206,136 @@ describe("Product shards - 1155", function () {
 
   //----------------- Create Shards -------------------------------
 
-  it("Should revert if create shard function is called by address other than owner", async function () {
+  it("Should revert if target supply is zero", async function () {
+    await expect( productShards.distributeInitialShards(
+      productUID,
+      0,
+      30,
+      lockPeriod,
+      30,
+      20,
+      lab.address,
+      rejuveAdmin.address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Target supply cannot be zero");
+  })
+
+  it("Should revert if lab credit is zero", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      0,
+      lockPeriod,
+      30,
+      20,
+      lab.address,
+      rejuveAdmin.address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Lab credit cannot be zero");
+  })
+
+  it("Should revert if lock period is zero", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      30,
+      0,
+      30,
+      20,
+      lab.address,
+      rejuveAdmin.address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Lock period cannot be zero");
+  })
+
+  it("Should revert if initial percent is zero", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      30,
+      lockPeriod,
+      0,
+      20,
+      lab.address,
+      rejuveAdmin.address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Initial percent cannot be zero");
+  })
+
+  it("Should revert if Rejuve percent is zero", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      30,
+      lockPeriod,
+      30,
+      0,
+      lab.address,
+      rejuveAdmin.address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Rejuve percent cannot be zero");
+  })
+
+  it("Should revert if Lab address is zero", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      30,
+      lockPeriod,
+      30,
+      20,
+      zero_address,
+      rejuveAdmin.address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Lab address cannot be zero");
+  })
+
+  it("Should revert if Rejuve address is zero", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      30,
+      lockPeriod,
+      30,
+      20,
+      lab.address,
+      zero_address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Rejuve address cannot be zero");
+  })
+
+  it("Should revert if URIs are empty ", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      30,
+      lockPeriod,
+      30,
+      20,
+      lab.address,
+      rejuveAdmin.address,
+      []
+    )).to.be.revertedWith("REJUVE: URIs length cannot be zero");
+  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  it("Should revert if createShard is called by address other than owner", async function () {
     await expect( productShards.connect(rejuveSponsor).distributeInitialShards(
       productUID,
       100,
@@ -443,51 +572,4 @@ it("Should revert if contract is paused", async function () {
     expect(await productShards.paused()).to.equal(false);
   });
 
-  it("Should revert if lock period is zero", async function () {
-    await expect(
-      productShards.distributeInitialShards(
-        productUID,
-        100,
-        30,
-        0,
-        30,
-        20,
-        lab.address,
-        rejuveAdmin.address,
-        ["/product1Locked", "/product1Traded"]
-      )
-    ).to.be.revertedWith("REJUVE: Lock period cannot be zero");
-  });
-
-  it("Should revert if target supply is zero", async function () {
-    await expect(
-      productShards.distributeInitialShards(
-        productUID,
-        0,
-        30,
-        2,
-        30,
-        20,
-        lab.address,
-        rejuveAdmin.address,
-        ["/product1Locked", "/product1Traded"]
-      )
-    ).to.be.revertedWith("REJUVE: Target supply cannot be 0");
-  });
-
-  it("Should revert if initial contributor percentage is zero", async function () {
-    await expect(
-      productShards.distributeInitialShards(
-        productUID,
-        100,
-        30,
-        2,
-        0,
-        20,
-        lab.address,
-        rejuveAdmin.address,
-        ["/product1Locked", "/product1Traded"]
-      )
-    ).to.be.revertedWith("REJUVE: Initial contributors percent cannot be 0");
-  });
 });
