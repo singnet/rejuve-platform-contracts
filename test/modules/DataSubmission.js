@@ -12,9 +12,8 @@ async function submitDataHash(dataOwnerAddress, dataHash, dataContractAddress, d
 async function getAccessPermission(dataOwnerAddress, dataRequestorID, dataHash, productUID, expiration, dataContractAddress, dataOwner, lab, dataMgt){
     ++nonce;
     let permissionSign = _getSign.getSignForPermission(dataOwnerAddress, dataRequestorID, dataHash, productUID, nonce, expiration, dataContractAddress, dataOwner);
-    await dataMgt.connect(lab).getPermission(dataOwnerAddress, permissionSign, dataHash, dataRequestorID, productUID, nonce, expiration);
+    await dataMgt.connect(lab).getPermission(dataOwnerAddress, permissionSign, dataHash, productUID, nonce, expiration);
 }
-
 
 module.exports.submitDataHash = submitDataHash;
 module.exports.getAccessPermission = getAccessPermission;

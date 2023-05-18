@@ -4,6 +4,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "./Interfaces/IProductNFT.sol";
+import "hardhat/console.sol";
 
 /** 
  * @title Product shards creation & allocation
@@ -25,12 +26,12 @@ import "./Interfaces/IProductNFT.sol";
 */
 contract ProductShards is Ownable, Pausable, ERC1155 {
 
-    //Product shards configuration
+    // Product shards configuration
     struct ShardConfig {
-        uint productUID;
-        uint targetSupply;
-        uint totalSupply;
-        uint lockPeriod;
+        uint256 productUID;
+        uint256 targetSupply;
+        uint256 totalSupply;
+        uint256 lockPeriod;
         uint8 initialPercent;
         uint8 rejuvePercent;
         uint8 futurePercent;
@@ -38,32 +39,32 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
 
     IProductNFT private _productNFT;
 
-    // Two token types 1. Locked 2. Traded
-    string[] private _types;
+    // Two token types for each product 1. Locked 2. Tradable
+    bytes32[] private _types;
 
-    // Addresses of all initial contributors
-    address[] private _initialDataOwners;
+    // Mapping from productUID to initial data contributors including (Lab & Rejuve)
+    mapping(uint256 => address[]) private _initialContributors;
 
-    // Shard amount of all initial contributors
-    uint[] private _initialDataOwnerShards;
+    // Mapping from productUID to Shard amount of all initial contributors
+    mapping(uint256 => uint256[]) private _initialContributorShards;
 
-    // Initial contributor reward status
-    bool _initialRewardDistributed;
+    // Mapping from productUID to initialShardsDistribution status
+    mapping(uint256 => bool) private _initialDistributionStatus;
 
     // Mapping from productUID to its Shards config
-    mapping(uint => ShardConfig) productToShardsConfig;
+    mapping(uint256 => ShardConfig) productToShardsConfig;
 
     // Mapping from productUID to Types array index
-    mapping(uint => uint[]) productToTypeIndexes;
+    mapping(uint256 => uint256[]) productToTypeIndexes;
 
     // Mapping from productUID to lock period
-    mapping(uint => uint) productToLockPeriod;
+    mapping(uint256 => uint256) productToLockPeriod;
 
     //Mapping from Token Type ID to Product UID
-    mapping(uint => uint) typeToProduct;
+    mapping(uint256 => uint256) typeToProduct;
 
     // Mapping from Type ID to state
-    mapping(uint => string) typeToState;
+    mapping(uint256 => bytes32) typeToState;
 
     //Mapping from TypeID to Type URI
     mapping(uint256 => string) typeToURI;
@@ -72,9 +73,9 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @dev Emitted when product shards are distributed to initial contributors
      */
     event InitialShardDistributed(
-        uint productUID,
-        address[] dataOwners,
-        uint[] shardAmount
+        uint256 productUID,
+        address[] initialContributors,
+        uint256[] shardAmount
     );
 
     //------------------------------- Constructor --------------------//
@@ -101,10 +102,10 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      *
      */
     function distributeInitialShards(
-        uint productUID,
-        uint targetSupply_,
-        uint labCredit,
-        uint lockPeriod,
+        uint256 productUID,
+        uint256 targetSupply_,
+        uint256 labCredit,
+        uint256 lockPeriod,
         uint8 initialPercent,
         uint8 rejuvePercent,
         address lab,
@@ -115,6 +116,10 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         onlyOwner 
         whenNotPaused 
     {
+        require(
+            !_initialDistributionStatus[productUID], 
+            "REJUVE: Initial shards distributed already"
+        );
         _preValidate(
             targetSupply_,
             labCredit,
@@ -143,14 +148,14 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
     /**
      * @return mintedShardSupply of a given product UID
      */
-    function totalShardSupply(uint productUID) external view returns (uint) {
+    function totalShardSupply(uint256 productUID) external view returns (uint256) {
         return productToShardsConfig[productUID].totalSupply;
     }
 
     /**
      * @return targetSupply of a given product UID
      */
-    function targetSupply(uint productUID) external view returns (uint) {
+    function targetSupply(uint256 productUID) external view returns (uint256) {
         return productToShardsConfig[productUID].targetSupply;
     }
 
@@ -158,8 +163,8 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @dev returns shards configuration info for a given productUID
      */
     function getShardsConfig(
-        uint productUID
-    ) external view returns (uint, uint8, uint8, uint8) {
+        uint256 productUID
+    ) external view returns (uint256, uint8, uint8, uint8) {
         return (
             productToShardsConfig[productUID].lockPeriod,
             productToShardsConfig[productUID].initialPercent,
@@ -172,9 +177,36 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @dev returns type IDs for a given productUID
      */
     function getProductIDs(
-        uint productUID
-    ) external view returns (uint[] memory) {
+        uint256 productUID
+    ) external view returns (uint256[] memory) {
         return productToTypeIndexes[productUID];
+    }
+
+    /**
+     * @return Status of initial shards distribution
+    */
+    function getInitialDistributionStatus(
+        uint256 productUID
+    ) external view returns (bool) {
+        return _initialDistributionStatus[productUID];
+    }
+
+    /**
+     * @return Initial contributors (Data owners, Lab and Rejuve) addresses 
+    */
+    function getInitialContributors(
+        uint256 productUID
+    ) external view returns(address[] memory){
+        return _initialContributors[productUID];
+    }
+
+    /**
+     * @return Initial contributors (Data owners, Lab and Rejuve) shards amount 
+    */
+    function getInitialContributorShards(
+        uint256 productUID
+    ) external view returns(uint256[] memory){
+        return _initialContributorShards[productUID];
     }
 
     //---------------------- PUBLIC -------------------------------------//
@@ -197,15 +229,15 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * 3. Calculate shard amount as per percentage for individual data contributor
      */
     function _shardsPerContributor(
-        uint creditScore,
-        uint totalCreditScores,
-        uint contributorShare,
-        uint targetSupply_
+        uint256 creditScore,
+        uint256 totalCreditScores,
+        uint256 contributorShare,
+        uint256 targetSupply_
     ) internal pure returns (uint) {
-        uint contributorShardsPercent = (100 * creditScore) /
+        uint256 contributorShardsPercent = (100 * creditScore) /
             totalCreditScores;
-        uint total = (targetSupply_ * contributorShare) / 100;
-        uint shardAmount = (total * contributorShardsPercent) / 100;
+        uint256 total = (targetSupply_ * contributorShare) / 100;
+        uint256 shardAmount = (total * contributorShardsPercent) / 100;
         return shardAmount;
     }
 
@@ -213,10 +245,10 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @dev 50% of shard amount should go to Locked Type
      * Remaining shard to Traded type
      */
-    function _setAmount(uint amount) internal pure returns (uint[] memory) {
+    function _setAmount(uint256 amount) internal pure returns (uint256[] memory) {
         // set both types shard amount
-        uint[] memory amounts = new uint[](2);
-        uint lockedAmount = (amount * 50) / 100; // calculate 50% locked
+        uint256[] memory amounts = new uint256[](2);
+        uint256 lockedAmount = (amount * 50) / 100; // calculate 50% locked
         amounts[0] = lockedAmount; // locked amount at 0
         amount = amount - lockedAmount;
         amounts[1] = amount; // traded at 1
@@ -229,9 +261,9 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @dev Checking input values 
     */
     function _preValidate(
-        uint targetSupply_,
-        uint labCredit,
-        uint lockPeriod,
+        uint256 targetSupply_,
+        uint256 labCredit,
+        uint256 lockPeriod,
         uint8 initialPercent,
         uint8 rejuvePercent,
         address lab,
@@ -276,10 +308,10 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @param productUID product NFT ID
     */
     function _distributeInitialShards(
-        uint productUID,
-        uint targetSupply_,
-        uint labCredit,
-        uint lockPeriod,
+        uint256 productUID,
+        uint256 targetSupply_,
+        uint256 labCredit,
+        uint256 lockPeriod,
         uint8 initialPercent,
         uint8 rejuvePercent,
         address lab,
@@ -297,26 +329,26 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
         _createTokenType(productUID, uris);
         _mintInitialShards(
             productUID,
-            targetSupply_,
             initialPercent,
             labCredit,
             lab
         );
-        _rejuveShare(productUID, targetSupply_, rejuve, rejuvePercent); 
+        _rejuveShare(productUID, targetSupply_, rejuvePercent, rejuve); 
 
         emit InitialShardDistributed(
             productUID,
-            _initialDataOwners,
-            _initialDataOwnerShards
+            _initialContributors[productUID],
+            _initialContributorShards[productUID]
         );
-        _initialRewardDistributed = true; 
+
+        _initialDistributionStatus[productUID] = true;
     }
 
     /**
      * @notice Set lock period for a given productUID
      * @param lockPeriod days in seconds e.g for 2 days => 172,800 seconds
      */
-    function _setLockPeriod(uint productUID, uint lockPeriod) private {
+    function _setLockPeriod(uint256 productUID, uint256 lockPeriod) private {
         lockPeriod = lockPeriod + block.timestamp;
         productToLockPeriod[productUID] = lockPeriod;
     }
@@ -325,9 +357,9 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @dev Initial shard configuration for given productUID
      */
     function _configShard(
-        uint productUID,
-        uint targetSupply_,
-        uint lockPeriod,
+        uint256 productUID,
+        uint256 targetSupply_,
+        uint256 lockPeriod,
         uint8 initialPercent,
         uint8 rejuvePercent
     ) private {
@@ -342,14 +374,14 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
     /**
      * @dev 1155 token types - 2 types for each product (Locked & Traded)
      */
-    function _createTokenType(uint productUID, string[] memory uris) private {
-        string[] memory tokenTypes = new string[](2);
+    function _createTokenType(uint256 productUID, string[] memory uris) private {
+        bytes32[] memory tokenTypes = new bytes32[](2);
         tokenTypes[0] = "LOCKED";
         tokenTypes[1] = "TRADED";
 
         for (uint8 i = 0; i < tokenTypes.length; i++) {
             _types.push(tokenTypes[i]);
-            uint index = _types.length - 1;
+            uint256 index = _types.length - 1;
             productToTypeIndexes[productUID].push(index);
             typeToState[index] = tokenTypes[i];
             typeToProduct[index] = productUID;
@@ -378,35 +410,35 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      *  - Lab will get proprotional contribution from initial percent category
      */
     function _mintInitialShards(
-        uint productUID,
-        uint targetSupply_,
-        uint initialContributorShare,
-        uint labCredit,
+        uint256 productUID,
+        uint256 initialContributorShare,
+        uint256 labCredit,
         address lab
     ) private {
         bytes[] memory productDataHashes = _productNFT.getProductToData(
             productUID
         );
-        uint totalCredits = _getTotalInitialCredits(productUID);
+        uint256 totalCredits = _getTotalInitialCredits(productUID);
         ShardConfig storage config = productToShardsConfig[productUID];
         totalCredits = totalCredits + labCredit;
+        uint256 initialDataLength = _productNFT.getInitialDataLength(productUID);
 
         for (
-            uint i = 0;
-            i < _productNFT.getInitialDataLength(productUID);
+            uint256 i = 0;
+            i < initialDataLength;
             i++
         ) {
             address dataOwner = _productNFT.getDataOwnerAddress(
                 productDataHashes[i]
             );
-            uint shardAmount = _shardsPerContributor(
+            uint256 shardAmount = _shardsPerContributor(
                 _productNFT.getDataCredit(productDataHashes[i], productUID),
                 totalCredits,
                 initialContributorShare,
-                targetSupply_
+                config.targetSupply
             );
 
-            uint[] memory amounts = _setAmount(shardAmount); // 50% should go to locked type & 50% to traded
+            uint256[] memory amounts = _setAmount(shardAmount); // 50% should go to locked type & 50% to traded
             _mintBatch(
                 dataOwner,
                 productToTypeIndexes[productUID],
@@ -415,22 +447,21 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
             );
 
             config.totalSupply = config.totalSupply + shardAmount;
-
-            _initialDataOwners.push(dataOwner);
-            _initialDataOwnerShards.push(shardAmount);
+            _initialContributors[productUID].push(dataOwner);
+            _initialContributorShards[productUID].push(shardAmount);
         }
 
-        uint _labShardAmount = _labShards(
+        uint256 labShardAmount = _labShards(
             productUID,
-            lab,
             labCredit,
             totalCredits,
             initialContributorShare,
-            targetSupply_
+            config.targetSupply,
+            lab
         );
-        config.totalSupply = config.totalSupply + _labShardAmount;
-        _initialDataOwners.push(lab);
-        _initialDataOwnerShards.push(_labShardAmount);
+        config.totalSupply = config.totalSupply + labShardAmount;
+        _initialContributors[productUID].push(lab);
+        _initialContributorShards[productUID].push(labShardAmount);
     }
 
     /**
@@ -438,61 +469,44 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @param percent Rejuve share %
      */
     function _rejuveShare(
-        uint productUID,
-        uint targetSupply_,
-        address rejuve,
-        uint percent
+        uint256 productUID,
+        uint256 targetSupply_,
+        uint256 percent,
+        address rejuve
     ) private {
         ShardConfig storage config = productToShardsConfig[productUID];
-        uint amount = (targetSupply_ * percent) / 100;
+        uint256 amount = (targetSupply_ * percent) / 100;
         config.totalSupply = config.totalSupply + amount;
+        uint256[] memory amounts = _setAmount(amount);
+        _initialContributors[productUID].push(rejuve);
+        _initialContributorShards[productUID].push(amount);
 
-        uint[] memory amounts = _setAmount(amount);
-
-        for (uint i = 0; i < amounts.length; i++) {
-            _mint(
-                rejuve,
-                productToTypeIndexes[productUID][i],
-                amounts[i],
-                "0x00"
-            );
-        }
-
-        _initialDataOwners.push(rejuve);
-        _initialDataOwnerShards.push(amount);
+        _mintBatch(rejuve, productToTypeIndexes[productUID], amounts, "0x00");
     }
 
-    //------------------------------------ Helpers---------------------------------------------//
+    //------------------------------- Helpers-----------------------------//
 
     /**
      * @dev Calculate lab shards as per its credit
      * @dev Lab will get shards in initial data contributor category
      */
     function _labShards(
-        uint productUID,
-        address lab,
-        uint labCredit,
-        uint totalCredits,
-        uint initialShare,
-        uint targetSupply_
-    ) private returns (uint) {
-        uint amount = _shardsPerContributor(
+        uint256 productUID,
+        uint256 labCredit,
+        uint256 totalCredits,
+        uint256 initialShare,
+        uint256 targetSupply_,
+        address lab
+    ) private returns (uint256) {
+        uint256 amount = _shardsPerContributor(
             labCredit,
             totalCredits,
             initialShare,
             targetSupply_
         );
-        uint[] memory amounts = _setAmount(amount);
-
-        for (uint i = 0; i < amounts.length; i++) {
-            _mint(
-                lab,
-                productToTypeIndexes[productUID][i],
-                amounts[i],
-                "0x00"
-            );
-        }
-
+        uint256[] memory amounts = _setAmount(amount);
+        _mintBatch(lab, productToTypeIndexes[productUID], amounts, "0x00");
+  
         return amount;
     }
 
@@ -500,16 +514,16 @@ contract ProductShards is Ownable, Pausable, ERC1155 {
      * @return uint sum of all initial data credits
      */
     function _getTotalInitialCredits(
-        uint productUID
-    ) private view returns (uint) {
+        uint256 productUID
+    ) private view returns (uint256) {
         bytes[] memory productDataHashes = _productNFT.getProductToData(
             productUID
         );
+        uint256 totalInitialCredits;
+        uint256 productHashesLength = productDataHashes.length;
 
-        uint totalInitialCredits;
-
-        for (uint i = 0; i < productDataHashes.length; i++) {
-            uint dataCredit = _productNFT.getDataCredit(
+        for (uint256 i = 0; i < productHashesLength; i++) {
+            uint256 dataCredit = _productNFT.getDataCredit(
                 productDataHashes[i],
                 productUID
             );

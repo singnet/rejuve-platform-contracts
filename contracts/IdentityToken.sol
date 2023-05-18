@@ -49,7 +49,7 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         _tokenIdCounter.increment();
     }
 
-    // ---------------------------- STEP 1 : Create Identity token ------------//
+    // -------------------- STEP 1 : Create Identity token ---------------------//
 
     /**
      * @notice Decentralized identitiies for data contributors. 
@@ -62,6 +62,7 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      */
     function createIdentity(
         bytes memory signature,
+        bytes32 kyc,
         address signer,
         string memory tokenURI,
         uint256 nonce
@@ -70,7 +71,7 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         whenNotPaused
     {
         require(
-            _verifyMessage(signature, signer, tokenURI, nonce),
+            _verifyMessage(signature, kyc, signer, tokenURI, nonce),
             "REJUVE: Invalid Signature"
         );
         require(
@@ -94,11 +95,7 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
             tokenId == ownerToIdentity[_msgSender()],
             "REJUVE: Only Identity Owner"
         );
-
-        registrations[_msgSender()] = UserStatus.NotRegistered;
-        ownerToIdentity[_msgSender()] = 0;
-        emit IdentityDestroyed(_msgSender(), tokenId);
-        _burn(tokenId);
+        _burnIdentity(tokenId);
     }
 
     //---------------------------- OWNER FUNCTIONS --------------------------------//
@@ -149,12 +146,26 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         ownerToIdentity[userAccount] = tokenId;
-        registrations[userAccount] = UserStatus.Registered;
+        registrations[userAccount] = UserStatus.Registered; 
         emit IdentityCreated(userAccount, tokenId, tokenURI);
         _safeMint(userAccount, tokenId);
         _setTokenURI(tokenId, tokenURI);
-
+        
         return tokenId;
+    }
+
+    /**
+     * @dev private function to burn the identity
+     */
+    function _burnIdentity(
+        uint256 tokenId
+    ) 
+        private 
+    {
+        registrations[_msgSender()] = UserStatus.NotRegistered;
+        ownerToIdentity[_msgSender()] = 0;
+        emit IdentityDestroyed(_msgSender(), tokenId);
+        _burn(tokenId);   
     }
 
     /**
@@ -163,6 +174,7 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
      */
     function _verifyMessage(
         bytes memory signature,
+        bytes32 kyc,
         address signer,
         string memory uri,
         uint256 nonce
@@ -170,7 +182,7 @@ contract IdentityToken is Context, ERC721URIStorage, Ownable, Pausable {
         require(!usedNonces[nonce], "REJUVE: Signature used already");
         usedNonces[nonce] = true;
         bytes32 messagehash = keccak256(
-            abi.encodePacked(signer, uri, nonce, address(this))
+            abi.encodePacked(kyc, signer, uri, nonce, address(this))
         ); // recreate message
         address signerAddress = messagehash.toEthSignedMessageHash().recover(
             signature

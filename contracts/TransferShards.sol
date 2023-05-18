@@ -5,10 +5,10 @@ import "./FutureShards.sol";
 /** 
  * @title Transfer shards 
  * @notice Contract module that provides shards transfer mechanism for
- * both "Traded" and "Locked" types.
+ * both "Tradable" and "Locked" types.
  *
  * @dev System should lock transfer of 50% of tokens for a specific time.
- * After this locking period, owner of shards can sale them as traded tokens
+ * After this locking period, owner of shards can sale them as tradable tokens
  *
  * @dev contract deployer is the default owner.
  * - Only Owner can call pause/unpause functions
@@ -19,7 +19,7 @@ contract TransferShards is FutureShards {
         FutureShards(uri, productNFT) 
     {}
 
-    //----------------------------------------
+    //----------------------- OWNER functions -------------------------//
 
     /**
      * @dev Triggers stopped state.
@@ -36,7 +36,7 @@ contract TransferShards is FutureShards {
         _unpause();
     }
 
-    //---------------------------------------- PUBLIC ----------------------------------------------//
+    //------------------------------ PUBLIC ------------------------------//
 
     /**
      * @dev Overrides {ERC1155 safeTransferFrom}
@@ -46,7 +46,7 @@ contract TransferShards is FutureShards {
      *  - if it is more than locking period, allow transfer
      *  - if less, lock transfer
      *
-     * 3.Else (Means Type ID is "traded"), allow transfer
+     * 3.Else (Means Type ID is "tradable"), allow transfer
      */
     function safeTransferFrom(
         address from,
@@ -55,7 +55,8 @@ contract TransferShards is FutureShards {
         uint256 amount,
         bytes memory data
     ) public override {
-        if (keccak256(bytes(typeToState[id])) == keccak256(bytes("LOCKED"))) {
+        if (typeToState[id] == bytes32("LOCKED")) {
+        //if (keccak256(bytes(typeToState[id])) == keccak256(bytes("LOCKED"))) {
             // check type if it is LOCKED
             require(
                 block.timestamp > productToLockPeriod[typeToProduct[id]],
@@ -63,7 +64,7 @@ contract TransferShards is FutureShards {
             );
             _transferShard(from, to, id, amount, data);
         } else {
-            // if type is TRADED
+            // if type is TRADABLE
             _transferShard(from, to, id, amount, data);
         }
     }

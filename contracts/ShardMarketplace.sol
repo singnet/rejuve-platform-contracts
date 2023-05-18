@@ -26,10 +26,10 @@ contract ShardMarketplace is Context, Ownable, Pausable {
     IRejuveToken private _rejuveToken;
 
     // Mappingn from holder to productUID to listing status
-    mapping(address => mapping(uint => ListingStatus)) private listingStatus;
+    mapping(address => mapping(uint256 => ListingStatus)) private listingStatus;
 
     // Mapping from holder to productUID to per shard price
-    mapping (address => mapping (uint => uint)) private holderShardPrice;
+    mapping (address => mapping (uint256 => uint256)) private holderShardPrice;
 
     // Mapping from nonce to use status
     mapping(uint256 => bool) private usedNonces;
@@ -37,22 +37,22 @@ contract ShardMarketplace is Context, Ownable, Pausable {
     /**
      * @dev Emitted when a new list is created by a shard holder
     */
-    event Listed(address holder, uint productUID, uint amount, uint price);
+    event Listed(address holder, uint256 productUID, uint256 amount, uint256 price);
 
     /**
      * @dev Emitted when a holder cancels a list 
     */
-    event CancelList(address holder, uint productUID);
+    event CancelList(address holder, uint256 productUID);
 
     /**
      * @dev Emitted when a holder updates a list 
     */
-    event ListUpdated(address holder, uint productUID, uint newPrice);
+    event ListUpdated(address holder, uint256 productUID, uint256 newPrice);
 
     /**
      * @dev Emitted when a buyer purchases shards
     */
-    event Sold(address seller, address buyer, uint productUID, uint shardAmount, uint unitPrice);
+    event Sold(address seller, address buyer, uint256 productUID, uint256 shardAmount, uint256 unitPrice);
 
     /**
      * @dev Throws if caller has not approved marketplace to execute shards transfer
@@ -85,9 +85,9 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @param id Type ID (0 for Locked type, 1 for Traded)
     */
     function listShard(
-        uint productUID, 
-        uint shardPrice, 
-        uint id
+        uint256 productUID, 
+        uint256 shardPrice, 
+        uint256 id
     ) 
         external 
         isApproved 
@@ -95,7 +95,7 @@ contract ShardMarketplace is Context, Ownable, Pausable {
     {
         require(listingStatus[_msgSender()][productUID] == ListingStatus.NotListed, "REJUVE: Listed already");
         require(shardPrice > 0, "Rejuve: Price cannot be zero");
-        uint amount = _productShard.balanceOf(_msgSender(), id);
+        uint256 amount = _productShard.balanceOf(_msgSender(), id);
         require(amount > 0, "REJUVE: Insufficent balance");
         _listShard(productUID, shardPrice, amount);
     }
@@ -106,8 +106,8 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @param newPrice New price of per shard unit
     */
     function updateList(
-        uint productUID, 
-        uint newPrice
+        uint256 productUID, 
+        uint256 newPrice
     ) 
         external 
         isListed(productUID, _msgSender())
@@ -120,7 +120,7 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @notice Allow holder to cancel a list
      * @dev Check if shards are listed already
     */
-    function cancelList(uint productUID) 
+    function cancelList(uint256 productUID) 
         external 
         isListed(productUID, _msgSender()) 
         whenNotPaused 
@@ -142,11 +142,11 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @param signature - Admin's signature to check if buyer has valid discount coupons
     */
     function buy(
-        uint productUID, 
-        uint shardAmount, 
-        uint id, 
-        uint coupon,
-        uint nonce,
+        uint256 productUID, 
+        uint256 shardAmount, 
+        uint256 id, 
+        uint256 coupon,
+        uint256 nonce,
         address seller,
         bytes memory signature
     ) 
@@ -155,7 +155,10 @@ contract ShardMarketplace is Context, Ownable, Pausable {
         whenNotPaused
     {
         require(shardAmount > 0, "REJUVE: Shard amount cannot be zero");
-        require(shardAmount <= _productShard.balanceOf(seller, id), "REJUVE: Insufficient shard amount");
+        require(
+            shardAmount <= _productShard.balanceOf(seller, id), 
+            "REJUVE: Insufficient shard amount"
+        );
         _buy(productUID, shardAmount, id, coupon, nonce, seller, signature);
     }
 
@@ -179,38 +182,37 @@ contract ShardMarketplace is Context, Ownable, Pausable {
     //---------------------- VIEWS ----------------------------//
 
     /**
+     * @return listing status of a holder
+    */
+    function getLisitingStatus(address holder, uint256 productUID) external view returns(ListingStatus) {
+        return listingStatus[holder][productUID];
+    }
+
+    /**
      * @return Per shard price of a holder
      * @param holder - Shard holder address
      * @param productUID - Product unique ID
     */
-    function getShardPrice(address holder, uint productUID) public view returns (uint) {
+    function getShardPrice(address holder, uint256 productUID) public view returns (uint256) {
         return holderShardPrice[holder][productUID];
     }
     
-    /**
-     * @return listing status of a holder
-    */
-    function getLisitingStatus(address holder, uint productUID) external view returns(ListingStatus) {
-        return listingStatus[holder][productUID];
-    }
-
     //------------------------ PRIVATE --------------------------//
 
     /**
      * @dev Change listing status of caller
      * @dev Add shard price of a holder
     */
-    function _listShard(uint productUID, uint price, uint amount) private {
+    function _listShard(uint256 productUID, uint256 price, uint256 amount) private {
         listingStatus[_msgSender()][productUID] = ListingStatus.Listed;
         holderShardPrice[_msgSender()][productUID] = price;
-
         emit Listed(_msgSender(), productUID, amount, price);
     }
 
     /**
      * @dev Update shard price of a holder
     */
-    function _updateList(uint productUID, uint newPrice) private {
+    function _updateList(uint256 productUID, uint256 newPrice) private {
         holderShardPrice[_msgSender()][productUID] = newPrice;
         emit ListUpdated(_msgSender(), productUID, newPrice);
     }
@@ -219,7 +221,7 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @dev Update listing status
      * @dev Update Price of shards to zero for caller
     */
-    function _cancelList(uint productUID) private {
+    function _cancelList(uint256 productUID) private {
         listingStatus[_msgSender()][productUID] = ListingStatus.NotListed;
         holderShardPrice[_msgSender()][productUID] = 0;
         emit CancelList(_msgSender(), productUID);
@@ -231,8 +233,8 @@ contract ShardMarketplace is Context, Ownable, Pausable {
     */
     function _verifyMessage(
         bytes memory signature,
-        uint coupon,
-        uint nonce
+        uint256 coupon,
+        uint256 nonce
     ) private returns (bool) {
         require(!usedNonces[nonce], "REJUVE: Signature used already");
         usedNonces[nonce] = true;
@@ -255,31 +257,29 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @dev If no coupon available OR invalid signature, execute transfer method directly
     */
     function _buy(
-        uint productUID, 
-        uint shardAmount, 
-        uint id, 
-        uint coupon,
-        uint nonce,
+        uint256 productUID, 
+        uint256 shardAmount, 
+        uint256 id, 
+        uint256 coupon,
+        uint256 nonce,
         address seller,
         bytes memory signature
     ) 
         private 
     {
-        uint unitPrice = getShardPrice(seller, productUID);
-        uint totalPrice = shardAmount * unitPrice; // price in rjv
+        uint256 unitPrice = getShardPrice(seller, productUID);
+        uint256 totalPrice = shardAmount * unitPrice; // price in rjv
 
         if(isNotEmpty(signature, coupon, nonce)) {
             bool discountApplied = _verifyMessage(signature, coupon, nonce);
             if(discountApplied) {
-                uint discount = coupon * totalPrice / 10000;
+                uint256 discount = coupon * totalPrice / 10000;
                 totalPrice = totalPrice - discount;
                 _transferAmount(seller, productUID, unitPrice, totalPrice, id, shardAmount);
             } else {
                 _transferAmount(seller, productUID, unitPrice, totalPrice, id, shardAmount);
             }
-        }
-
-        else {
+        } else {
             _transferAmount(seller, productUID, unitPrice, totalPrice, id, shardAmount);
         }
     }
@@ -290,8 +290,14 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @dev Send RJV to shards seller 
      * @dev Send Shards ownership to buyer
     */
-    function _transferAmount(address seller, uint productUID, uint unitPrice, uint totalPrice, uint id, uint shardAmount) private {    
-        
+    function _transferAmount(
+        address seller, 
+        uint256 productUID, 
+        uint256 unitPrice, 
+        uint256 totalPrice, 
+        uint256 id, 
+        uint256 shardAmount
+    ) private {    
         require(_rejuveToken.balanceOf(_msgSender()) >= totalPrice, "REJUVE Insuffient RJV balance");
         require(_rejuveToken.allowance(_msgSender(), address(this)) >= totalPrice, "REJUVE: Not approved");
         
@@ -307,7 +313,7 @@ contract ShardMarketplace is Context, Ownable, Pausable {
     /**
      * @dev Check non empty values 
     */
-    function isNotEmpty(bytes memory signature, uint coupon, uint nonce) private pure returns(bool) {
+    function isNotEmpty(bytes memory signature, uint256 coupon, uint256 nonce) private pure returns(bool) {
         if(coupon != 0 && signature.length != 0 && nonce !=0){
             return true;
         } else {

@@ -15,17 +15,17 @@ contract DistributorAgreement is Ownable, Pausable {
 
     struct Distributor {
         bytes agreement;
-        uint productUID;
-        uint units;
-        uint unitPrice;
-        uint percentage;
+        uint256 productUID;
+        uint256 units;
+        uint256 unitPrice;
+        uint256 percentage;
     }
 
     // Mapping from distributor to info
     mapping(address => Distributor) private distributors;
 
     // Mapping from nonce to status
-    mapping(uint => bool) private usedNonce;
+    mapping(uint256 => bool) private usedNonce;
 
     /**
      * @dev Emitted when a new agreement is created
@@ -33,10 +33,10 @@ contract DistributorAgreement is Ownable, Pausable {
     event DistributorCreated(
         address distributor,
         bytes agreement,
-        uint productUID,
-        uint units,
-        uint unitPrice,
-        uint percentage
+        uint256 productUID,
+        uint256 units,
+        uint256 unitPrice,
+        uint256 percentage
     );
 
     /**
@@ -54,11 +54,11 @@ contract DistributorAgreement is Ownable, Pausable {
         address distributor,
         bytes memory sign,
         bytes memory agreement,
-        uint productUID,
-        uint totalUnits,
-        uint unitPrice,
-        uint percentage,
-        uint nonce
+        uint256 productUID,
+        uint256 totalUnits,
+        uint256 unitPrice,
+        uint256 percentage,
+        uint256 nonce
     ) 
         external
         whenNotPaused
@@ -114,10 +114,10 @@ contract DistributorAgreement is Ownable, Pausable {
     function _createAgreement(
         address distributor,
         bytes memory agreement,
-        uint productUID,
-        uint totalUnits,
-        uint unitPrice,
-        uint percentage
+        uint256 productUID,
+        uint256 totalUnits,
+        uint256 unitPrice,
+        uint256 percentage
     ) private {
         Distributor storage dist = distributors[distributor];
         dist.agreement = agreement;
@@ -144,7 +144,7 @@ contract DistributorAgreement is Ownable, Pausable {
         address distributor,
         bytes memory sign,
         bytes memory agreement,
-        uint _nonce
+        uint256 _nonce
     ) private returns (bool) {
         require(!usedNonce[_nonce], "REJUVE: Nonce used already");
         usedNonce[_nonce] = true;

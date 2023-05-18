@@ -1,19 +1,18 @@
 
-async function getSignForIdentity(identityOwnerAddress, tokenURI, nonce, contractAddress, identityOwner) 
+async function getSignForIdentity(identityOwnerAddress, kyc, tokenURI, nonce, contractAddress, identityOwner) 
 {
   const message = ethers.utils.solidityKeccak256(
-    ['address','string', 'uint256' ,'address'],
+    ['bytes32', 'address', 'string', 'uint256' ,'address'],
       [
+        kyc,
         identityOwnerAddress,
         tokenURI,
         nonce,
         contractAddress
       ],
   )
-
   const arrayifyMessage = ethers.utils.arrayify(message)
   const flatSignature = await identityOwner.signMessage(arrayifyMessage)
-
   return flatSignature;
 }
 

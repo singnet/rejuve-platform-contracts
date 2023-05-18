@@ -318,23 +318,6 @@ describe("Product shards - 1155", function () {
     )).to.be.revertedWith("REJUVE: URIs length cannot be zero");
   })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   it("Should revert if createShard is called by address other than owner", async function () {
     await expect( productShards.connect(rejuveSponsor).distributeInitialShards(
       productUID,
@@ -347,7 +330,6 @@ describe("Product shards - 1155", function () {
       rejuveAdmin.address,
       ["/product1Locked", "/product1Traded"]
     )).to.be.revertedWith("Ownable: caller is not the owner");
-
   });
 
   it("Should revert if create shard function is called when contract is paused", async function () {
@@ -391,10 +373,26 @@ it("Should create 1155 based shards", async function () {
 
   console.log("Shards Config :: ", values);
   console.log("Balance of Data owner 1: type locked: " , await productShards.balanceOf(dataOwner1.address, 0));
-
   console.log("Balance of Data owner 1: type traded: " , await productShards.balanceOf(dataOwner1.address, 1));
 
-});
+  console.log("Balance of Data owner 2: type locked: " , await productShards.balanceOf(dataOwner2.address, 0));
+  console.log("Balance of Data owner 2: type traded: " , await productShards.balanceOf(dataOwner2.address, 1));
+
+  console.log("Balance of Rjuve: type locked: " , await productShards.balanceOf(rejuveAdmin.address, 0));
+  console.log("Balance of Rejuve: type traded: " , await productShards.balanceOf(rejuveAdmin.address, 1));
+
+  console.log("Balance of Lab: type locked: " , await productShards.balanceOf(lab.address, 0));
+  console.log("Balance of Lab: type traded: " , await productShards.balanceOf(lab.address, 1));
+
+
+  console.log("D1 :" , dataOwner1.address);
+  console.log("D2 :" , dataOwner2.address);
+  console.log("lab :" , lab.address);
+  console.log("rejuve:" , rejuveAdmin.address);
+
+  console.log("Initial contributors ", await productShards.getInitialContributors(productUID));
+  console.log("All shards ", await productShards.getInitialContributorShards(productUID));
+  });
 
 
 //-------------------------------- Initial Ended --------------------------------//
@@ -436,16 +434,8 @@ it("Should create 1155 based shards", async function () {
       0,
       [30, 50],
       [dataOwner3.address, clinic.address]
-    )).to.be.revertedWith("REJUVE: Future percentage share cannot be zero"); 
+    )).to.be.revertedWith("REJUVE: Future percent cannot be zero"); 
   })
-
-  // it("Should revert if called before initial or future shard distribution", async function () {
-  //   await expect(productShards.mintRemainingShards(
-  //     productUID,
-  //     rejuveAdmin.address
-  //   )).to.be.revertedWith("REJUVE: Cannot mint before initial & future distribution");
-  // })
-
 
   it("Should create future shards", async function () {
     
@@ -457,10 +447,19 @@ it("Should create 1155 based shards", async function () {
     );
 
     expect(await productShards.totalShardSupply(productUID)).to.equal(86);  
+
+    console.log("Data owner 3 - future - locked", await productShards.balanceOf(dataOwner3.address, 0));
+    console.log("Data owner 3 - future ", await productShards.balanceOf(dataOwner3.address, 1));
+
+    console.log("clinic - future - locked ", await productShards.balanceOf(clinic.address, 0));
+    console.log("clinic - future ", await productShards.balanceOf(clinic.address, 1));
+
+    console.log("Future contributors ", await productShards.getFutureContributors(productUID));
+    console.log("Future contributors shards ", await productShards.getFutureContributorShards(productUID));
   })
 //------------------------------------- Future ended ------------------------------//
 
-//----------------------------------- Transfer shard start ---------------------------------//
+//----------------------------------- Transfer shard start -------------------------//
 
 it("Should revert if contract is paused", async function () {
   await productShards.pause();

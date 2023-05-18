@@ -21,33 +21,30 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
     IIdentityToken private _identityToken;
     IDataManagement private _dataMgt;
 
-    // Mapping from product to creator
-    mapping(uint => address) private productToCreator;
-
     // Mapping from product UID to initial data array length
-    mapping(uint => uint) private productToInitialLength;
+    mapping(uint256 => uint256) private productToInitialLength;
 
     // Mapping from data hash to product UID to credit score
-    mapping(bytes => mapping(uint => uint)) private dataToProductToCredit;
+    mapping(bytes => mapping(uint256 => uint256)) private dataToProductToCredit;
 
     // Mapping from Product UID to data hashes
-    mapping(uint => bytes[]) private productToData;
+    mapping(uint256 => bytes[]) private productToData;
 
     /**
      * @dev Emitted when a new product is created
     */
     event ProductCreated(
-        uint creatorID,
-        uint productUID,
+        uint256 creatorID,
+        uint256 productUID,
         string productURI,
         bytes[] datahashes,
-        uint[] creditScore
+        uint256[] creditScore
     );
 
     /**
      * @dev Emitted when a new data hashes are linked with exisitng product NFT
      */
-    event NewDataLinked(uint productUID, bytes[] dataHash, uint[] creditScore);
+    event NewDataLinked(uint256 productUID, bytes[] dataHash, uint256[] creditScore);
 
     constructor(
         string memory name,
@@ -74,11 +71,11 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
      * @param creditScores AI assigned credit scores to each data hash
      */
     function createProduct(
-        uint productCreatorId,
-        uint productUID,
+        uint256 productCreatorId,
+        uint256 productUID,
         string memory productURI,
         bytes[] memory dataHashes,
-        uint[] memory creditScores
+        uint256[] memory creditScores
     ) 
         external 
         whenNotPaused 
@@ -106,17 +103,17 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
     /**
      * @notice Link new data to existing product NFT
      * @dev only product owner (Lab) can call this function
-     */
+    */
     function linkNewData(
-        uint productUID,
+        uint256 productUID,
         bytes[] memory newDataHashes,
-        uint[] memory creditScores
+        uint256[] memory creditScores
     ) 
         external 
         whenNotPaused 
     {
         require(
-            _msgSender() == productToCreator[productUID],
+            _msgSender() == ownerOf(productUID),
             "REJUVE: Only Product Creator"
         );
         require(
@@ -135,20 +132,20 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
 
     /**
      * @notice returns all data (hashes) used in a specific product
-     */
+    */
     function getProductToData(
-        uint productUID
+        uint256 productUID
     ) external view returns (bytes[] memory) {
         return productToData[productUID];
     }
 
     /**
      * @notice returns credit score assigned to a data hash for a specific product
-     */
+    */
     function getDataCredit(
         bytes memory dHash,
-        uint productUID
-    ) external view returns (uint) {
+        uint256 productUID
+    ) external view returns (uint256) {
         return dataToProductToCredit[dHash][productUID];
     }
 
@@ -162,11 +159,12 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
     }
 
     /**
-     * @notice returns owner of given data
-     */
+     * @notice returns initial data length 
+     * Initial data => All data hashes that are submitted before product NFT creation
+    */
     function getInitialDataLength(
-        uint productUID
-    ) external view returns (uint) {
+        uint256 productUID
+    ) external view returns (uint256) {
         return productToInitialLength[productUID];
     }
 
@@ -195,15 +193,14 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
      * - Use product UID as NFT token id
      */
     function _createProduct(
-        uint productUID,
-        uint productCreatorId,
+        uint256 productUID,
+        uint256 productCreatorId,
         string memory productURI,
         bytes[] memory dataHashes,
-        uint[] memory creditScores
+        uint256[] memory creditScores
     ) 
         private 
     {
-        productToCreator[productUID] = _msgSender();
         productToInitialLength[productUID] = dataHashes.length;
         emit ProductCreated(
             productCreatorId,
@@ -223,26 +220,23 @@ contract ProductNFT is ERC721URIStorage, Ownable, Pausable {
      * - Link product UID to all data hashes
      */
     function _linkData(
-        uint productUID,
+        uint256 productUID,
         bytes[] memory dataHashes,
-        uint[] memory creditScores
-    ) private returns (bool) {
+        uint256[] memory creditScores
+    ) 
+        private
+        returns (bool) 
+    {
         bool notPermitted;
-        for (uint i = 0; i < dataHashes.length; i++) {
-            if (
-                _dataMgt.getPermissionStatus(dataHashes[i], productUID) == 1
-            ) {
-                // 1 = permitted , 0 = not permitted
-                dataToProductToCredit[dataHashes[i]][
-                    productUID
-                ] = creditScores[i];
+        for (uint256 i = 0; i < dataHashes.length; i++) {
+            if (_dataMgt.getPermissionStatus(dataHashes[i], productUID) == 1) { // 1 = permitted , 0 = not permitted
+                dataToProductToCredit[dataHashes[i]][productUID] = creditScores[i]; 
                 productToData[productUID].push(dataHashes[i]);
             } else {
                 notPermitted = true; // if any data hash inside data hash array is not permitted
                 break;
             }
         }
-
         return notPermitted;
     }
 }

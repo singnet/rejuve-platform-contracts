@@ -25,19 +25,19 @@ contract DataManagement is Context, Ownable, Pausable {
     bytes[] private _dataHashes;
 
     // Mapping from data hash to owner identity
-    mapping(bytes => uint) private dataToOwner;
+    mapping(bytes => uint256) private dataToOwner;
 
     // Mapping from owner identity to permission hashes
-    mapping(uint => bytes32[]) private ownerToPermissions;
+    mapping(uint256 => bytes32[]) private ownerToPermissions;
 
     // Mapping from owner identity to indexes => [dataHashes]
-    mapping(uint => uint[]) private ownerToDataIndexes;
+    mapping(uint256 => uint256[]) private ownerToDataIndexes;
 
     // Mapping from data hash to nextProductUID to permission state
-    mapping(bytes => mapping(uint => PermissionState)) private dataToProductPermission;
+    mapping(bytes => mapping(uint256 => PermissionState)) private dataToProductPermission;
 
     // Mapping from data hash to nextProductUID to permission deadline
-    mapping(bytes => mapping(uint => uint)) private dataToProductToExpiry;
+    mapping(bytes => mapping(uint256 => uint256)) private dataToProductToExpiry;
 
     // Mapping from nonce to use status
     mapping(uint256 => bool) private usedNonces;
@@ -45,19 +45,27 @@ contract DataManagement is Context, Ownable, Pausable {
     /**
      * @dev Emitted when a new data hash is submitted
     */
-    event DataSubmitted(address dataOwner, uint dataOwnerId, bytes dataHash);
+    event DataSubmitted(address dataOwner, uint256 dataOwnerId, bytes dataHash);
 
     /**
      * @dev Emitted when permission is granted to access requested data
      * to be used in a specific product
     */
     event PermissionGranted(
-        uint dataOwnerId,
-        uint requesterId,
+        uint256 dataOwnerId,
+        uint256 requesterId,
+        uint256 nextProductUID,
         bytes dataHash,
-        uint nextProductUID,
         bytes32 permissionHash
     );
+
+    modifier isRegistered(address signer) {
+        require(
+            _identityToken.ifRegistered(signer) == 1,
+            "REJUVE: Not Registered"
+        );
+        _;
+    }
 
     constructor(IIdentityToken identityToken_) {
         _identityToken = identityToken_;
@@ -67,6 +75,10 @@ contract DataManagement is Context, Ownable, Pausable {
 
     /**
      * @notice Allow rejuve/sponsor to execute transaction
+     * @param signer is a data owner address who wants to submit data
+     * @param signature - signer's signature (used here as permission for data submission)
+     * @param dHash - Actual data hash in bytes
+     * @param nonce A unique number to prevent replay attacks
      * @dev Allow only registered data owners
      * @dev check if data owner's signature is valid
      * @dev Link data owner's ID to submitted data hash
@@ -79,11 +91,8 @@ contract DataManagement is Context, Ownable, Pausable {
     )
         external
         whenNotPaused
+        isRegistered(signer)
     {
-        require(
-            _identityToken.ifRegistered(signer) == 1,
-            "REJUVE: Not Registered"
-        );
         require(
             _verifyDataMessage(signature, signer, dHash, nonce),
             "REJUVE: Invalid Signature"
@@ -92,7 +101,7 @@ contract DataManagement is Context, Ownable, Pausable {
         _submitData(signer, dHash);
     }
 
-    //--------------------- Step 4: Get Permission By requester to access data ---------------------
+    //--------- Step 3: Get Permission By requester to access data ---------------------
 
     /**
      * @notice Requester is executing transaction
@@ -102,16 +111,14 @@ contract DataManagement is Context, Ownable, Pausable {
      * @param signer Data owner address
      * @param signature Data owner's signature
      * @param dHash Data hash
-     * @param requesterId Requester decentralized identity ID
      * @param nextProductUID General product ID used by requester (Lab)
      * @param nonce A unique number to prevent replay attacks
      * @param expiration A deadline
-     */
+    */
     function getPermission(
         address signer,
         bytes memory signature,
         bytes memory dHash,
-        uint256 requesterId,
         uint256 nextProductUID,
         uint256 nonce,
         uint256 expiration
@@ -119,6 +126,7 @@ contract DataManagement is Context, Ownable, Pausable {
         external 
         whenNotPaused 
     {
+        uint256 requesterId = _identityToken.getOwnerIdentity(_msgSender());
         _preValidations(
             _msgSender(),
             signer,
@@ -161,10 +169,10 @@ contract DataManagement is Context, Ownable, Pausable {
      * Get data based on index
      */
     function getDataByTokenId(
-        uint tokenId,
-        uint index
+        uint256 tokenId,
+        uint256 index
     ) external view returns (bytes memory) {
-        uint dataIndex = ownerToDataIndexes[tokenId][index];
+        uint256 dataIndex = ownerToDataIndexes[tokenId][index];
         return _dataHashes[dataIndex];
     }
 
@@ -174,13 +182,13 @@ contract DataManagement is Context, Ownable, Pausable {
      */
     function getPermissionStatus(
         bytes memory dHash,
-        uint productUID
+        uint256 productUID
     ) external view returns (uint8) {
         return uint8(dataToProductPermission[dHash][productUID]);
     }
 
-    // @return data owner identity token ID
-    function getDataOwnerId(bytes memory dHash) external view returns (uint) {
+    // Return data owner identity token ID
+    function getDataOwnerId(bytes memory dHash) external view returns (uint256) {
         return dataToOwner[dHash];
     }
 
@@ -189,9 +197,16 @@ contract DataManagement is Context, Ownable, Pausable {
      */
     function getPermissionDeadline(
         bytes memory dHash,
-        uint nextProductUID
-    ) external view returns (uint) {
+        uint256 nextProductUID
+    ) external view returns (uint256) {
         return dataToProductToExpiry[dHash][nextProductUID];
+    }
+
+    /** 
+     *  @return all permission hashes for a given owner
+    */
+    function getPermissionHashes(address owner) external view returns (bytes32[] memory) {
+        return ownerToPermissions[_identityToken.getOwnerIdentity(owner)];
     }
 
     //----------------------------- PRIVATE FUNCTIONS ------------------------------------
@@ -203,8 +218,8 @@ contract DataManagement is Context, Ownable, Pausable {
      */
     function _submitData(address dataOwner, bytes memory dHash) private {
         _dataHashes.push(dHash);
-        uint index = _dataHashes.length - 1;
-        uint tokenId = _identityToken.getOwnerIdentity(dataOwner);
+        uint256 index = _dataHashes.length - 1;
+        uint256 tokenId = _identityToken.getOwnerIdentity(dataOwner);
         ownerToDataIndexes[tokenId].push(index);
         dataToOwner[dHash] = tokenId;
 
@@ -245,16 +260,16 @@ contract DataManagement is Context, Ownable, Pausable {
     function _getPermission(
         address dataOwner,
         bytes memory dHash,
-        uint requesterId,
-        uint nextProductUID,
-        uint expiration
+        uint256 requesterId,
+        uint256 nextProductUID,
+        uint256 expiration
     ) private {
         bytes32 permissionHash = _generatePermissionHash(
             requesterId,
             dHash,
             nextProductUID
         );
-        uint dataOwnerId = _identityToken.getOwnerIdentity(dataOwner);
+        uint256 dataOwnerId = _identityToken.getOwnerIdentity(dataOwner);
         ownerToPermissions[dataOwnerId].push(permissionHash); // save all permissions hashes
         dataToProductPermission[dHash][nextProductUID] = PermissionState
             .Permitted;
@@ -265,8 +280,8 @@ contract DataManagement is Context, Ownable, Pausable {
         emit PermissionGranted(
             dataOwnerId,
             requesterId,
-            dHash,
             nextProductUID,
+            dHash,   
             permissionHash
         );
     }
@@ -286,12 +301,11 @@ contract DataManagement is Context, Ownable, Pausable {
         uint256 nextProductUID,
         uint256 nonce,
         uint256 expiration
-    ) private {
-        require(
-            _identityToken.ifRegistered(caller) == 1,
-            "REJUVE: Not Registered"
-        );
-        uint id = dataToOwner[dHash];
+    ) 
+        private 
+        isRegistered(caller)
+    {
+        uint256 id = dataToOwner[dHash];
         require(
             id == _identityToken.getOwnerIdentity(signer),
             "REJUVE: Not a Data Owner"
@@ -349,15 +363,15 @@ contract DataManagement is Context, Ownable, Pausable {
     /**
      * @dev calculate permission expiration
      */
-    function _calculateDeadline(uint expiration) private view returns (uint) {
-        uint deadline = block.timestamp + expiration;
+    function _calculateDeadline(uint256 expiration) private view returns (uint256) {
+        uint256 deadline = block.timestamp + expiration;
         return deadline;
     }
 
     function _generatePermissionHash(
-        uint requesterId,
+        uint256 requesterId,
         bytes memory dHash,
-        uint nextProductUID
+        uint256 nextProductUID
     ) private pure returns (bytes32) {
         return
             keccak256(abi.encodePacked(requesterId, dHash, nextProductUID)

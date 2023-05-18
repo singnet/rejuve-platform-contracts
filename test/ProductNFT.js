@@ -16,7 +16,6 @@ describe("Product NFT New contract", function () {
     let sponsor;
     let lab;
     let addrs;
-
     let productUID = 200;
     let creatorID;
     let expiration = 2;
@@ -28,6 +27,9 @@ describe("Product NFT New contract", function () {
     "0x7012f98e24c6b2f609d365c959c99a9bc691d6939cc7162e679fb1226697a56b";
     let newDataHash =
     "0x1988284e7250800b37f11b3fbe7b25ad52b72cb5caff67934f69015a4263ffb5";
+
+    const kycDataHash= "7924fbcf9a7f76ca5412304f2bf47e326b638e9e7c42ecad878ed9c22a8f1428";
+    const kyc = "0x" + kycDataHash;
 
     before (async function () {
         [rejuveAdmin, dataOwner1, dataOwner2, sponsor, lab, ...addrs] = await ethers.getSigners();

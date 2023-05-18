@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 interface IIdentityToken is IERC721 {
@@ -10,9 +10,9 @@ interface IIdentityToken is IERC721 {
         uint256 _nonce
     ) external;
 
-    function burnIdentity(uint _tokenId) external;
+    function burnIdentity(uint56 _tokenId) external;
 
-    function getOwnerIdentity(address _owner) external view returns (uint);
+    function getOwnerIdentity(address _owner) external view returns (uint256);
 
     function ifRegistered(address _userAddress) external view returns (uint8);
 }

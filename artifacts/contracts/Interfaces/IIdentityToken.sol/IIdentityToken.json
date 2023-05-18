@@ -118,9 +118,9 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint56",
           "name": "_tokenId",
-          "type": "uint256"
+          "type": "uint56"
         }
       ],
       "name": "burnIdentity",

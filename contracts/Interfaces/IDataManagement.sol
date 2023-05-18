@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 interface IDataManagement {
@@ -22,19 +22,19 @@ interface IDataManagement {
     ) external;
 
     function getDataByTokenId(
-        uint _tokenId,
-        uint _index
+        uint256 _tokenId,
+        uint256 _index
     ) external view returns (bytes memory);
 
     function getPermissionStatus(
         bytes memory _dHash,
-        uint _productUID
+        uint256 _productUID
     ) external view returns (uint8);
 
-    function getDataOwnerId(bytes memory _dHash) external view returns (uint);
+    function getDataOwnerId(bytes memory _dHash) external view returns (uint256);
 
     function getPermissionDeadline(
         bytes memory _dHash,
-        uint _nextProductUID
-    ) external view returns (uint);
+        uint256 _nextProductUID
+    ) external view returns (uint256);
 }

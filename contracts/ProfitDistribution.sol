@@ -20,23 +20,23 @@ contract ProfitDistribution is Context, Ownable, Pausable {
     IProductShards private _productShards;
 
     // Mapping from productUID to Earned amount 
-    mapping(uint => uint) private productEarning; 
+    mapping(uint256 => uint256) private productEarning; 
 
     // Mapping from productUID to totalWithdrawal
-    mapping(uint => uint) private withdrawalBalance; 
+    mapping(uint256 => uint256) private withdrawalBalance; 
    
    // Mapping from holder to productUID to lastPoint
-    mapping(address => mapping(uint => uint)) private holderLastPoint;
+    mapping(address => mapping(uint256 => uint256)) private holderLastPoint;
 
     /**
      * @dev Emitted when a new purchase is made
     */
-    event PaymentReceived(address sender, uint productUID, uint amount);
+    event PaymentReceived(address sender, uint256 productUID, uint256 amount);
 
     /**
      * @dev Emitted when a holder withdraws an amount
     */
-    event Withdrawal(address holder, uint productUID, uint amount);
+    event Withdrawal(address holder, uint256 productUID, uint256 amount);
 
     //------------------------------ Constructor --------------------------------//
 
@@ -54,8 +54,8 @@ contract ProfitDistribution is Context, Ownable, Pausable {
      * @param amount deposited RJV tokens / price (in RJV) of the item
     */
     function deposit(
-        uint productUID, 
-        uint amount
+        uint256 productUID, 
+        uint256 amount
     ) 
         external 
         whenNotPaused 
@@ -72,8 +72,8 @@ contract ProfitDistribution is Context, Ownable, Pausable {
      * (calculate off-chain)
     */
     function withdraw(
-        uint productUID, 
-        uint contributionPoints
+        uint256 productUID, 
+        uint256 contributionPoints
     ) 
         external 
         whenNotPaused 
@@ -106,14 +106,14 @@ contract ProfitDistribution is Context, Ownable, Pausable {
     /**
      * @return Total earning of a product
     */
-    function getProductEarning(uint productUID) external view returns (uint) {
+    function getProductEarning(uint256 productUID) external view returns (uint256) {
         return productEarning[productUID];
     }
 
     /**
      * @return Total withdrawal amount of a product
     */
-    function getTotalWithdrawal(uint productUID) external view returns (uint) {
+    function getTotalWithdrawal(uint256 productUID) external view returns (uint256) {
         return withdrawalBalance[productUID];
     }
 
@@ -122,33 +122,33 @@ contract ProfitDistribution is Context, Ownable, Pausable {
     */
     function getHolderLastPoint(
         address holder,
-        uint productUID
-    ) external view returns (uint) {
+        uint256 productUID
+    ) external view returns (uint256) {
         return holderLastPoint[holder][productUID];
     }
 
     //------------------------------ PUBLIC --------------------------------//
 
     /**
-     * @return Total Shard balance(Traded & locked) of a caller
+     * @return Total Shard balance(Tradable & locked) of a caller
     */
-    function _getShardBalance(uint productUID) public view returns (uint) {
-        uint[] memory productIds = _productShards.getProductIDs(productUID);
-        uint lockedBalance = _productShards.balanceOf(
+    function _getShardBalance(uint256 productUID) public view returns (uint256) {
+        uint256[] memory productIds = _productShards.getProductIDs(productUID);
+        uint256 lockedBalance = _productShards.balanceOf(
             _msgSender(),
             productIds[0]
         );
-        uint tradedBalance = _productShards.balanceOf(
+        uint256 tradedBalance = _productShards.balanceOf(
             _msgSender(),
             productIds[1]
         );
-        uint balance = lockedBalance + tradedBalance;
+        uint256 balance = lockedBalance + tradedBalance;
         return balance;
     }
 
     //------------------------------ PRIVATE --------------------------------//
 
-    function _deposit(uint productUID, uint amount) private {   
+    function _deposit(uint256 productUID, uint256 amount) private {   
         productEarning[productUID] += amount;
         emit PaymentReceived(_msgSender(), productUID, amount);   
         _rejuveToken.transferFrom(_msgSender(), address(this), amount);  
@@ -163,10 +163,10 @@ contract ProfitDistribution is Context, Ownable, Pausable {
      * 4. Update product withdrawal balance 
      * 5. Transfer RJV tokens from contract to caller
      */
-    function _withdraw(uint productUID, uint contributionPoints) private {
-        uint totalEarningForCaller = productEarning[productUID] -
+    function _withdraw(uint256 productUID, uint256 contributionPoints) private {
+        uint256 totalEarningForCaller = productEarning[productUID] -
             holderLastPoint[_msgSender()][productUID];
-        uint amount = (contributionPoints * totalEarningForCaller) / 10000; // calculate RJV
+        uint256 amount = (contributionPoints * totalEarningForCaller) / 10000; // calculate RJV
         require(amount > 0, "REJUVE: No user earning");
 
         holderLastPoint[_msgSender()][productUID] = productEarning[

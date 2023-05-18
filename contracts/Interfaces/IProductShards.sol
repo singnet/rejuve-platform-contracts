@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
 interface IProductShards is IERC1155 {
-    function totalShardSupply(uint _productUID) external view returns (uint);
+    function totalShardSupply(uint256 _productUID) external view returns (uint256);
 
-    function targetSupply(uint _productUID) external view returns (uint);
+    function targetSupply(uint256 _productUID) external view returns (uint256);
 
     function getShardsConfig(
-        uint _productUID
-    ) external view returns (uint, uint8, uint8, uint8);
+        uint256 _productUID
+    ) external view returns (uint256, uint8, uint8, uint8);
 
     function getProductIDs(
-        uint productUID
-    ) external view returns (uint[] memory);
+        uint256 productUID
+    ) external view returns (uint256[] memory);
 }
