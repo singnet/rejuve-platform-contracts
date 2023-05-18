@@ -50,7 +50,8 @@ contract FutureShards is ProductShards {
      * Important:
      *
      * 1. @param futurePercent - share % assigned to future contributors category 
-     * out of total target
+     * out of total target. It should be less or equal to remaining percentage out
+     * of 100. 
      * 2. @param credits - negotiated weights
      * 3. @param futureContributors - addresses of future contributors that are getting shards
      */
