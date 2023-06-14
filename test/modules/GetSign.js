@@ -55,7 +55,6 @@ async function getSignForPermission(dataOwnerAddress, requesterID, dataHash, nex
   return flatSignature;
 }
 
-
 async function getDistributorSign(distributorAddress, contractAddress, agreementHash, nonce, distributor) {
 
   const message = ethers.utils.solidityKeccak256(
@@ -85,13 +84,51 @@ async function getAdminSignForCoupon(adminAddress, admin, userAddress, contractA
         couponBps,
         nonce
       ],
-  )
+  );
 
-  const arrayifyMessage = ethers.utils.arrayify(message)
-  const flatSignature = await admin.signMessage(arrayifyMessage)
+  const arrayifyMessage = ethers.utils.arrayify(message);
+  const flatSignature = await admin.signMessage(arrayifyMessage);
 
   return flatSignature;
 
+}
+
+async function getSignForProduct(
+  productUID, 
+  nonce, 
+  productURI, 
+  signerAddress, 
+  data,
+  creditScores, 
+  callerAddress, 
+  contractAddress,
+  signer
+) {
+  // Hash the parameters
+  const message = ethers.utils.solidityKeccak256(
+    ['uint256', 'uint256', 'string', 'address', 'bytes32', 'uint256[]', 'address', 'address'],
+      [
+        productUID,
+        nonce,
+        productURI,
+        signerAddress,
+        data,
+        creditScores,
+        callerAddress,
+        contractAddress,
+      ],
+  );
+  const arrayifyMessage = ethers.utils.arrayify(message)
+  const flatSignature = await signer.signMessage(arrayifyMessage)
+  console.log("signature offchain ", flatSignature);
+  return flatSignature;
+}
+
+async function concatenatedHash(dataHashes) {
+  const result = ethers.utils.defaultAbiCoder.encode([ "bytes[]" ],[dataHashes] );
+  const hash = ethers.utils.keccak256(result);
+  console.log("Result is ::: ", hash);
+  return hash;
 }
 
 module.exports.getSignForIdentity = getSignForIdentity;
@@ -99,3 +136,5 @@ module.exports.getSignForData = getSignForData;
 module.exports.getSignForPermission = getSignForPermission;
 module.exports.getDistributorSign = getDistributorSign;
 module.exports.getAdminSignForCoupon = getAdminSignForCoupon;
+module.exports.getSignForProduct = getSignForProduct;
+module.exports.concatenatedHash = concatenatedHash;

@@ -2,14 +2,14 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/DataManagement.sol": {
-      "lastModificationDate": 1683188583993,
-      "contentHash": "f345b607536d405460a9fe5289a6b972",
+      "lastModificationDate": 1686730617322,
+      "contentHash": "0dc90a70cca1cba0bba1a5284e4a9c99",
       "sourceName": "contracts/DataManagement.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -25,9 +25,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -39,21 +36,21 @@
         "./Interfaces/IIdentityToken.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "DataManagement"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IIdentityToken.sol": {
-      "lastModificationDate": 1683186705454,
-      "contentHash": "258cf4eb7d90f19d95fcf30f6f7a2275",
+      "lastModificationDate": 1686731056565,
+      "contentHash": "71cf760f43ef747af35909eee33badc5",
       "sourceName": "contracts/Interfaces/IIdentityToken.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -69,9 +66,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -79,21 +73,21 @@
         "@openzeppelin/contracts/token/ERC721/IERC721.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "IIdentityToken"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/security/Pausable.sol": {
-      "lastModificationDate": 1672150605956,
+      "lastModificationDate": 1686731702871,
       "contentHash": "25c8108f36fdd472bc78d4c4af240c11",
       "sourceName": "@openzeppelin/contracts/security/Pausable.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -109,9 +103,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -126,14 +117,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1672150605956,
-      "contentHash": "e436cea06129be2c73cda4b1acc848b5",
+      "lastModificationDate": 1686731702870,
+      "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -149,9 +140,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -166,14 +154,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1672150605905,
+      "lastModificationDate": 1686731702791,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -189,9 +177,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -204,14 +189,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol": {
-      "lastModificationDate": 1672150605908,
-      "contentHash": "fe1190dbb6431c2464246925713f0f7f",
+      "lastModificationDate": 1686731702802,
+      "contentHash": "d822a8a9468649cab463f29f5decf5cc",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -227,9 +212,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -244,14 +226,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1672150605951,
-      "contentHash": "eb7e61db29f31d88b3c1cef1b063d338",
+      "lastModificationDate": 1686731702853,
+      "contentHash": "48de4c9a3a4ae5ef66a2aa620843413f",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -267,9 +249,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -284,14 +263,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1672150605949,
+      "lastModificationDate": 1686731702841,
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -307,9 +286,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -322,14 +298,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1672150605972,
-      "contentHash": "396031251978f8febfd90cb62cb240ec",
+      "lastModificationDate": 1686731702880,
+      "contentHash": "48686fc32a22a3754b8e63321857dd2a",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -345,14 +321,12 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
       "imports": [
-        "./math/Math.sol"
+        "./math/Math.sol",
+        "./math/SignedMath.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -362,14 +336,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
-      "lastModificationDate": 1672150605956,
-      "contentHash": "b9c58920ce74d6dc819161786112e7ee",
+      "lastModificationDate": 1686731702868,
+      "contentHash": "fe63409d8a06818b926cf89e0ea88b1b",
       "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -385,9 +359,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -400,14 +371,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1672150605924,
-      "contentHash": "190f627b9302b9602d3a313e28205cc5",
+      "lastModificationDate": 1686731702820,
+      "contentHash": "95602b04f0b53f1139f4668d123ddeb7",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -423,9 +394,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -446,14 +414,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1672150605829,
-      "contentHash": "f31ad6fc4bbf9c06203987220156a6ba",
+      "lastModificationDate": 1686731702788,
+      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -469,9 +437,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -484,14 +449,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
-      "lastModificationDate": 1672150605918,
+      "lastModificationDate": 1686731702810,
       "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -507,9 +472,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -524,14 +486,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1672150605951,
+      "lastModificationDate": 1686731702857,
       "contentHash": "c22d4395e33763de693fd440c6fd10e1",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -547,9 +509,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -562,14 +521,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
-      "lastModificationDate": 1672150605951,
+      "lastModificationDate": 1686731702855,
       "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -585,9 +544,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -602,14 +558,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol": {
-      "lastModificationDate": 1672150605916,
-      "contentHash": "447816f3d93d639006eb423c33d2ca2c",
+      "lastModificationDate": 1686731702806,
+      "contentHash": "65c9d9c87e2b4df70e723819774a0482",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -625,9 +581,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -647,14 +600,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol": {
-      "lastModificationDate": 1672150605949,
+      "lastModificationDate": 1686731702839,
       "contentHash": "9f8822b72fe2702979e40160cb6d9636",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -670,9 +623,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -687,14 +637,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155.sol": {
-      "lastModificationDate": 1672150605949,
-      "contentHash": "d5a8f6e07ca38ec384856cfe9f08a867",
+      "lastModificationDate": 1686731702838,
+      "contentHash": "93aa9af4f5d2d2095a71ccde917038bb",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -710,9 +660,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -727,14 +674,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol": {
-      "lastModificationDate": 1672150605949,
+      "lastModificationDate": 1686731702839,
       "contentHash": "9148c2e10c4efb12c71a7f080da5559b",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -750,9 +697,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -767,14 +711,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1672150605919,
-      "contentHash": "834a0dde221759af42b030253315b086",
+      "lastModificationDate": 1686731702812,
+      "contentHash": "3ae5166c6827a9cf1a7a462d1632b464",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -790,9 +734,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -809,14 +750,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1672150605950,
-      "contentHash": "ad7c2d0af148c8f9f097d65deeb4da6b",
+      "lastModificationDate": 1686731702846,
+      "contentHash": "df36f7051335cd1e748b1b6463b7fdd3",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -832,9 +773,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -847,14 +785,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
-      "lastModificationDate": 1672150605950,
+      "lastModificationDate": 1686731702847,
       "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -870,9 +808,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -887,14 +822,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
-      "lastModificationDate": 1672150605950,
+      "lastModificationDate": 1686731702846,
       "contentHash": "d151fbfe7939989b9acf22797b32058b",
       "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -910,9 +845,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -925,14 +857,14 @@
       "artifacts": []
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IRejuveToken.sol": {
-      "lastModificationDate": 1683186732618,
-      "contentHash": "b7f60d15427adb926df95fd5afc9644a",
+      "lastModificationDate": 1686731135095,
+      "contentHash": "aeb820ca267b4111fb18eea778b2991c",
       "sourceName": "contracts/Interfaces/IRejuveToken.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -948,9 +880,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -958,21 +887,21 @@
         "@openzeppelin/contracts/interfaces/IERC20.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "IRejuveToken"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/RejuveTokenTest.sol": {
-      "lastModificationDate": 1680767126494,
-      "contentHash": "f731b25f707d1fd7b055a2509e471292",
+      "lastModificationDate": 1686730648314,
+      "contentHash": "f3a135970ff9a1ced523694997d99277",
       "sourceName": "contracts/RejuveTokenTest.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -988,9 +917,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -999,21 +925,21 @@
         "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "RejuveTokenTest"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ProductShards.sol": {
-      "lastModificationDate": 1684315373252,
-      "contentHash": "f7c76bd9564c358d10295848d34b887c",
+      "lastModificationDate": 1686730638823,
+      "contentHash": "1c5505d4047f46d3b1cad3b9513996c2",
       "sourceName": "contracts/ProductShards.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1029,9 +955,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1043,21 +966,21 @@
         "hardhat/console.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "ProductShards"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IProductNFT.sol": {
-      "lastModificationDate": 1683186710304,
-      "contentHash": "f06e2c34d69e104d87bfa548be2e237d",
+      "lastModificationDate": 1686731074041,
+      "contentHash": "ba45e5db7f47aadafe80fea9e9e22728",
       "sourceName": "contracts/Interfaces/IProductNFT.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1073,9 +996,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1083,21 +1003,21 @@
         "@openzeppelin/contracts/token/ERC721/IERC721.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "IProductNFT"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ProductNFT.sol": {
-      "lastModificationDate": 1683190270359,
-      "contentHash": "e4b3a56dd57e1f97e3310df0ca75a520",
+      "lastModificationDate": 1686735083191,
+      "contentHash": "9ca1d03f951e75b6cec9ca1a510dbee4",
       "sourceName": "contracts/ProductNFT.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1113,36 +1033,35 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
       "imports": [
         "@openzeppelin/contracts/utils/Context.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/security/Pausable.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
         "./Interfaces/IIdentityToken.sol",
         "./Interfaces/IDataManagement.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "ProductNFT"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IDataManagement.sol": {
-      "lastModificationDate": 1683186699463,
-      "contentHash": "173dca4758adcbfbd4f09551092077ab",
+      "lastModificationDate": 1686731051505,
+      "contentHash": "9ab5a91b229da59dad19c89cf8589de4",
       "sourceName": "contracts/Interfaces/IDataManagement.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1158,9 +1077,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1168,21 +1084,21 @@
         "@openzeppelin/contracts/token/ERC721/IERC721.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "IDataManagement"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
-      "lastModificationDate": 1672150605931,
-      "contentHash": "8af32effd0536e2971ff8496812a5016",
+      "lastModificationDate": 1686731702825,
+      "contentHash": "de368c6a87e159c86544ae5041b58cf3",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1198,14 +1114,12 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
       "imports": [
-        "../ERC721.sol"
+        "../ERC721.sol",
+        "../../../interfaces/IERC4906.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -1215,14 +1129,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/IdentityToken.sol": {
-      "lastModificationDate": 1683795527581,
-      "contentHash": "fbff52a58ec32ba1895724f9f9b02390",
+      "lastModificationDate": 1686729601174,
+      "contentHash": "a22678763a47e91d9365ad40d50fac91",
       "sourceName": "contracts/IdentityToken.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1238,9 +1152,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1253,21 +1164,21 @@
         "@openzeppelin/contracts/utils/cryptography/ECDSA.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "IdentityToken"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
-      "lastModificationDate": 1672150605906,
+      "lastModificationDate": 1686731702791,
       "contentHash": "74654e3ae5d7f39555055dfe244dab7a",
       "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1283,9 +1194,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1298,14 +1206,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/FutureShards.sol": {
-      "lastModificationDate": 1684401784315,
-      "contentHash": "de55d298b7ee1eb231b7222973e62175",
+      "lastModificationDate": 1686730628494,
+      "contentHash": "062b414b2631cf465f96a6ca6bd07ef8",
       "sourceName": "contracts/FutureShards.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1321,9 +1229,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1331,21 +1236,21 @@
         "./ProductShards.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "FutureShards"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/TransferShards.sol": {
-      "lastModificationDate": 1683792646405,
-      "contentHash": "786be90736431a1e52cc871f8401acb3",
+      "lastModificationDate": 1686730658306,
+      "contentHash": "0815d8995f45a62ecab06643f1364628",
       "sourceName": "contracts/TransferShards.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1361,9 +1266,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1371,21 +1273,21 @@
         "./FutureShards.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "TransferShards"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/DistributorAgreement.sol": {
-      "lastModificationDate": 1683186292360,
-      "contentHash": "f53193dc414af4e1d940038e1c0420cd",
+      "lastModificationDate": 1686730623295,
+      "contentHash": "b15c86a3f46c04ba2e6c639785f93956",
       "sourceName": "contracts/DistributorAgreement.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1401,9 +1303,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1413,21 +1312,21 @@
         "@openzeppelin/contracts/security/Pausable.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "DistributorAgreement"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1672150623547,
+      "lastModificationDate": 1686731703077,
       "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1443,9 +1342,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1458,14 +1354,14 @@
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Interfaces/IProductShards.sol": {
-      "lastModificationDate": 1683186725659,
-      "contentHash": "6d3cfb88fff3a69083d956c0157b97eb",
+      "lastModificationDate": 1686731130863,
+      "contentHash": "f0c9a6255bf72d83719207b4caa91a5f",
       "sourceName": "contracts/Interfaces/IProductShards.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1481,9 +1377,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1491,21 +1384,21 @@
         "@openzeppelin/contracts/token/ERC1155/IERC1155.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "IProductShards"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ProfitDistribution.sol": {
-      "lastModificationDate": 1683793439089,
-      "contentHash": "04cc4f593eabfa6d488441d5a4f46b0f",
+      "lastModificationDate": 1686730643344,
+      "contentHash": "3db7eb9b129fe3a36ebfc105ab4feb1d",
       "sourceName": "contracts/ProfitDistribution.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1521,9 +1414,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1535,21 +1425,21 @@
         "./Interfaces/IProductShards.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "ProfitDistribution"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ShardMarketplace.sol": {
-      "lastModificationDate": 1683796425172,
-      "contentHash": "f59d7d7cb13bf4c4b41f84a2d4d2fbfc",
+      "lastModificationDate": 1686730653827,
+      "contentHash": "f57cc552ebd54c7de3593cd2a419a9fa",
       "sourceName": "contracts/ShardMarketplace.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1565,9 +1455,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1580,21 +1467,21 @@
         "./Interfaces/IProductShards.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "ShardMarketplace"
       ]
     },
     "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/Voting.sol": {
-      "lastModificationDate": 1683186385774,
-      "contentHash": "f552435ff008d79d5a1abe6c81947361",
+      "lastModificationDate": 1686730663367,
+      "contentHash": "005fe9c1e97e2cd2fbad01f3707aee3d",
       "sourceName": "contracts/Voting.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1610,9 +1497,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -1622,21 +1506,21 @@
         "@openzeppelin/contracts/security/Pausable.sol"
       ],
       "versionPragmas": [
-        "^0.8.19"
+        "^0.8.20"
       ],
       "artifacts": [
         "Voting"
       ]
     },
-    "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/contracts/ProductShardsError.sol": {
-      "lastModificationDate": 1683872726112,
-      "contentHash": "f34d25aa75c1abcd55b2d7a3f4e8070e",
-      "sourceName": "contracts/ProductShardsError.sol",
+    "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
+      "lastModificationDate": 1686731702785,
+      "contentHash": "a2b1ec38a8dad325a596f926890772b8",
+      "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1652,14 +1536,198 @@
                 "ast"
               ]
             }
+          }
+        }
+      },
+      "imports": [
+        "./IAccessControl.sol",
+        "../utils/Context.sol",
+        "../utils/Strings.sol",
+        "../utils/introspection/ERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AccessControl"
+      ]
+    },
+    "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
+      "lastModificationDate": 1686731702833,
+      "contentHash": "57c84298234411cea19c7c284d86be8b",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
           },
-          "metadata": {
-            "useLiteralContent": false
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
           }
         }
       },
       "imports": [],
-      "versionPragmas": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IAccessControl"
+      ]
+    },
+    "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
+      "lastModificationDate": 1686731702878,
+      "contentHash": "9488ebd4daacfee8ad04811600d7d061",
+      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SignedMath"
+      ]
+    },
+    "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/interfaces/IERC721.sol": {
+      "lastModificationDate": 1686731702853,
+      "contentHash": "e6da7798a8c22c5043cc42d64a2a8f80",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC721.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../token/ERC721/IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": []
+    },
+    "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/interfaces/IERC4906.sol": {
+      "lastModificationDate": 1686731702852,
+      "contentHash": "d3f355e15269d1476d86c84730cebb5e",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC4906.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC165.sol",
+        "./IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC4906"
+      ]
+    },
+    "/Users/bushrahussain/Documents/Office/Rejuve/rejuve-platform-contracts/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
+      "lastModificationDate": 1686731702841,
+      "contentHash": "ee9624272968c23d93d4c2e39f06e6e2",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
       "artifacts": []
     }
   }

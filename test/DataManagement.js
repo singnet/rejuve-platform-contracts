@@ -130,13 +130,27 @@ describe("Data Management Contract", function () {
         await expect(dataMgt.getPermission(addr2.address, signature2, dataHash, 100, nonce, expiration))
         .to.be.revertedWith("REJUVE: Invalid Signature");
 
-        expect (await dataMgt.getPermissionStatus(dataHash, 100)).to.equal(0);
+        expect(await dataMgt.getPermissionStatus(dataHash, 100)).to.equal(0);
     });
 
     it("should permit lab to use data", async function () {
         
         await dataMgt.getPermission(addr2.address, signature, dataHash, 100, nonce, expiration);
-        expect (await dataMgt.getPermissionStatus(dataHash, 100)).to.equal(1);
+        expect(await dataMgt.getPermissionStatus(dataHash, 100)).to.equal(1);
+        const requestorID = await identityToken.getOwnerIdentity(owner.address);
+        const permissionHash = ethers.utils.solidityKeccak256(
+            ['uint256', 'bytes', 'uint256'],
+              [
+                requestorID,
+                dataHash,
+                100
+              ],
+        )
+
+        expect()
+        console.log("Permission hash ", permissionHash);
+        
+        console.log("owner all permissions ", await dataMgt.getPermissionHashes(addr2.address));
 
         console.log("Deadline for a data hash", await dataMgt.getPermissionDeadline(dataHash, 100));
     });

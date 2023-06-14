@@ -39,7 +39,6 @@ describe("Identity Token Contract", function () {
     it("should create identity", async function () {
         signature = await _getSign.getSignForIdentity(userAddress1, kyc, "/tokenURIHere", nonce, identityToken.address, addr1);   
         await identityToken.createIdentity(signature, kyc, userAddress1, "/tokenURIHere", nonce);
-
         expect (await identityToken.balanceOf(userAddress1)).to.equal(balance);
         expect (await identityToken.getOwnerIdentity(userAddress1)).to.equal(tokenId);
         expect (await identityToken.ifRegistered(userAddress1)).to.equal(1);      
@@ -49,11 +48,9 @@ describe("Identity Token Contract", function () {
         let signature5 = await _getSign.getSignForIdentity(userAddress1, kyc, "/tokenURIHere", nonce, identityToken.address, addr1);   
         await expect (identityToken.createIdentity(signature5, kyc, userAddress1, "/tokenURIHere", nonce))
         .to.be.revertedWith("REJUVE: Signature used already");
-
     })
 
     it("Should revert if signed by user other than identity requester", async function () {
-
         ++nonce;
         let signature4 = await _getSign.getSignForIdentity(userAddress2, kyc, "/tokenURIHere", nonce, identityToken.address, addr1);
         await expect (identityToken.createIdentity(signature4, kyc, userAddress2, "/tokenURIHere", nonce)) 
@@ -62,23 +59,19 @@ describe("Identity Token Contract", function () {
     });
 
     it("should revert if tries to create more than one identity", async function () {
-
         ++nonce;
         // creating new signature
         let signature2 = await _getSign.getSignForIdentity(userAddress1, kyc, "/tokenURI2", nonce, identityToken.address, addr1); 
         await expect(identityToken.createIdentity(signature2, kyc, userAddress1, "/tokenURI2", nonce))
         .to.be.revertedWith("REJUVE: One Identity Per User");
-
     });
 
     it("should increase token id by 1 for new user", async function () {
-
         ++nonce;
         let signature3 = await _getSign.getSignForIdentity(userAddress2, kyc, "/tokenURIHere", nonce, identityToken.address, addr2);
         await identityToken.createIdentity(signature3, kyc, userAddress2, "/tokenURIHere", nonce);
         ++tokenId;
         expect (await identityToken.getOwnerIdentity(userAddress2)).to.equal(tokenId);
-
     });
 
     it("should burn given token Id", async function () {
@@ -89,7 +82,6 @@ describe("Identity Token Contract", function () {
     });
 
     it("should revert if burn is called by user other than owner", async function () {
-
         await expect(identityToken.burnIdentity(identityToken.getOwnerIdentity(userAddress2)))
         .to.be.revertedWith("REJUVE: Only Identity Owner");
   
@@ -101,7 +93,6 @@ describe("Identity Token Contract", function () {
     });
 
     it("should revert if contract is paused", async function () {
-
         await identityToken.pause();
         expect(await identityToken.paused()).to.equal(true);
         ++nonce;

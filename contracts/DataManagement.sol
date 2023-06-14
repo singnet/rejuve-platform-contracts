@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -146,7 +146,7 @@ contract DataManagement is Context, Ownable, Pausable {
         );
     }
 
-    //---------------------------- OWNER FUNCTIONS --------------------------------
+    //--------------------- OWNER FUNCTIONS --------------------------------//
     /**
      * @dev Triggers stopped state.
      *
@@ -162,7 +162,7 @@ contract DataManagement is Context, Ownable, Pausable {
         _unpause();
     }
 
-    //----------------------------- OTHER SPPORTIVE VIEWS ------------------------------
+    //----------------------- OTHER SPPORTIVE VIEWS ---------------------------//
 
     /**
      * @dev Get index of [datahashes]
@@ -209,7 +209,7 @@ contract DataManagement is Context, Ownable, Pausable {
         return ownerToPermissions[_identityToken.getOwnerIdentity(owner)];
     }
 
-    //----------------------------- PRIVATE FUNCTIONS ------------------------------------
+    //------------------------ PRIVATE FUNCTIONS -----------------------------//
 
     /**
      * @dev Private function to submit data
