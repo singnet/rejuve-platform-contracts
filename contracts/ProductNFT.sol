@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -143,6 +142,10 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
     */
     function linkNewData(
         uint256 productUID,
+        uint256 nonce,
+        string memory productURI,
+        address signer, 
+        bytes memory signature,
         bytes[] memory newDataHashes,
         uint256[] memory creditScores
     ) 
@@ -156,6 +159,26 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
         require(
             newDataHashes.length == creditScores.length,
             "REJUVE: Not equal length"
+        );
+        require(
+            signer != address(0), 
+            "REJUVE: Signer can not be zero"
+        );
+        require(
+            hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
+            "REJUVE: Invalid signer"
+        );
+        require(
+            _verifyMessage(
+                productUID, 
+                nonce, 
+                productURI, 
+                signer,
+                signature,
+                creditScores,
+                newDataHashes
+            ),
+            "REJUVE: Invalid signature of signer"
         );
         require(
             !_linkData(productUID, newDataHashes, creditScores),
@@ -234,7 +257,17 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
     /**
      * @dev See {IERC165-supportsInterface}.
     */
-    function supportsInterface(bytes4 interfaceId) public view override(AccessControl, ERC721URIStorage) returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) 
+        public 
+        view 
+        override(
+            AccessControl, 
+            ERC721URIStorage
+        ) 
+        returns (bool) 
+    {
         return interfaceId == type(IAccessControl).interfaceId || super.supportsInterface(interfaceId);
     }
 

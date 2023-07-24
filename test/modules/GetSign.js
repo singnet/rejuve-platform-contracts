@@ -120,7 +120,6 @@ async function getSignForProduct(
   );
   const arrayifyMessage = ethers.utils.arrayify(message)
   const flatSignature = await signer.signMessage(arrayifyMessage)
-  console.log("signature offchain ", flatSignature);
   return flatSignature;
 }
 

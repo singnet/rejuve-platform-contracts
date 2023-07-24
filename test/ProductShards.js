@@ -30,6 +30,7 @@ describe("Product shards - 1155", function () {
   let dataOwner3; // new data owner
   let addr3;
   let addrs;
+  let nonce = 1;
 
   let dataHash1 =
     "0x622b1092273fe26f6a2c370a5c34a690337e7f802f2fa5006b40790bd3f7d69b";
@@ -70,11 +71,17 @@ describe("Product shards - 1155", function () {
     dataMgt = await _dataMgt.deploy(identityToken.address);
 
     _productNFT = await ethers.getContractFactory("ProductNFT"); 
-    productNFT = await _productNFT.deploy("Rejuve Products","RP", identityToken.address, dataMgt.address);
+    productNFT = await _productNFT.deploy(
+      "Rejuve Products",
+      "RP", 
+      rejuveAdmin.address, 
+      identityToken.address, 
+      dataMgt.address
+    );
 
     _productShards = await ethers.getContractFactory("TransferShards");
     productShards = await _productShards.deploy(
-      "/rejuveshards",
+      "rejuveshards/",
       productNFT.address
     );
 
@@ -186,25 +193,51 @@ describe("Product shards - 1155", function () {
     );
   });
 
-  //----------------- Create Product -------------------------------
+  //----------------- Create Product -------------------------------//
 
-  it("Should create product ", async function () {   
+  it("Should create productt ", async function () {
+
+    // Get concatenated hash 
+    let dataHashes = [dataHash1, dataHash2];
+    let dataHashConcatenated = await _getSign.concatenatedHash(dataHashes);
+    
+    // Get sign on credit scores from an authorized signer 
+    let signForProduct = await _getSign.getSignForProduct(
+      productUID,
+      nonce,
+      "/ProductURI",
+      rejuveAdmin.address,
+      dataHashConcatenated,
+      [10,20],
+      lab.address,
+      productNFT.address,
+      rejuveAdmin
+    );  
+    
     // Product Creation by lab (lab)
     await productNFT
       .connect(lab)
       .createProduct(
-        labID,
         productUID,
+        nonce,
         "/ProductURI",
-        [dataHash1, dataHash2],
+        rejuveAdmin.address,
+        signForProduct,
+        [dataHash1,
+        dataHash2],
         [10, 20]
       );
-
+    ++nonce;      
     expect(await productNFT.ownerOf(productUID)).to.equal(lab.address);
     expect(await productNFT.tokenURI(productUID)).to.equal("/ProductURI");
   });
 
-  //----------------- Create Shards -------------------------------
+  //----------------- Create Shards -------------------------------//
+
+
+  //------ Initial values
+
+  //----- Product shards - initial
 
   it("Should revert if target supply is zero", async function () {
     await expect( productShards.distributeInitialShards(
@@ -368,23 +401,23 @@ it("Should create 1155 based shards", async function () {
   expect(await productShards.targetSupply(productUID)).to.equal(100);
   expect(await productShards.uri(0)).to.equal("/product1Locked");
   expect(await productShards.uri(1)).to.equal("/product1Traded");
+
+  let productIds = await productShards.getProductIDs(productUID)
+  expect(productIds[0]).to.equal(0);
+  expect(productIds[1]).to.equal(1);
+  expect(await productShards.getInitialDistributionStatus(productUID)).to.equal(true);
   
   let values = await productShards.getShardsConfig(productUID);
 
   console.log("Shards Config :: ", values);
   console.log("Balance of Data owner 1: type locked: " , await productShards.balanceOf(dataOwner1.address, 0));
   console.log("Balance of Data owner 1: type traded: " , await productShards.balanceOf(dataOwner1.address, 1));
-
   console.log("Balance of Data owner 2: type locked: " , await productShards.balanceOf(dataOwner2.address, 0));
   console.log("Balance of Data owner 2: type traded: " , await productShards.balanceOf(dataOwner2.address, 1));
-
   console.log("Balance of Rjuve: type locked: " , await productShards.balanceOf(rejuveAdmin.address, 0));
   console.log("Balance of Rejuve: type traded: " , await productShards.balanceOf(rejuveAdmin.address, 1));
-
   console.log("Balance of Lab: type locked: " , await productShards.balanceOf(lab.address, 0));
   console.log("Balance of Lab: type traded: " , await productShards.balanceOf(lab.address, 1));
-
-
   console.log("D1 :" , dataOwner1.address);
   console.log("D2 :" , dataOwner2.address);
   console.log("lab :" , lab.address);
@@ -393,6 +426,21 @@ it("Should create 1155 based shards", async function () {
   console.log("Initial contributors ", await productShards.getInitialContributors(productUID));
   console.log("All shards ", await productShards.getInitialContributorShards(productUID));
   });
+
+
+  it("Should revert if trying to create initial shards again", async function () {
+    await expect(productShards.distributeInitialShards(
+      productUID,
+      100,
+      30,
+      lockPeriod,
+      30,
+      20,
+      lab.address,
+      rejuveAdmin.address,
+      ["/product1Locked", "/product1Traded"]
+    )).to.be.revertedWith("REJUVE: Initial shards distributed already");
+  })
 
 
 //-------------------------------- Initial Ended --------------------------------//

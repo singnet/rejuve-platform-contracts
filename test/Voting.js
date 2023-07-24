@@ -40,13 +40,11 @@ describe("Voting Contract", function () {
     })
 
     it("Should revert if empty proposal info", async function () {
-        
         await expect(voting.addProposal(10, proposalInfo, votingResult))
         .to.be.revertedWith("REJUVE: Proposal info cannot be empty");   
     })
 
     it("Should add proposal", async function () {
-    
         let proposalInfoNew = "This is a proposal";
         let votingResultNew = "Passed";
         await voting.addProposal(100, proposalInfoNew, votingResultNew);
