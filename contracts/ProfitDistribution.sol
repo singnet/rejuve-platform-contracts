@@ -68,21 +68,19 @@ contract ProfitDistribution is Context, Ownable, Pausable {
      * @notice A shard holder can withdraw/claim his earning after a product is purchased by 
      * a buyer (Indivuduals or Distributors)
      * @param productUID - Id of a product from which holder is withdrawing his earning
-     * @param contributionPoints - caller contribution in overall product 
-     * (calculate off-chain)
+     * contributionPoints - caller contribution in overall product 
+     * 
     */
     function withdraw(
-        uint256 productUID, 
-        uint256 contributionPoints
+        uint256 productUID 
     ) 
         external 
         whenNotPaused 
     {
-        require(contributionPoints > 0, "REJUVE: Zero contribution");
         require(productEarning[productUID] > 0, "REJUVE: No product earning");
         require(_getShardBalance(productUID) > 0, "REJUVE: No shard balance");
 
-        _withdraw(productUID, contributionPoints);
+        _withdraw(productUID);
     }
 
     //---------------------------- OWNER FUNCTIONS --------------//
@@ -156,14 +154,15 @@ contract ProfitDistribution is Context, Ownable, Pausable {
 
     /**
      * @dev Contribution points are basis points (1% = 100 bps => calculate off-chain)
-     * @param contributionPoints - Basis points of the caller (calculate off-chain)
-     * 1. Get total product earning for caller
-     * 2. Calculate earned RJV tokens  
-     * 3. Update caller last points => Assign "current product earning" to holder last point
-     * 4. Update product withdrawal balance 
-     * 5. Transfer RJV tokens from contract to caller
+     * 1. Get "contributionPoints" => Basis points of the caller
+     * 2. Get total product earning for caller
+     * 3. Calculate earned RJV tokens  
+     * 4. Update caller last points => Assign "current product earning" to holder last point
+     * 5. Update product withdrawal balance 
+     * 6. Transfer RJV tokens from contract to caller
      */
-    function _withdraw(uint256 productUID, uint256 contributionPoints) private {
+    function _withdraw(uint256 productUID) private {
+        uint256 contributionPoints = _getContributionPoints(productUID);
         uint256 totalEarningForCaller = productEarning[productUID] -
             holderLastPoint[_msgSender()][productUID];
         uint256 amount = (contributionPoints * totalEarningForCaller) / 10000; // calculate RJV
@@ -176,5 +175,20 @@ contract ProfitDistribution is Context, Ownable, Pausable {
 
         emit Withdrawal(_msgSender(), productUID, amount);
         _rejuveToken.transfer(_msgSender(), amount);
+    }
+
+    /**
+     * @dev Calculate caller contribution points in the product
+     * Steps:
+     * 1. Get shard balance of caller
+     * 2. Get total available shards
+     * 3. Calculate percentage contribution of caller 
+     * 4. Multiply by 100 to get basis points
+    */
+    function _getContributionPoints(uint256 productUID) private view returns(uint256) {
+        uint256 callerShardBalance = _getShardBalance(productUID);
+        uint256 totalShards = _productShards.totalShardSupply(productUID);
+        uint256 percentageContribution = (callerShardBalance * 100) / totalShards;
+        return percentageContribution * 100;
     }
 }

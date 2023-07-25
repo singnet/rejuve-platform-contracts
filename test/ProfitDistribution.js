@@ -41,7 +41,7 @@ describe("Profit Distribution Contract", function () {
     });  
         
     it("Should revert if 0 earning", async function () {
-        await expect(profit.withdraw(productUID, 233))
+        await expect(profit.withdraw(productUID))
         .to.be.revertedWith("REJUVE: No product earning");
     })
 
@@ -87,10 +87,9 @@ describe("Profit Distribution Contract", function () {
 
     it("Should claim profit by Rejuve platform", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, rejuveAdmin.address, rejuveAdmin, profit, productUID, totalAvailableShards); 
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.withdraw(productUID, contributionPoints); 
-      
+        await profit.withdraw(productUID); 
+
         expect (await rejuveToken.balanceOf(rejuveAdmin.address)).to.equal(callerEarning);
         expect (await profit.getHolderLastPoint(rejuveAdmin.address, productUID)).to.equal(await profit.getProductEarning(productUID));
         
@@ -100,16 +99,14 @@ describe("Profit Distribution Contract", function () {
 
     it("Should revert if tries to withdraw again", async function () {
         await profitModule.calculateEarning(rejuveToken, rejuveAdmin.address, rejuveAdmin, profit, productUID, totalAvailableShards); 
-        let contributionPoints = await profitModule.getContributionPoints();
-        await expect(profit.connect(rejuveAdmin).withdraw(productUID, contributionPoints))
+        await expect(profit.connect(rejuveAdmin).withdraw(productUID))
         .to.be.revertedWith("REJUVE: No user earning");
     })
 
     it("Should claim profit by Clinic", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, clinic.address, clinic, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.connect(clinic).withdraw(productUID, contributionPoints); 
+        await profit.connect(clinic).withdraw(productUID); 
 
         expect (await rejuveToken.balanceOf(clinic.address)).to.equal(callerEarning); 
         expect (await profit.getHolderLastPoint(clinic.address, productUID)).to.equal(await profit.getProductEarning(productUID));
@@ -120,10 +117,9 @@ describe("Profit Distribution Contract", function () {
 
     it("Should claim profit by Data owner 1", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, dataowner1.address, dataowner1, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.connect(dataowner1).withdraw(productUID, contributionPoints);  
-
+        await profit.connect(dataowner1).withdraw(productUID);
+        
         expect (await rejuveToken.balanceOf(dataowner1.address)).to.equal(callerEarning); 
         expect (await profit.getHolderLastPoint(dataowner1.address, productUID)).to.equal(await profit.getProductEarning(productUID));
         let totalWithdrawal = Number (previousWithdrawal) + Number (await profitModule.getWithdrawAmount());
@@ -133,9 +129,8 @@ describe("Profit Distribution Contract", function () {
 
     it("Should claim profit by Data owner 2", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, dataowner2.address, dataowner2, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID);
-        await profit.connect(dataowner2).withdraw(productUID, contributionPoints);  
+        await profit.connect(dataowner2).withdraw(productUID);  
 
         expect (await rejuveToken.balanceOf(dataowner2.address)).to.equal(callerEarning);   
         expect (await profit.getHolderLastPoint(dataowner2.address, productUID)).to.equal(await profit.getProductEarning(productUID));  
@@ -145,9 +140,8 @@ describe("Profit Distribution Contract", function () {
 
     it("Should claim profit by data owner 3", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, dataowner3.address, dataowner3, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.connect(dataowner3).withdraw(productUID, contributionPoints);  
+        await profit.connect(dataowner3).withdraw(productUID); 
 
         expect (await rejuveToken.balanceOf(dataowner3.address)).to.equal(callerEarning);
         expect (await profit.getHolderLastPoint(dataowner3.address, productUID)).to.equal(await profit.getProductEarning(productUID));
@@ -159,14 +153,14 @@ describe("Profit Distribution Contract", function () {
     })
     
     it("Should revert if caller has no product shards", async function () {
-        await expect(profit.connect(distributor1).withdraw(productUID, 233))
+        await expect(profit.connect(distributor1).withdraw(productUID))
         .to.be.revertedWith("REJUVE: No shard balance");
     })
 
-    it("Should revert if contribution point is zero", async function () {
-        await expect(profit.connect(lab).withdraw(productUID, 0))
-        .to.be.revertedWith("REJUVE: Zero contribution");
-    })
+    // it("Should revert if contribution point is zero", async function () {
+    //     await expect(profit.connect(distributor1).withdraw(productUID))
+    //     .to.be.revertedWith("REJUVE: Zero contribution");
+    // })
 
     //----- Deposit some amount again
 
@@ -182,10 +176,8 @@ describe("Profit Distribution Contract", function () {
 
     it("Should claim profit by Rejuve platform again", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, rejuveAdmin.address, rejuveAdmin, profit, productUID, totalAvailableShards); 
-        let contributionPoints = await profitModule.getContributionPoints();
-        
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.withdraw(productUID, contributionPoints); 
+        await profit.withdraw(productUID); 
 
         expect (await rejuveToken.balanceOf(rejuveAdmin.address)).to.equal(callerEarning);
         expect (await profit.getHolderLastPoint(rejuveAdmin.address, productUID)).to.equal(await profit.getProductEarning(productUID));
@@ -196,16 +188,14 @@ describe("Profit Distribution Contract", function () {
 
     it("Should revert if tries to withdraw again", async function () {
         await profitModule.calculateEarning(rejuveToken, rejuveAdmin.address, rejuveAdmin, profit, productUID, totalAvailableShards); 
-        let contributionPoints = await profitModule.getContributionPoints();
-        await expect(profit.connect(rejuveAdmin).withdraw(productUID, contributionPoints))
+        await expect(profit.connect(rejuveAdmin).withdraw(productUID))
         .to.be.revertedWith("REJUVE: No user earning");
     })
 
     it("Should claim profit by Clinic again", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, clinic.address, clinic, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.connect(clinic).withdraw(productUID, contributionPoints); 
+        await profit.connect(clinic).withdraw(productUID); 
     
         expect (await rejuveToken.balanceOf(clinic.address)).to.equal(callerEarning); 
         expect (await profit.getHolderLastPoint(clinic.address, productUID)).to.equal(await profit.getProductEarning(productUID));
@@ -216,9 +206,10 @@ describe("Profit Distribution Contract", function () {
     //-- Lab withdrawal first time
     it("Should claim profit by lab again", async function () {
         let callerEarning = await profitModule.calculateEarning(rejuveToken, lab.address, lab, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.connect(lab).withdraw(productUID, contributionPoints);  
+        await profit.connect(lab).withdraw(productUID);  
+
+        console.log("Lab b :", await rejuveToken.balanceOf(lab.address));
 
         expect (await rejuveToken.balanceOf(lab.address)).to.equal(callerEarning); 
         expect (await profit.getHolderLastPoint(lab.address, productUID)).to.equal(await profit.getProductEarning(productUID));
@@ -229,24 +220,20 @@ describe("Profit Distribution Contract", function () {
     it("Should revert if trying withdraw when contract is paused", async function () {
         await profit.pause();
         await profitModule.calculateEarning(rejuveToken, dataowner1.address, dataowner1, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
-        await expect(profit.connect(dataowner1).withdraw(productUID, contributionPoints))
+    
+        await expect(profit.connect(dataowner1).withdraw(productUID))
         .to.be.revertedWith("Pausable: paused");
     })
 
     it("Should claim profit by data owner again", async function () {
         await profit.unpause();
         let callerEarning = await profitModule.calculateEarning(rejuveToken, dataowner1.address, dataowner1, profit, productUID, totalAvailableShards);
-        let contributionPoints = await profitModule.getContributionPoints();
         let previousWithdrawal= await profit.getTotalWithdrawal(productUID); 
-        await profit.connect(dataowner1).withdraw(productUID, contributionPoints);  
+        await profit.connect(dataowner1).withdraw(productUID);  
 
         expect (await rejuveToken.balanceOf(dataowner1.address)).to.equal(callerEarning); 
         expect (await profit.getHolderLastPoint(dataowner1.address, productUID)).to.equal(await profit.getProductEarning(productUID));
         let totalWithdrawal = Number (previousWithdrawal) + Number (await profitModule.getWithdrawAmount());
         expect (await profit.getTotalWithdrawal(productUID)).to.equal(totalWithdrawal);
     })
-
-    
-
 })

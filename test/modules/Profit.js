@@ -11,11 +11,10 @@ async function depositRejuveTokens(rejuveToken, buyer, profitContractAddress, pr
 }
 
 async function calculateEarning(rejuveToken, callerAddress, caller, profitContract, productUID, totalAvailableShards){
-    let rejuveBalance = await rejuveToken.balanceOf(callerAddress);
+    let rejuveBalance = await rejuveToken.balanceOf(callerAddress)
     let shardBalance = await profitContract.connect(caller)._getShardBalance(productUID);
     let percentageContribution = (shardBalance * 100) / totalAvailableShards;
-
-    percentagePoints = Math.round(percentageContribution.toFixed(2)) ;
+    percentagePoints = Math.trunc(percentageContribution) ;
     percentagePoints = percentagePoints * 100;
  
     let productEarning = await profitContract.getProductEarning(productUID);

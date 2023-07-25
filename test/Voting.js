@@ -9,7 +9,7 @@ describe("Voting Contract", function () {
     let user2;
     let addrs;
     let proposalInfo = "";
-    let votingResult = "";
+    let votingResult = "";;
     
     before(async function () {
         [rejuveAdmin, user1, user2, ...addrs] = await ethers.getSigners();
@@ -33,8 +33,13 @@ describe("Voting Contract", function () {
         .to.be.revertedWith("Ownable: caller is not the owner");   
     })
 
-    it("Should revert if total participants are zero", async function () {
+    it("Should revert if adding proposal is called by someone other than owner", async function () {
         await voting.unpause();
+        await expect(voting.connect(user1).addProposal(100, proposalInfo, votingResult))
+        .to.be.revertedWith("Ownable: caller is not the owner");   
+    })
+
+    it("Should revert if total participants are zero", async function () {
         await expect(voting.addProposal(0, proposalInfo, votingResult))
         .to.be.revertedWith("REJUVE: Total participants cannot be zero");   
     })
@@ -44,12 +49,16 @@ describe("Voting Contract", function () {
         .to.be.revertedWith("REJUVE: Proposal info cannot be empty");   
     })
 
-    it("Should add proposal", async function () {
+    it("Should revert if empty voting result", async function () {
         let proposalInfoNew = "This is a proposal";
+        await expect(voting.addProposal(10, proposalInfoNew, votingResult))
+        .to.be.revertedWith("REJUVE: Voting result info cannot be empty");   
+    })
+
+    it("Should add proposal", async function () {
+        let proposalInfoNew = "This is another proposal";
         let votingResultNew = "Passed";
         await voting.addProposal(100, proposalInfoNew, votingResultNew);
         console.log("Proposal info", await voting.getProposal(1));
     });
-
-
 })

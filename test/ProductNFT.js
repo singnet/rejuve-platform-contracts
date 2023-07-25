@@ -713,13 +713,13 @@ describe("Product NFT New contract", function () {
     //--------------------------- Interface -----------------------//
 
     // Test case
-    it('should return true for supported interface', async () => {
-        const interfaceId = ethers.utils.id('yourInterfaceId');
-        const result = await productNFT.supportsInterface(interfaceId);
-        console.log(result);
+    // it('should return true for supported interface', async () => {
+    //     const interfaceId = ethers.utils.id('yourInterfaceId');
+    //     const result = await productNFT.supportsInterface(interfaceId);
+    //     console.log(result);
     
-        //assert.isTrue(result, 'Expected the function to return true');
-    });
+    //     //assert.isTrue(result, 'Expected the function to return true');
+    // });
     
     // it('should return false for unsupported interface', async () => {
     //     const interfaceId = ethers.utils.id('unsupportedInterfaceId');

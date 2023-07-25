@@ -485,6 +485,16 @@ it("Should create 1155 based shards", async function () {
     )).to.be.revertedWith("REJUVE: Future percent cannot be zero"); 
   })
 
+  it("Should create future shards - exceed limit shud fail", async function () {
+    await expect(productShards.distributeFutureShards(
+      productUID,
+      60,
+      [30, 50],
+      [dataOwner3.address, clinic.address]
+    )).to.be.revertedWith("REJUVE: Future percent exceeds available limit");
+
+   })
+
   it("Should create future shards", async function () {
     
     await productShards.distributeFutureShards(
@@ -494,7 +504,8 @@ it("Should create 1155 based shards", async function () {
       [dataOwner3.address, clinic.address]
     );
 
-    expect(await productShards.totalShardSupply(productUID)).to.equal(86);  
+    expect(await productShards.totalShardSupply(productUID)).to.equal(86);
+    expect(await productShards.getFutureDistributionStatus(productUID)).to.equal(true);  
 
     console.log("Data owner 3 - future - locked", await productShards.balanceOf(dataOwner3.address, 0));
     console.log("Data owner 3 - future ", await productShards.balanceOf(dataOwner3.address, 1));
@@ -504,6 +515,15 @@ it("Should create 1155 based shards", async function () {
 
     console.log("Future contributors ", await productShards.getFutureContributors(productUID));
     console.log("Future contributors shards ", await productShards.getFutureContributorShards(productUID));
+  })
+
+  it("Should create future shards again - shud fail", async function () { 
+    await expect(productShards.distributeFutureShards(
+      productUID,
+      40,
+      [30, 50],
+      [dataOwner3.address, clinic.address]
+    )).to.be.revertedWith("REJUVE: Future shards distributed already"); 
   })
 //------------------------------------- Future ended ------------------------------//
 
