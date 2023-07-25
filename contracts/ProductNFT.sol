@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.21;
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -268,7 +268,7 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
         ) 
         returns (bool) 
     {
-        return interfaceId == type(IAccessControl).interfaceId || super.supportsInterface(interfaceId);
+        return super.supportsInterface(interfaceId);
     }
 
     //--------------------- Private Functions ----------------------//
