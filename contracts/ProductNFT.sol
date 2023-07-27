@@ -114,35 +114,6 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
             creditScores
         );  
   
-        // require(
-        //     dataHashes.length == creditScores.length,
-        //     "REJUVE: Not equal length"
-        // );
-        // require(
-        //     signer != address(0), 
-        //     "REJUVE: Signer can not be zero"
-        // );
-        // require(
-        //     hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
-        //     "REJUVE: Invalid signer"
-        // );
-        // require(
-        //     _verifyMessage(
-        //         productUID, 
-        //         nonce, 
-        //         productURI, 
-        //         signer,
-        //         signature,
-        //         creditScores,
-        //         dataHashes
-        //     ),
-        //     "REJUVE: Invalid signature of signer"
-        // );
-        // require(
-        //     !_linkData(productUID, dataHashes, creditScores),
-        //     "REJUVE: Data Not Permitted"
-        // );
-
         _createProduct(productUID, productURI, dataHashes, creditScores);
     }
 
@@ -175,35 +146,6 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
             newDataHashes,
             creditScores
         );
-
-        // require(
-        //     newDataHashes.length == creditScores.length,
-        //     "REJUVE: Not equal length"
-        // );
-        // require(
-        //     signer != address(0), 
-        //     "REJUVE: Signer can not be zero"
-        // );
-        // require(
-        //     hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
-        //     "REJUVE: Invalid signer"
-        // );
-        // require(
-        //     _verifyMessage(
-        //         productUID, 
-        //         nonce, 
-        //         productURI, 
-        //         signer,
-        //         signature,
-        //         creditScores,
-        //         newDataHashes
-        //     ),
-        //     "REJUVE: Invalid signature of signer"
-        // );
-        // require(
-        //     !_linkData(productUID, newDataHashes, creditScores),
-        //     "REJUVE: Data Not Permitted"
-        // );
 
         emit NewDataLinked(productUID, newDataHashes, creditScores);
     }
