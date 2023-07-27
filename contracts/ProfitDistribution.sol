@@ -78,7 +78,7 @@ contract ProfitDistribution is Context, Ownable, Pausable {
         whenNotPaused 
     {
         require(productEarning[productUID] > 0, "REJUVE: No product earning");
-        require(_getShardBalance(productUID) > 0, "REJUVE: No shard balance");
+        require(getShardBalance(productUID) > 0, "REJUVE: No shard balance");
 
         _withdraw(productUID);
     }
@@ -130,7 +130,7 @@ contract ProfitDistribution is Context, Ownable, Pausable {
     /**
      * @return Total Shard balance(Tradable & locked) of a caller
     */
-    function _getShardBalance(uint256 productUID) public view returns (uint256) {
+    function getShardBalance(uint256 productUID) public view returns (uint256) {
         uint256[] memory productIds = _productShards.getProductIDs(productUID);
         uint256 lockedBalance = _productShards.balanceOf(
             _msgSender(),
@@ -153,7 +153,7 @@ contract ProfitDistribution is Context, Ownable, Pausable {
     }
 
     /**
-     * @dev Contribution points are basis points (1% = 100 bps => calculate off-chain)
+     * @dev Contribution points are basis points (1% = 100 bps)
      * 1. Get "contributionPoints" => Basis points of the caller
      * 2. Get total product earning for caller
      * 3. Calculate earned RJV tokens  
@@ -186,7 +186,7 @@ contract ProfitDistribution is Context, Ownable, Pausable {
      * 4. Multiply by 100 to get basis points
     */
     function _getContributionPoints(uint256 productUID) private view returns(uint256) {
-        uint256 callerShardBalance = _getShardBalance(productUID);
+        uint256 callerShardBalance = getShardBalance(productUID);
         uint256 totalShards = _productShards.totalShardSupply(productUID);
         uint256 percentageContribution = (callerShardBalance * 100) / totalShards;
         return percentageContribution * 100;

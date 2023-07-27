@@ -99,39 +99,49 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
     ) 
         external 
         whenNotPaused 
-    {      
+    {   
         require(
             _identityToken.ifRegistered(_msgSender()) == 1,
             "REJUVE: Not Registered"
-        );
-        require(
-            dataHashes.length == creditScores.length,
-            "REJUVE: Not equal length"
-        );
-        require(
-            signer != address(0), 
-            "REJUVE: Signer can not be zero"
-        );
-        require(
-            hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
-            "REJUVE: Invalid signer"
-        );
-        require(
-            _verifyMessage(
-                productUID, 
-                nonce, 
-                productURI, 
-                signer,
-                signature,
-                creditScores,
-                dataHashes
-            ),
-            "REJUVE: Invalid signature of signer"
-        );
-        require(
-            !_linkData(productUID, dataHashes, creditScores),
-            "REJUVE: Data Not Permitted"
-        );
+        ); 
+        _preValidations(
+            productUID, 
+            nonce, 
+            productURI, 
+            signer, 
+            signature, 
+            dataHashes, 
+            creditScores
+        );  
+  
+        // require(
+        //     dataHashes.length == creditScores.length,
+        //     "REJUVE: Not equal length"
+        // );
+        // require(
+        //     signer != address(0), 
+        //     "REJUVE: Signer can not be zero"
+        // );
+        // require(
+        //     hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
+        //     "REJUVE: Invalid signer"
+        // );
+        // require(
+        //     _verifyMessage(
+        //         productUID, 
+        //         nonce, 
+        //         productURI, 
+        //         signer,
+        //         signature,
+        //         creditScores,
+        //         dataHashes
+        //     ),
+        //     "REJUVE: Invalid signature of signer"
+        // );
+        // require(
+        //     !_linkData(productUID, dataHashes, creditScores),
+        //     "REJUVE: Data Not Permitted"
+        // );
 
         _createProduct(productUID, productURI, dataHashes, creditScores);
     }
@@ -156,34 +166,44 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
             _msgSender() == ownerOf(productUID),
             "REJUVE: Only Product Creator"
         );
-        require(
-            newDataHashes.length == creditScores.length,
-            "REJUVE: Not equal length"
+        _preValidations(
+            productUID,
+            nonce,
+            productURI,
+            signer,
+            signature,
+            newDataHashes,
+            creditScores
         );
-        require(
-            signer != address(0), 
-            "REJUVE: Signer can not be zero"
-        );
-        require(
-            hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
-            "REJUVE: Invalid signer"
-        );
-        require(
-            _verifyMessage(
-                productUID, 
-                nonce, 
-                productURI, 
-                signer,
-                signature,
-                creditScores,
-                newDataHashes
-            ),
-            "REJUVE: Invalid signature of signer"
-        );
-        require(
-            !_linkData(productUID, newDataHashes, creditScores),
-            "REJUVE: Data Not Permitted"
-        );
+
+        // require(
+        //     newDataHashes.length == creditScores.length,
+        //     "REJUVE: Not equal length"
+        // );
+        // require(
+        //     signer != address(0), 
+        //     "REJUVE: Signer can not be zero"
+        // );
+        // require(
+        //     hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
+        //     "REJUVE: Invalid signer"
+        // );
+        // require(
+        //     _verifyMessage(
+        //         productUID, 
+        //         nonce, 
+        //         productURI, 
+        //         signer,
+        //         signature,
+        //         creditScores,
+        //         newDataHashes
+        //     ),
+        //     "REJUVE: Invalid signature of signer"
+        // );
+        // require(
+        //     !_linkData(productUID, newDataHashes, creditScores),
+        //     "REJUVE: Data Not Permitted"
+        // );
 
         emit NewDataLinked(productUID, newDataHashes, creditScores);
     }
@@ -367,5 +387,49 @@ contract ProductNFT is ERC721URIStorage, AccessControl, Pausable {
         if (signer == signerAddress) {
             flag = true;
         }
+    }
+
+    //------------------------ Helpers -------------------------//
+
+    function _preValidations(
+        uint256 productUID,
+        uint256 nonce,
+        string memory productURI,
+        address signer, 
+        bytes memory signature,
+        bytes[] memory dataHashes,
+        uint256[] memory creditScores
+    ) 
+        private 
+    {
+        require(
+            dataHashes.length == creditScores.length,
+            "REJUVE: Not equal length"
+        );
+
+        require(
+            signer != address(0), 
+            "REJUVE: Signer can not be zero"
+        );
+        require(
+            hasRole(SIGNER_ROLE, signer), // Match signer with SIGNER_ROLE address
+            "REJUVE: Invalid signer"
+        );
+        require(
+            _verifyMessage(
+                productUID, 
+                nonce, 
+                productURI, 
+                signer,
+                signature,
+                creditScores,
+                dataHashes
+            ),
+            "REJUVE: Invalid signature of signer"
+        );
+        require(
+            !_linkData(productUID, dataHashes, creditScores),
+            "REJUVE: Data Not Permitted"
+        );
     }
 }
