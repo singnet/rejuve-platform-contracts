@@ -58,7 +58,10 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @dev Throws if caller has not approved marketplace to execute shards transfer
     */
     modifier isApproved() {
-        require(_productShard.isApprovedForAll(_msgSender(), address(this)), "REJUVE: Not approved");
+        require(
+            _productShard.isApprovedForAll(_msgSender(), address(this)), 
+            "REJUVE: Not approved"
+        );
         _;
     }
 
@@ -66,7 +69,10 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @dev Throws if shards are not listed by a holder
     */
     modifier isListed(uint productUID, address caller) {
-        require(listingStatus[caller][productUID] == ListingStatus.Listed, "REJUVE: Not listed");
+        require(
+            listingStatus[caller][productUID] == ListingStatus.Listed, 
+            "REJUVE: Not listed"
+        );
         _;
     }
 
@@ -93,7 +99,10 @@ contract ShardMarketplace is Context, Ownable, Pausable {
         isApproved 
         whenNotPaused
     {
-        require(listingStatus[_msgSender()][productUID] == ListingStatus.NotListed, "REJUVE: Listed already");
+        require(
+            listingStatus[_msgSender()][productUID] == ListingStatus.NotListed, 
+            "REJUVE: Listed already"
+        );
         require(shardPrice > 0, "Rejuve: Price cannot be zero");
         uint256 amount = _productShard.balanceOf(_msgSender(), id);
         require(amount > 0, "REJUVE: Insufficent balance");
@@ -184,7 +193,10 @@ contract ShardMarketplace is Context, Ownable, Pausable {
     /**
      * @return listing status of a holder
     */
-    function getLisitingStatus(address holder, uint256 productUID) external view returns(ListingStatus) {
+    function getLisitingStatus(
+        address holder, 
+        uint256 productUID
+    ) external view returns(ListingStatus) {
         return listingStatus[holder][productUID];
     }
 
@@ -193,7 +205,10 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @param holder - Shard holder address
      * @param productUID - Product unique ID
     */
-    function getShardPrice(address holder, uint256 productUID) public view returns (uint256) {
+    function getShardPrice(
+        address holder, 
+        uint256 productUID
+    ) public view returns (uint256) {
         return holderShardPrice[holder][productUID];
     }
     
@@ -298,8 +313,14 @@ contract ShardMarketplace is Context, Ownable, Pausable {
         uint256 id, 
         uint256 shardAmount
     ) private {    
-        require(_rejuveToken.balanceOf(_msgSender()) >= totalPrice, "REJUVE Insuffient RJV balance");
-        require(_rejuveToken.allowance(_msgSender(), address(this)) >= totalPrice, "REJUVE: Not approved");
+        require(
+            _rejuveToken.balanceOf(_msgSender()) >= totalPrice,
+            "REJUVE Insuffient RJV balance"
+        );
+        require(
+            _rejuveToken.allowance(_msgSender(), address(this)) >= totalPrice,
+            "REJUVE: Not approved"
+        );
         
         emit Sold(seller, _msgSender(), productUID, shardAmount, unitPrice);
         
@@ -314,7 +335,7 @@ contract ShardMarketplace is Context, Ownable, Pausable {
      * @dev Check non empty values 
     */
     function isNotEmpty(bytes memory signature, uint256 coupon, uint256 nonce) private pure returns(bool) {
-        if(coupon != 0 && signature.length != 0 && nonce !=0){
+        if(coupon != 0 && signature.length != 0 && nonce != 0){
             return true;
         } else {
             return false;
