@@ -1,5 +1,11 @@
 node_modules/
 coverage/
+cache/
+bin/
+artifacts/
+coverage/
+.vscode
 coverage.json
 .env
+
 
